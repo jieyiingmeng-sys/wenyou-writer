@@ -184,6 +184,75 @@ kbd{font:10px var(--mono);color:var(--dim2);border:1px solid var(--border2);bord
 .titem .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .titem .sub{margin-left:auto;font:10px var(--mono);color:var(--dim2);flex:0 0 auto}
 .filterbar{padding:7px 9px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid var(--border)}
+
+/* ── 伏笔笔记（左侧可折叠段，卡片式排版，和"树"质感区分开）────────── */
+.fs-section{border-bottom:1px solid var(--border);flex:0 0 auto}
+.fs-head{cursor:pointer;user-select:none}
+.fs-caret{font-size:9px;transition:transform .12s;margin-right:2px;color:var(--dim2)}
+.fs-section.collapsed .fs-caret{transform:rotate(-90deg)}
+.fs-section.collapsed .fs-list{display:none}
+.fs-count{margin-left:6px;font:10px var(--mono);color:var(--dim2)}
+.fs-list{max-height:38vh;overflow-y:auto;padding:5px 7px 7px}
+.fs-empty{padding:8px 4px;font-size:11px;color:var(--dim2);line-height:1.5}
+/* 每条伏笔 = 带金色左边线的圆角卡片 */
+.fs-card{background:var(--panel2);border:1px solid var(--border);border-left:3px solid var(--accent);
+  border-radius:7px;margin-bottom:6px;overflow:hidden}
+.fs-card.sel{border-left-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.fs-card-top{display:flex;align-items:center;gap:6px;padding:6px 8px;cursor:pointer}
+.fs-card-top:hover{background:var(--panel3)}
+.fs-card-title{flex:1;font-size:12px;color:var(--text);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fs-card-counts{display:flex;gap:5px;flex:0 0 auto}
+.fs-cc{font:10px var(--mono);padding:1px 5px;border-radius:9px;background:var(--bg2);color:var(--dim);border:1px solid var(--border2)}
+.fs-cc.payoff-0{color:var(--orange-text);border-color:var(--orange);background:var(--orange-wash)}
+.fs-cc b{color:var(--text);font-weight:700}
+.fs-card-actions{display:flex;gap:3px;padding:0 8px 6px}
+.fs-mini{font-size:11px;color:var(--dim);cursor:pointer;padding:1px 6px;border:1px solid var(--border2);border-radius:4px;background:var(--bg2)}
+.fs-mini:hover{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.fs-links{padding:2px 6px 6px 6px;border-top:1px dashed var(--border);display:none}
+.fs-card.open .fs-links{display:block}
+.fs-link{display:flex;align-items:center;gap:6px;padding:3px 4px;font-size:11px;border-radius:4px;cursor:pointer}
+.fs-link:hover{background:var(--panel3)}
+.fs-link-role{flex:0 0 auto;font:10px var(--mono);padding:0 5px;border-radius:3px;color:#fff;min-width:30px;text-align:center}
+.fs-role-plant{background:#3c6e4f}
+.fs-role-mention{background:#6b3f7a}
+.fs-role-payoff{background:#c08552}
+.fs-link-node{flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fs-link-node .fs-nid{color:var(--dim2);font:10px var(--mono);margin-right:4px}
+.fs-link-del{flex:0 0 auto;color:var(--dim2);cursor:pointer;padding:0 4px;border-radius:3px}
+.fs-link-del:hover{background:var(--orange-wash);color:var(--orange-on-wash)}
+/* ── 添加关联 弹层 ─────────────────────────────────── */
+.fs-link-add{display:flex;flex-direction:column;gap:8px;padding:2px}
+.fs-link-add .fs-row{display:flex;gap:6px;align-items:center}
+.fs-link-add label{font-size:11px;color:var(--dim);min-width:48px}
+.fs-link-add select,.fs-link-add input{flex:1;min-width:0}
+.fs-link-add .fs-search-results{max-height:180px;overflow-y:auto;border:1px solid var(--border);border-radius:6px}
+.fs-link-add .fs-opt{display:flex;align-items:center;gap:6px;padding:4px 7px;font-size:12px;cursor:pointer;border-radius:4px}
+.fs-link-add .fs-opt:hover{background:var(--panel3)}
+.fs-link-add .fs-opt .fs-oid{color:var(--dim2);font:10px var(--mono);margin-left:auto}
+.fs-link-add .fs-opt.ending .fs-oid::after{content:' · 结局';color:var(--accent-text)}
+.fs-link-add .fs-hint{font-size:10px;color:var(--dim2);line-height:1.4}
+
+/* ── 右键「设置伏笔和回收」浮层 ─────────────────────── */
+.fs-picker{max-width:280px}
+.fs-picker-top{padding:4px 6px 6px;border-bottom:1px solid var(--border)}
+.fs-picker-new{font-size:12px;color:var(--accent-text);cursor:pointer;padding:3px 6px;border:1px dashed var(--accent-line);border-radius:5px;text-align:center}
+.fs-picker-new:hover{background:var(--accent-wash2)}
+.fs-picker-empty{padding:8px 6px;font-size:11px;color:var(--dim2)}
+.fs-pick-row{padding:4px 6px;border-bottom:1px solid var(--border)}
+.fs-pick-row:hover{background:var(--panel3)}
+.fs-pick-head{display:flex;align-items:center;gap:6px;cursor:pointer}
+.fs-pick-title{flex:1;font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fs-pick-chips{display:flex;gap:3px;flex:0 0 auto}
+.fs-pick-chip{font:9px var(--mono);padding:0 4px;border-radius:3px;background:var(--bg2);color:var(--dim2);border:1px solid var(--border2)}
+.fs-pick-chip.on-plant{background:var(--green);color:#0d0d0d;border-color:var(--green)}
+.fs-pick-chip.on-mention{background:var(--purple);color:#0d0d0d;border-color:var(--purple)}
+.fs-pick-chip.on-payoff{background:var(--orange);color:#0d0d0d;border-color:var(--orange)}
+.fs-pick-actions{display:none;gap:4px;margin-top:5px;flex-wrap:wrap}
+.fs-pick-row.open .fs-pick-actions{display:flex}
+.fs-pick-act{font-size:11px;padding:2px 7px;border-radius:4px;cursor:pointer;border:1px solid var(--border2);background:var(--bg2);color:var(--text)}
+.fs-pick-act:hover{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.fs-pick-act.danger{color:var(--red-text)}
+.fs-pick-act.danger:hover{background:var(--red);color:var(--on-red)}
 .outline-tip{padding:4px 9px;font-size:10px;color:var(--dim2);background:var(--bg2);border-bottom:1px solid var(--border);line-height:1.4}
 .filterbar input{width:100%}
 /* 命中计数：搜索无结果时用户分不清"真没有"还是"筛太严"，
@@ -230,6 +299,61 @@ kbd{font:10px var(--mono);color:var(--dim2);border:1px solid var(--border2);bord
 .port::after{content:attr(data-label);position:absolute;left:14px;top:-2px;font:10px var(--sans);color:var(--dim);white-space:nowrap;pointer-events:none;background:var(--panel2);padding:0 4px;border-radius:3px;opacity:0;transition:opacity .12s}
 .port:hover::after{opacity:1;color:var(--text)}
 .port-in{position:absolute;left:-8px;top:14px;width:12px;height:12px;border-radius:50%;background:var(--panel);border:2px solid var(--border2)}
+/* 选中卡片右边缘的拖拽手柄：拖它改宽度（n.w）。只在 .sel 时显示；
+   9px 宽贴右边缘、不挡出口端口（端口在 right:-7px 外侧）。 */
+/* 下边缘拖拽手柄：拖它改卡片高度（n.h）。
+   2026-10-23：原来是右边缘手柄改宽度，作者反馈"拖动卡片侧面加宽会让
+   连接线和端口断开"—— 出口端口在右边缘，宽度一变端口就横移。
+   改成下边缘改高度，端口位置（top:26px 固定）完全不受影响。 */
+.node .resize-h-handle{position:absolute;bottom:0;left:0;width:100%;height:9px;cursor:ns-resize;z-index:6;display:none}
+.node.sel .resize-h-handle{display:block}
+.node .resize-h-handle:hover{background:linear-gradient(180deg,transparent,var(--accent))}
+/* 手动定高时内容区自己滚动（.node 本身不能加 overflow:hidden ——
+   出口端口在 right:-7px，藏在盒子外头，裁掉就看不见了）。 */
+.node.fixed-h{display:flex;flex-direction:column}
+.node.fixed-h .node-bd{overflow:auto;flex:1 1 auto;min-height:0}
+.node.fixed-h .node-bd .txt{max-height:none}
+
+/* ── 编集盒子：画布上的大虚线框 ── */
+.group-box{position:absolute;border:2px dashed var(--accent);border-radius:10px;
+  background:color-mix(in srgb,var(--accent) 8%,transparent);pointer-events:auto;z-index:0}
+.group-box:hover{background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.group-label{position:absolute;top:-11px;left:10px;display:flex;align-items:center;gap:5px;
+  font:11px var(--mono);color:var(--accent-text);background:var(--accent);
+  padding:1px 8px;border-radius:4px;white-space:nowrap}
+.group-label .group-dot{width:7px;height:7px;border-radius:2px;background:var(--accent-text);opacity:.8}
+/* 收起态 = 「装了东西，但没摊开」。
+   ⚠️ 不要靠线型（虚线/实线）和底色浓淡来区分 —— 作者 2026-10-24：
+   「我知道目前有虚线实线区别，但是放小了之后基本上看不清楚这是个空盒子还是收起盒子」。
+   画布是整体 scale 的，线型一缩小就糊成一条线，浓淡也贴不齐，只有**形状差异**
+   缩到很小还数得出来。所以收起的盒子往右下再垫两层错开的描边 —— 像一摞纸：
+   **数到三条边 = 收起，只有一条边 = 空**。 */
+.group-box.collapsed{border-style:solid;background:color-mix(in srgb,var(--accent) 16%,transparent)}
+.group-box.collapsed::before,
+.group-box.collapsed::after{
+  content:'';position:absolute;left:10px;top:10px;width:100%;height:100%;
+  border:2px solid var(--accent);border-radius:10px;background:transparent;
+  opacity:.55;z-index:-1;pointer-events:none;
+}
+.group-box.collapsed::after{left:20px;top:20px;opacity:.3}
+/* 空盒子：正中间一个淡淡的加号（「可以往里放东西」），
+   顺手和上头那一摞形成对照，一眼分开「空的」和「收起的」。 */
+.group-box.empty::before{content:none}
+.group-box.empty::after{
+  content:'+';position:absolute;left:50%;top:50%;width:auto;height:auto;
+  transform:translate(-50%,-50%);
+  font:400 34px/1 var(--sans);color:var(--accent-text);
+  opacity:.35;pointer-events:none;
+}
+.group-label .group-caret{font-size:10px;line-height:1;cursor:pointer;padding:0 1px;opacity:.9}
+.group-label .group-caret:hover{opacity:1;filter:brightness(1.4)}
+.group-label .group-cnt{font:10px var(--mono);opacity:.85}
+/* ── 编集盒子：大纲条目 ── */
+.li.group-li{padding-left:10px}
+.li.group-li .grp-caret{color:var(--accent);margin-right:6px;font-size:11px;cursor:pointer}
+.li.group-li .grp-caret:hover{filter:brightness(1.4)}
+.li.group-li.collapsed .nm{opacity:.75}
+.li.group-li .sub{margin-left:auto;font:10px var(--mono);color:var(--dim2)}
 
 .node.type-scene .node-hd{background:#3c6e4f}
 .node.type-check .node-hd{background:#7a6420}
@@ -279,6 +403,10 @@ kbd{font:10px var(--mono);color:var(--dim2);border:1px solid var(--border2);bord
 .edge{fill:none;stroke:var(--edge-c);stroke-width:1.8px}
 .edge.sel{stroke:var(--accent);stroke-width:2.6px}
 .edge-free{stroke-dasharray:5 4;stroke:var(--edge-c2)}
+/* 关联线的宽命中区：透明粗线盖在可见虚线下面，让 1.8px 的虚线也点得准。
+   pointer-events:stroke —— 只有描边区域响应，路径内部（空白）不响应，
+   免得这条宽线把中间的卡片点击都吃掉。 */
+.edge-free-hit{fill:none;stroke:transparent;stroke-width:14;pointer-events:stroke;cursor:pointer}
 .edge-lbl{font:10px var(--sans);fill:var(--dim);paint-order:stroke;stroke:var(--map-stroke);stroke-width:3px}
 .hit{fill:none;stroke:transparent;stroke-width:14px;cursor:pointer}
 
@@ -374,9 +502,12 @@ kbd{font:10px var(--mono);color:var(--dim2);border:1px solid var(--border2);bord
 .gnode-fmark{stroke-width:1}
 
 /* ── 节点连接点（拖线建关系） ──────────────────────
-   像流程画布的端口：hover 节点才显形，按住拖到另一个节点即成关系。
-   之前只有"点起点 → 再点终点"两步式，作者想验证连线能不能用都无从下手。 */
-.gnode-port{opacity:0;transition:opacity .1s;cursor:crosshair}
+   像流程画布的端口：按住拖到另一个节点即成关系。
+   ⚠️ 原来是 opacity:0 —— hover 才显形，等于"看不见却能点"：
+   作者不知道节点边上那儿能拉线，只能挨个位置乱试，
+   试中了是连线、试不中是挪位置，手感就"完全摸不出规律"
+   （作者 2026-10-24 原话）。现在平时就淡淡地显形，hover 变实。 */
+.gnode-port{opacity:.42;transition:opacity .1s;cursor:crosshair}
 .gnode:hover .gnode-port,.gnode-port.on{opacity:1}
 .gnode-port>circle:first-child{
   fill:var(--panel3);stroke:var(--accent);stroke-width:1.6;
@@ -385,6 +516,8 @@ kbd{font:10px var(--mono);color:var(--dim2);border:1px solid var(--border2);bord
 .gnode-port-hit{pointer-events:all}
 /* 拖线时所有可连节点亮一圈端口，让作者知道能往哪儿放 */
 .gnode.link-target .gnode-core{stroke:var(--accent);stroke-width:3}
+/* 拖线时其它可连节点：淡淡描一圈，表示"这儿也能放" */
+.gnode.linkable .gnode-core{stroke:var(--accent);stroke-width:1.8;stroke-dasharray:4 3;opacity:.82}
 /* 新建出来的节点闪一下：不然"点了按钮什么都没变"的错觉会再来一次 */
 .gnode.flash .gnode-core{animation:gnodeFlash 1.5s ease-out 1}
 @keyframes gnodeFlash{
@@ -400,6 +533,9 @@ kbd{font:10px var(--mono);color:var(--dim2);border:1px solid var(--border2);bord
 .gedge.sel line{filter:drop-shadow(0 0 4px var(--sel-glow))}
 .gedge:hover line{stroke-width:2.6}
 .gghost{stroke:var(--accent);stroke-width:2;stroke-dasharray:5 4;opacity:.8}
+/* 线头吸到目标节点上：虚线变实线、加粗 —— 一眼看出"抓住了"，松手就成。
+   作者 2026-10-24：「关系连线手感不太好，拖动线出来之后总是连不到下一个」。 */
+.gghost.snapped{stroke-dasharray:none;stroke-width:3;opacity:1}
 .graph-legend{position:absolute;left:10px;bottom:10px;background:var(--tip-bg2);border:1px solid var(--border2);
   border-radius:6px;padding:7px 10px;font:11px var(--sans);max-width:62%;pointer-events:none}
 .graph-legend-h{color:var(--dim);margin-bottom:4px;font-size:10px}
@@ -419,8 +555,18 @@ kbd{font:10px var(--mono);color:var(--dim2);border:1px solid var(--border2);bord
 /* 时间轴上的事件条 / 剧情节点条：底色是**语义色**（红=事件、绿=节点），
    跨皮肤恒定 —— 所以条上的文字也必须恒为浅色（--on-block）。
    亮色皮肤下若跟着 --text 走，深色底压深字会看不见。 */
-.tl-item{position:absolute;height:20px;top:5px;border-radius:3px;font-size:11px;line-height:20px;padding:0 6px;overflow:hidden;white-space:nowrap;cursor:pointer;color:var(--text);box-sizing:border-box}
+/* ⚠️ 时间轴的条用了语义类名 node / evt（`<div class="tl-item node">`），
+   而画布卡片的样式恰好也叫 `.node` —— `.node` 那条规则里有
+   **min-width:170px / max-width:330px / box-shadow**，于是：
+     · 1 年的条被撑成 170px（看着像占了 170 年）；
+     · 200 年的条被截在 330px（怎么调都对不上刻度）。
+   这就是作者 2026-10-24「甘特图这个条也依旧没对应好实际年份」的根因。
+   条长的唯一实现是 timeline.js 的 barW()，这里必须把这几个属性清掉。 */
+.tl-item{position:absolute;height:20px;top:5px;border-radius:3px;font-size:11px;line-height:20px;padding:0 6px;overflow:hidden;white-space:nowrap;cursor:pointer;color:var(--text);box-sizing:border-box;
+  min-width:0;max-width:none;box-shadow:none}
 .tl-item:hover{filter:brightness(1.25)}
+/* 区间条内的"实际年份区间"文字：比标题淡一号，不抢标题，窄条会被 overflow 裁掉 */
+.tl-item .tl-span-rng{margin-left:7px;font:10px var(--mono);opacity:.7;letter-spacing:.2px}
 .tl-item.evt{background:#5a2f2f;border:1px solid #7a3f3f;color:var(--on-block)}
 .tl-item.evt:hover{background:#7a3f3f}
 .tl-item.node{background:#2c4a38;border:1px solid #3c6e4f;color:var(--on-block)}
@@ -655,6 +801,21 @@ kbd{font:10px var(--mono);color:var(--dim2);border:1px solid var(--border2);bord
 .fld>label{display:block;font-size:11px;color:var(--dim);margin-bottom:3px}
 .fld-row{display:flex;gap:6px}
 .fld-row>*{flex:1;min-width:0}
+/* 自定义颜色选择器：当前色块 + 展开面板（预设色板 / 已用过的色 / 十六进制）。
+   没有原生 input=color 的吸管。 */
+.color-pick{position:relative;display:inline-block;width:100%}
+.cp-cur{width:100%;height:24px;border-radius:4px;border:1px solid var(--border2);cursor:pointer;background:var(--panel)}
+.cp-cur:hover{border-color:var(--accent)}
+.cp-panel{position:absolute;z-index:50;top:28px;left:0;min-width:172px;background:var(--panel2);border:1px solid var(--border2);border-radius:7px;padding:7px;box-shadow:var(--shadow-md)}
+.cp-h{font-size:10px;color:var(--dim);margin:2px 0 4px}
+.cp-h2{font-size:10px;color:var(--dim);margin-right:6px}
+.cp-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
+.cp-sw{width:17px;height:17px;border-radius:3px;border:1px solid rgba(0,0,0,.25);cursor:pointer}
+.cp-sw:hover{transform:scale(1.18);border-color:var(--accent)}
+.cp-hex{display:flex;align-items:center;gap:6px}
+.cp-hex input{flex:1;min-width:0;background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:4px;padding:2px 5px;font:11px var(--mono)}
+.cp-hex input.bad{border-color:var(--red);outline:none}
+.cp-err{font-size:10px;color:var(--red-text);margin-top:3px;line-height:1.35}
 /* 下拉框（select）的展开列表。
    option 从来没被设过背景色，深色面板下浏览器只能自己挑颜色 ——
    于是展开时是灰白底、选中行是深灰块，和面板完全不搭（用户截图反馈）。
@@ -1611,7 +1772,17 @@ input.num-in[type=number]:focus{
 </style>
 <!-- 网页版显示名。PC 版由 app.py 通过 ?appname= 注入；网页版没有那个
      查询参数（file:// 双击打开时也没有），在这里直接给。 -->
-<script>window.__WY_APPNAME__ = '文游写作助手 4.5 网页版';</script>
+<script>window.__WY_APPNAME__ = '文游写作助手 4.7 网页版';</script>
+<script>
+/* 网页版 _T 垫片：与桌面版 lang.js 的全局 _T 同语义（无语言模块时的降级分支）——
+   直接返回中文原文并填充 {var} 占位符。桌面版 4.6/4.7 的新代码大量使用 _T，
+   网页版无语言模块，靠这个垫片保持行为一致。改桌面版迁移代码时不要删。 */
+globalThis._T = function (s, vars) {
+  let out = String(s == null ? '' : s);
+  if (vars) out = out.replace(/\{(\w+)\}/g, (m, k) => (vars[k] != null ? vars[k] : m));
+  return out;
+};
+</script>
 <!-- 内置世界地图底图。用 <script> 而不是 fetch：双击 file:// 打开时
      fetch 会被浏览器拦下，<script> 不会。 -->
 <script>
@@ -1636,7 +1807,7 @@ window.__WORLD_GEO__ = {"meta":{"source":"Natural Earth 50m (public domain) - na
         <span class="menu-label">文件</span>
         <div class="dropdown">
           <button data-act="new">新建工程<kbd>Ctrl+N</kbd></button>
-          <button data-act="newtab">新开一个窗口（多开）<kbd>Ctrl+Shift+N</kbd></button>
+          <button data-act="newtab">新开一个窗口（多开）</button>
           <button data-act="open">打开…<kbd>Ctrl+O</kbd></button>
           <button data-act="recent">最近打开的工程</button>
           <button data-act="sample">载入示例工程（看结构用）</button>
@@ -1673,7 +1844,7 @@ window.__WORLD_GEO__ = {"meta":{"source":"Natural Earth 50m (public domain) - na
           <hr>
           <button data-act="lint">检查工程完整性<kbd>Ctrl+I</kbd></button>
           <hr>
-          <button data-act="batchYear">批量设年份…（配合画布框选 + 右键）</button>
+          <button data-act="batchYear">批量设起始年份…（配合画布框选 + 右键）</button>
           <button data-act="batchYearSpread">按顺序每年铺开年份…</button>
           <hr>
           <button data-act="skin">界面配色…</button>
@@ -1719,6 +1890,17 @@ window.__WORLD_GEO__ = {"meta":{"source":"Natural Earth 50m (public domain) - na
       </div>
       <div class="outline-tip">点条目选中 · 右键可重命名或删除 · 悬停标题行有 ＋</div>
       <div class="tree" id="outline"></div>
+      <div class="fs-section" id="fsSection">
+        <div class="panel-head fs-head" id="fsHead">
+          <span class="fs-caret" id="fsCaret">▼</span>
+          <span>伏笔笔记</span>
+          <span class="fs-count" id="fsCount"></span>
+          <div class="panel-head-actions">
+            <button class="icon-btn" id="btnAddForeshadow" title="新建伏笔">＋伏</button>
+          </div>
+        </div>
+        <div class="fs-list" id="foreshadowList"></div>
+      </div>
       <div class="panel-head" style="border-top:1px solid var(--border)">
         <span>快速筛选</span>
         <span class="filter-count" id="filterCount"></span>
@@ -1742,6 +1924,8 @@ window.__WORLD_GEO__ = {"meta":{"source":"Natural Earth 50m (public domain) - na
             <button class="tbtn" data-node="effect">＋结算</button>
             <button class="tbtn" data-node="ending">＋结局</button>
             <button class="tbtn" data-node="note">＋便签</button>
+            <button class="tbtn" data-node="card">＋实体卡</button>
+            <button class="tbtn" id="btnNewGroup">＋编集</button>
           </div>
           <div class="tool-group">
             <button class="tbtn" id="btnZoomOut">－</button>
@@ -1780,6 +1964,7 @@ window.__WORLD_GEO__ = {"meta":{"source":"Natural Earth 50m (public domain) - na
             <label class="chk"><input type="checkbox" id="chkRelLines" checked> 关系连线</label>
             <label class="chk"><input type="checkbox" id="chkLabels" checked> 名称</label>
             <label class="chk"><input type="checkbox" id="chkRegions" checked> 地区（点）</label>
+            <label class="chk"><input type="checkbox" id="chkChars" checked> 角色（点）</label>
             <label class="chk"><input type="checkbox" id="chkTerr" checked> 势力范围</label>
             <label class="chk"><input type="checkbox" id="chkPcRoute" checked> 主角路程</label>
           </div>
@@ -1837,7 +2022,8 @@ window.__WORLD_GEO__ = {"meta":{"source":"Natural Earth 50m (public domain) - na
             <button class="tbtn" id="btnTlZoomOut">－</button>
             <span class="zoomval" id="tlZoomVal">1.0×</span>
             <button class="tbtn" id="btnTlZoomIn">＋</button>
-            <button class="tbtn" id="btnTlFit">适应</button>
+            <button class="tbtn" id="btnTlFit" title="让条的长度按年数如实画出：跨度大时可以横向滚动">如实适应</button>
+            <button class="tbtn" id="btnTlAll" title="把整个时间区间压进一屏看全局（条会变短）">全貌</button>
             <button class="tbtn" id="btnTlRange">区间设置…</button>
           </div>
           <div class="tool-group">
@@ -2756,7 +2942,10 @@ var REL_KINDS = [
       },
       /* 关系图上各实体的节点坐标，按 id 存；用户拖动后可持久保存 */
       graphPos: {},
-      checks: [], eventTables: [], nodes: [], links: [],
+      checks: [], eventTables: [], nodes: [], links: [], groups: [],
+      /* 伏笔笔记：作者专用，随工程导出带走（下游呈现层按"作者专用"过滤，不展示给玩家）。
+         结构见 model 的 addForeshadow / foreshadowCounts。 */
+      foreshadows: [],
       /* 地图底图。两种：
            'world' 内置世界地理底图（海岸线 + 水系，仅自然地理，无行政边界）
            'image' 作者自己上传的图片（架空世界 / 手绘地图 / 自定义风格）
@@ -2799,14 +2988,24 @@ var REL_KINDS = [
     data: blankProject(),
     path: null,
     dirty: false,
-    sel: null,                       // {kind:'node'|'region'|..., id}
+    sel: null,                       // {kind:'node'|'region'|'character'|'faction'|'group'|..., id}
     selNodes: [],                    // 画布多选
     _undo: [], _redo: [], _ls: {},
     _warns: [],
+    /* 堆叠（折叠链）与归组单元的缓存。数据一变由 emit 统一作废。 */
+    _stacksCache: null, _unitCache: null,
 
     /* 事件 */
     on(ev, fn) { (this._ls[ev] = this._ls[ev] || []).push(fn); return this; },
-    emit(ev, a, b) { (this._ls[ev] || []).forEach(f => { try { f(a, b); } catch (e) { console.error(e); } }); },
+    emit(ev, a, b) {
+      /* 堆叠 / 归组单元的缓存：数据一变就得作废。
+         放在 emit 里统一清，而不是在每个改数据的地方手写 ——
+         漏一处就会读到过期缓存，表现为"改了半天盒子成员还是旧的"。 */
+      if (ev === 'change' || ev === 'load' || ev === 'loaded') {
+        this._stacksCache = null; this._unitCache = null;
+      }
+      (this._ls[ev] || []).forEach(f => { try { f(a, b); } catch (e) { console.error(e); } });
+    },
 
     /* 事务与撤销 */
     transact(label, fn) {
@@ -2918,6 +3117,11 @@ var REL_KINDS = [
         eventTables: Array.isArray(s.eventTables) ? s.eventTables : [],
         links: Array.isArray(s.links) ? s.links : [],
       };
+      /* 老工程没有 groups 字段、节点也没有 group，补齐默认值，避免渲染 / 导出读到 undefined。 */
+      if (!Array.isArray(d.groups)) d.groups = [];
+      (d.groups || []).forEach(g => { if (g.collapsed === undefined) g.collapsed = false; if (g.parent === undefined) g.parent = ''; });
+      (d.nodes || []).forEach(n => { if (n.group === undefined) n.group = ''; });
+      return d;
     },
 
     /* ── ID ── */
@@ -2926,6 +3130,15 @@ var REL_KINDS = [
       const scan = arr => (arr || []).forEach(o => { if (o && o.id) all.push(o.id); });
       const d = this.data;
       ['regions', 'characters', 'relations', 'nodes', 'checks', 'eventTables', 'flags'].forEach(k => scan(d[k]));
+      /* ⚠️ 扫描列表必须覆盖**所有**带 id 的实体数组，否则 nextId 会算错"最小空闲编号"，
+         撞出重复 id（曾经漏掉 factions / items / shops / vars，靠 meta.idSeq 计数器兜底才没爆，
+         但那套计数器本身就是要删掉的 —— 所以这里一次性补齐）。 */
+      (d.factions || []).forEach(o => o.id && all.push(o.id));
+      (d.items || []).forEach(o => o.id && all.push(o.id));
+      (d.shops || []).forEach(o => o.id && all.push(o.id));
+      ((d.vars && d.vars.list) || []).forEach(o => o.id && all.push(o.id));
+      (d.groups || []).forEach(o => o.id && all.push(o.id));
+      (d.foreshadows || []).forEach(o => o.id && all.push(o.id));
       (d.eventTables || []).forEach(t => scan(t.entries));
       (d.timeline.eras || []).forEach(e => e.id && all.push(e.id));
       (d.timeline.marks || []).forEach(m => m.id && all.push(m.id));
@@ -2933,17 +3146,13 @@ var REL_KINDS = [
       (d.checks || []).forEach(c => (c.bands || []).forEach(b => b.id && all.push(b.id)));
       let n = 1;
       while (all.indexOf(prefix + n) >= 0) n++;
-      /* 删过的编号不回收复用。
-         表达式在工程里存的是文本（r.r1.和平度），跨实体的引用清理管不到它 ——
-         地区甲（r1）被删掉、新建一个地区乙又拿到 r1 的话，
-         所有写着 r.r1.和平度 的检定难度/条件会静默改指向乙，且无任何提示。
-         编号跳着走（r1、r2、删掉 r2、新建得 r3）代价只是 id 不连续，
-         换来"表达式永远指原来那个东西"，这个交换非常值。
-         计数器存在 meta.idSeq 里 —— 随 .wyx 一起存盘，重开工程不会把编号收回重用。 */
-      const seq = (this.data.meta.idSeq = this.data.meta.idSeq || {});
-      if (isFinite(seq[prefix]) && seq[prefix] > n) n = Math.floor(seq[prefix]);
-      while (all.indexOf(prefix + n) >= 0) n++;
-      seq[prefix] = n + 1;
+      /* 删除实体后编号立即回收复用（作者拍板「方案①」：删 n10 立刻让新建节点补位 n10）。
+         上面这层 while 已经扫过全工程的所有 id（含新增补齐的 factions / items / shops / vars / groups），
+         n 就是「当前最小的空闲编号」，所以直接返回、不再跳号 —— 删掉 n10 后新建的节点自然拿到 n10，
+         删掉中间任意编号也都按最小空隙回填。
+         代价（作者已知并接受）：表达式里按 id 写的引用（如 r.r1.和平度）在
+         「删甲、新建乙恰好拿到 r1」时会静默改指向乙。作者选择「编号连续、补位」
+         优先于「表达式永远指原物」。 */
       return prefix + n;
     },
     /* 纪年标记：作者记下的关键年份（"商灭""大陆分裂""主角出生"）。
@@ -2983,6 +3192,7 @@ var REL_KINDS = [
         case 'item': return this.data.items || [];
         case 'faction': return this.data.factions || [];
         case 'shop': return this.data.shops || [];
+        case 'group': return this.data.groups || [];
         /* 没有 'good' 这一类了 —— 商品就是道具（作者：「商品=道具，它无非是时而在商店里，
            时而在人手里而已」）。留着旧 kind 只为老工程里的选中项不至于直接崩。 */
         case 'good': return [];
@@ -3674,6 +3884,64 @@ var REL_KINDS = [
       this.pc().tracks.push(nt);
       return nt;
     },
+    /* ── 角色的行动轨迹（与主角同构）────────────────────
+       主角的 tracks 已经成熟，角色的用同一套结构（{from,to,lon,lat,label}）。
+       地图上要给角色画标记（#111），就必须能读"某年他在哪"、
+       也能把拖动结果写回去 —— 以前只有主角能落点，角色只能靠 home 地区定位，
+       地图上画不出独立的角色点。 */
+    charTracks(c) {
+      if (!c) return [];
+      const raw = Array.isArray(c.tracks) ? c.tracks : [];
+      const t0 = this.data.timeline;
+      /* 只读视图：规范化只作用在返回的临时数组上，ref 指回原始项供 UI 写入。
+         （同 pcTracks —— 别在这里就地写 c.tracks，会造成套娃。） */
+      const out = raw.map(t => ({
+        from: this._yr(t && t.from, t0.start),
+        to: this._yr(t && t.to, t0.end),
+        lon: this._lon(t && t.lon, 110),
+        lat: this._lat(t && t.lat, 35),
+        label: (t && t.label) || '',
+        ref: t,
+      }));
+      out.forEach(t => { if (t.to < t.from) { const s = t.from; t.from = t.to; t.to = s; } });
+      out.sort((a, b) => a.from - b.from || a.to - b.to);
+      return out;
+    },
+    /* 某个年份角色在哪一段轨迹上；不在任何一段内返回 null */
+    charTrackAt(c, year) {
+      const y = year == null ? this.data.timeline.current : year;
+      const ts = this.charTracks(c);
+      for (let i = 0; i < ts.length; i++) {
+        if (y >= ts[i].from && y <= ts[i].to) return ts[i];
+      }
+      return null;
+    },
+    /* 某一年的角色坐标；没设定返回 null */
+    charPosAt(c, year) {
+      const t = this.charTrackAt(c, year);
+      return t ? { lon: t.lon, lat: t.lat, label: t.label, track: t } : null;
+    },
+    /* 在某个年份给角色落点（与 setPcPos 同语义：命中已有段就改那一段，
+       没命中就新开一段；拖动属于微调，默认不切段）。 */
+    setCharPos(c, lon, lat, year, opts) {
+      opts = opts || {};
+      if (!c) return null;
+      const y = this._yr(year == null ? this.data.timeline.current : year, this.data.timeline.current);
+      const L = this._lon(lon), B = this._lat(lat);
+      const t0 = this.data.timeline;
+      if (!Array.isArray(c.tracks)) c.tracks = [];
+      const hit = this.charTracks(c).find(t => y >= t.from && y <= t.to);
+      if (!hit) {
+        const idx = this.charTracks(c).findIndex(t => t.from > y);
+        const to = idx >= 0 ? Math.min(t0.end, this.charTracks(c)[idx].from - 1) : t0.end;
+        const nt = { from: y, to: Math.max(y, to), lon: L, lat: B, label: opts.label || '' };
+        c.tracks.push(nt);
+        return nt;
+      }
+      if (opts.label != null) hit.ref.label = opts.label;
+      hit.ref.lon = L; hit.ref.lat = B;
+      return hit;
+    },
     /* 关系两端的名字。
        六种 kind 的 a/b 端分别是：
          r_r  地区 / 地区
@@ -3920,7 +4188,7 @@ var REL_KINDS = [
         text: '', x: Math.round(x || 0), y: Math.round(y || 0),
         speaker: '', regionId: '', year: this.data.timeline.current,
         tags: [], note: '', choices: [], effects: [],
-        checkId: '', tableId: '', refKind: '', refId: '',
+        checkId: '', tableId: '', refKind: '', refId: '', group: '',
       };
       if (t === 'scene') o.choices = [];
       if (t === 'check') o.checkId = '';
@@ -3933,6 +4201,285 @@ var REL_KINDS = [
          **结局没有 next**（终点），所以不进 outlets。 */
       if (t === 'ending') { o.next = null; o.endingId = ''; o.isTrue = false; o.goodBad = ''; }
       this.data.nodes.push(o); return o;
+    },
+    /* ── 编集盒子（分组 / 图层组）────────────────────────
+       语义完全按**绘画软件的图层组**来（作者原话"按绘画软件的图层组逻辑来定"）：
+       · 盒子可以套盒子（parent），形成一棵树 —— G3 ⊃ G2 ⊃ G1 ⊃ n1。
+       · 一个节点放在树的**某一个位置**上（node.group 指向它所属的最内层盒子），
+         于是它同时被自己那一层**和所有外层盒子**包着：n1 属于 G1，也被 G2、G3 包着。
+         这就是"一个节点可以有多个 group"的正确解释 —— 是**传递包含**，不是并列多挂。
+         读成员一律走 groupMembers()（传递），只有"直接挂在谁下面"才用 directMembers()。
+       · 反过来，一个节点不可能同时挂在两个**互不包含**的盒子里（那才是"交集"）：
+         图层在树里只有一个位置，node.group 是单字段，结构上就不可能，不需要拦。
+       · 破坏树的操作（套进自己 / 套进自己的子孙）视为不可执行的嵌套 → 抛错，
+         调用方红字提示「不能这样嵌套」。 */
+    newGroup(name, parent, pos) {
+      /* collapsed = 收起（图层组那个折叠箭头）。**空盒子是允许的** ——
+         绘画软件里可以建一个空的图层组，之后再往里拖东西；
+         所以新建盒子不要求先选中卡片，也不要求里面有成员才算存在。
+         pos = 空盒子自己的位置（作者 2026-10-23：新建盒子后要能在画布上
+         看到它、拖动它 —— 以前空盒子什么都不画，等于建了等于没建）。 */
+      const o = { id: this.nextId('g'), name: name || _T('新盒子'), parent: parent || '', collapsed: false };
+      if (pos) { o.x = Math.round(pos.x); o.y = Math.round(pos.y); }
+      (this.data.groups = this.data.groups || []).push(o);
+      return o;
+    },
+    getGroup(id) { return (this.data.groups || []).find(g => g.id === id) || null; },
+    removeGroup(id) {
+      const gs = this.data.groups || [];
+      const i = gs.findIndex(g => g.id === id);
+      if (i < 0) return;
+      const g = gs[i];
+      /* 成员解组：node.group 清空（节点本身不删，只是脱离盒子）。
+         ⚠️ 按**归组单元**清：归组单位是折叠堆（作者 2026-10-23 拍板
+         「要么进要么都不进」），一串堆里的每个节点的 group 字段都写着同一个盒子 id，
+         所以按单元清空才不会漏掉"脏数据只写了一部分"的情况。 */
+      this.groupUnits(id).forEach(unit => {
+        unit.forEach(n => { if (n.group === id) n.group = ''; });
+      });
+      /* 兜底：万一有节点直接指着自己但不在任何单元索引里（索引按堆建的，
+         单节点也在单元里，所以这条其实是保险）。 */
+      (this.data.nodes || []).forEach(n => { if (n.group === id) n.group = ''; });
+      /* 子盒子上提一级：parent 指向被删盒子的 parent（本来就是树，不可能成环） */
+      gs.forEach(c => { if (c.parent === id) c.parent = g.parent || ''; });
+      gs.splice(i, 1);
+    },
+
+    /* ── 伏笔笔记（作者专用，随工程导出带走，下游呈现层按"作者专用"过滤，不展示给玩家）──
+       一条伏笔 = 一个想法的"埋设 / 提及 / 回收"轨迹。为什么要有它：
+       ① 埋了太多容易忘哪个没收尾；② 想看某条线索从哪儿埋、在哪儿收得翻半天。
+       数据形态：
+         d.foreshadows[] = [{ id, title, note, links:[{ role, node }] }]
+         role ∈ {'plant'(埋设) | 'mention'(提及) | 'payoff'(回收)}
+         node = 节点 id（场景卡 / 结局卡 / 任何剧情节点都行，都是 node）
+       埋设 / 提及 / 回收 都允许多个（"两件事共同促成某个后果"= 多个 plant；
+       一个线索在 A 结局回收、B 结局也回收 = 多个 payoff）。
+       埋/提/收三个计数**实时算**，不落库 —— 永远和 links 对得上，作者自己看数决定要不要继续。 */
+    addForeshadow(title, opts) {
+      const o = Object.assign({
+        id: this.nextId('fs'),
+        title: (title || _T('新伏笔')).trim() || _T('新伏笔'),
+        note: '',
+        links: [],
+      }, opts || {});
+      if (!Array.isArray(o.links)) o.links = [];
+      (this.data.foreshadows = this.data.foreshadows || []).push(o);
+      return o;
+    },
+    getForeshadow(id) { return (this.data.foreshadows || []).find(f => f.id === id) || null; },
+    removeForeshadow(id) {
+      const fs = this.data.foreshadows || [];
+      const i = fs.findIndex(f => f.id === id);
+      if (i < 0) return;
+      fs.splice(i, 1);
+    },
+    /* 三个计数：按 links 实时算，不存库。 */
+    foreshadowCounts(f) {
+      const c = { plant: 0, mention: 0, payoff: 0 };
+      (f.links || []).forEach(l => { if (c[l.role] != null) c[l.role]++; });
+      return c;
+    },
+    /* 把某节点挂成某伏笔的某个角色（埋/提/收）。
+       同一「伏笔 + 角色 + 节点」去重：已经挂过就不动，避免重复计数。 */
+    addForeshadowLink(fid, role, nodeId) {
+      const f = this.getForeshadow(fid);
+      if (!f || !nodeId) return false;
+      if (!Array.isArray(f.links)) f.links = [];
+      if (f.links.some(l => l.role === role && l.node === nodeId)) return false;
+      f.links.push({ role: role, node: nodeId });
+      return true;
+    },
+    /* 取消某节点在某伏笔上某角色的关联（只删这条；其它角色/节点不动）。 */
+    removeForeshadowLink(fid, role, nodeId) {
+      const f = this.getForeshadow(fid);
+      if (!f || !Array.isArray(f.links)) return;
+      f.links = f.links.filter(l => !(l.role === role && l.node === nodeId));
+    },
+    /* 切换：已挂就取消，没挂就挂上（右键"设为埋设/回收"用这个最顺手）。 */
+    toggleForeshadowLink(fid, role, nodeId) {
+      const f = this.getForeshadow(fid);
+      if (!f || !nodeId) return;
+      const has = (f.links || []).some(l => l.role === role && l.node === nodeId);
+      if (has) this.removeForeshadowLink(fid, role, nodeId);
+      else this.addForeshadowLink(fid, role, nodeId);
+    },
+    /* 这张节点在某条伏笔上各自角色有没有挂（右键面板显示"✓埋设/✓回收"用）。 */
+    foreshadowRolesOfNode(fid, nodeId) {
+      const f = this.getForeshadow(fid);
+      const out = { plant: false, mention: false, payoff: false };
+      if (f && Array.isArray(f.links)) f.links.forEach(l => { if (l.node === nodeId && out[l.role] != null) out[l.role] = true; });
+      return out;
+    },
+    /* 节点标题：画布节点（场景/结局/…）的 title 字段；没有就回退 id。 */
+    nodeTitle(id) {
+      const n = this.get('node', id);
+      return n ? (n.title || n.id) : (id || '');
+    },
+    /* 直接成员：只算"节点自己挂在哪个盒子里"的那一层（node.group === id）。
+       ⚠️ 归组单位是**折叠堆**（作者 2026-10-23 拍板）：
+       「堆叠内的任意一个剧情场景卡进了编集盒子，意味着同一串堆叠都改进，
+         不是同一串堆叠的不该进」「要么进要么都不进，不允许一半在一半不在」。
+       所以读成员时先按"归组单元"归并 —— 一个堆整体属于哪个盒子，
+       而不是看堆里每个节点各自的 group 字段。
+       单元的盒子 = 单元链头的 group（链头没有就取单元里第一个非空的），
+       于是脏数据（一个堆里一半 g1 一半 g2）也会被归一到一个盒子里。 */
+    directMembers(id) {
+      const out = [];
+      this.groupUnits(id).forEach(u => out.push.apply(out, u));
+      return out;
+    },
+    /* 某盒子的**直接**归组单元：每个单元是 [节点…]（折叠堆的全部成员，或单个节点）。
+       单元里的节点 group 字段可能各不相同（历史数据），但对外一律按单元算。 */
+    groupUnits(id) {
+      const out = [];
+      const seen = {};
+      (this.data.nodes || []).forEach(n => {
+        const unit = this.groupUnitOf(n.id);
+        const key = unit.length ? unit[0].id : n.id;
+        if (seen[key]) return;
+        seen[key] = 1;
+        if (this.groupUnitGroup(unit) === id) out.push(unit);
+      });
+      return out;
+    },
+    /* 归组单元：节点所在的那一串（折叠堆）或它自己。
+       堆的判定与折叠显示共用同一套（stacks()），不另立标准。 */
+    groupUnitOf(nodeId) {
+      const idx = this._unitIndex();
+      /* ⚠️ 索引是**普通对象**（不是数组），所以只能 idx[nodeId]；
+         写成 idx.map[nodeId] 会撞上 Array.prototype.map —— 那时
+         idx.map 是 undefined → "Cannot read properties of undefined"。 */
+      return idx[nodeId] || [];
+    },
+    /* 单元索引：nodeId → 所属单元（节点数组）。一次算好缓存，
+       避免 groupUnits 对每个节点都重扫一遍堆（O(n²)）。 */
+    _unitIndex() {
+      if (this._unitCache) return this._unitCache;
+      const map = {};
+      this.stacks().forEach(st => {
+        st.nodes.forEach(n => { map[n.id] = st.nodes; });
+      });
+      (this.data.nodes || []).forEach(n => { if (!map[n.id]) map[n.id] = [n]; });
+      this._unitCache = map;
+      return map;
+    },
+    /* 堆叠（折叠链）列表，带缓存。数据一变就失效（见 emit 里的清理）。 */
+    stacks() {
+      if (this._stacksCache) return this._stacksCache;
+      this._stacksCache = this.novelStacks();
+      return this._stacksCache;
+    },
+    /* 单元整体属于哪个盒子：链头的 group 优先，没有就取单元里第一个非空的。
+       这样"一半一半"的脏数据会自动归到一边，绝不会同时出现在两个盒子里。 */
+    groupUnitGroup(unit) {
+      if (!unit || !unit.length) return '';
+      if (unit[0].group) return unit[0].group;
+      for (let i = 0; i < unit.length; i++) if (unit[i].group) return unit[i].group;
+      return '';
+    },
+    /* 成员（**传递包含**，图层组语义）：
+       绘画软件里把一个图层放进"组1"，而"组1"在"组2"里、"组2"在"组3"里 ——
+       那这个图层就是同时被 组1/组2/组3 三层包着，外层的框会把它一起框进去。
+       所以外层盒子的成员 = 自己直接挂着的节点 **+ 所有子孙盒子里的节点**。
+       （只筛 node.group === id 会让外层盒显示"0 成员"、也不画框，那是错的。） */
+    groupMembers(id) {
+      const ids = { [id]: 1 };
+      const gs = this.data.groups || [];
+      let added = true, guard = 0;
+      while (added && guard++ < 999) {          /* guard：万一数据被改坏成环，别死循环 */
+        added = false;
+        gs.forEach(g => { if (g.parent && ids[g.parent] && !ids[g.id]) { ids[g.id] = 1; added = true; } });
+      }
+      const out = [];
+      (this.data.nodes || []).forEach(n => {
+        const unit = this.groupUnitOf(n.id);
+        const key = unit.length ? unit[0].id : n.id;
+        if (out.some(u => (u[0] && u[0].id) === key)) return;
+        if (ids[this.groupUnitGroup(unit)]) out.push(unit);
+      });
+      /* 返回节点数组（不是单元数组）—— 调用方（导出、大纲计数）要的是节点。 */
+      const flat = [];
+      out.forEach(u => flat.push.apply(flat, u));
+      return flat;
+    },
+    /* 某盒子往上一直到最外层的整条祖先链（含自己），顺序：最内层 → … → 最外层。
+       节点 n1 挂在 G1、G1⊂G2⊂G3 时，n1 的 groupChain = ['G1','G2','G3'] ——
+       这就是"n1 实际上被 G1-3 都包着"的那条链。 */
+    groupChain(groupId) {
+      const out = [];
+      const gs = this.data.groups || [];
+      let cur = groupId, guard = 0;
+      while (cur && guard++ < 999) {
+        const g = gs.find(x => x.id === cur);
+        if (!g) break;
+        out.push(g.id);
+        cur = g.parent;
+      }
+      return out;
+    },
+    childGroups(parentId) { return (this.data.groups || []).filter(g => g.parent === (parentId || '')); },
+    setGroupCollapsed(id, v) { const g = this.getGroup(id); if (g) g.collapsed = !!v; },
+    /* 这个节点是不是被某个**收起**的盒子"收进去"了：沿祖先链往上，任一层收起就算收起。
+       绘画软件里收起一个图层组，它里面（含更内层的组）的图层全部隐藏 —— 就是这个行为。
+       ⚠️ 反过来必须成立：**盒子处于展开状态时，它的成员一个都不许被藏起来**
+       （"有东西却打开图层组也不显示"是 bug，不是特性）。 */
+    nodeCollapsedByGroup(n) {
+      if (!n) return false;
+      /* 按**归组单元**算（不是节点自己的 group 字段）：
+         一串堆叠整体在一个盒子里（setNodeGroup 整串写），
+         这里也整串一起被收进去 / 一起显示。 */
+      const unit = this.groupUnitOf(n.id);
+      const gid = this.groupUnitGroup(unit);
+      if (!gid) return false;
+      return this.groupChain(gid).some(id => {
+        const g = this.getGroup(id);
+        return !!(g && g.collapsed);
+      });
+    },
+    /* 某盒子的祖先里有没有收起的（用于判断这个盒子的框还该不该画 ——
+       外层收起了，里面的子盒也一起被收进去，不该再单独画一个框）。 */
+    ancestorCollapsed(groupId) {
+      return this.groupChain(groupId).slice(1).some(id => {
+        const g = this.getGroup(id);
+        return !!(g && g.collapsed);
+      });
+    },
+    setNodeGroup(nodeId, groupId) {
+      const n = this.get('node', nodeId);
+      if (!n) return;
+      /* 单字段赋值 = 把节点搬到树的这个位置上（换盒就是移动，不是"再加一个盒子"）。
+         它自动就被该盒的所有外层盒子一起包着（见 groupMembers 的传递包含）。
+         两个互不包含的盒子不可能同时挂 —— 单字段，结构上杜绝。
+
+         ⚠️ 但归组单位是**折叠堆**（作者 2026-10-23 拍板）：
+           「堆叠内的任意一个剧情场景卡进了编集盒子，意味着同一串堆叠都改进」
+           「要么进要么都不进，不允许一半在一半不在」。
+         所以这里写的是**整个归组单元** —— 给堆里任何一张卡拉进盒子，
+         整串都跟着进；把整串拉出来，整串都出来。
+         不这么做的后果：堆里一半在盒子里、一半在外面，
+         折叠后那张卡代表整串却落在盒子外 —— 画面和语义都对不上。 */
+      const unit = this.groupUnitOf(nodeId);
+      if (!unit.length) return;
+      unit.forEach(x => { x.group = groupId || ''; });
+    },
+    /* 设置某盒子的父级（嵌套）。会沿 parent 链向上爬检查成环 ——
+       若 parentId 是 groupId 的子孙（或就是它自己），说明会成环，抛错交给调用方红字提示。 */
+    setGroupParent(groupId, parentId) {
+      if (!parentId) { const g = this.getGroup(groupId); if (g) g.parent = ''; return; }
+      /* 不能执行的嵌套一律只回一句「不能这样嵌套」（作者：红字仅提示不能这样嵌套），
+         不解释成环/子孙这些内部概念 —— 作者不需要知道为什么，只要知道这样套不行。
+         两种情况都会走到这句：套进自己、套进自己的子孙（沿 parent 链往上爬会爬回自己）。 */
+      const BAD = _T('不能这样嵌套');
+      if (groupId === parentId) throw new Error(BAD);
+      const gs = this.data.groups || [];
+      let cur = parentId, guard = 0;
+      while (cur && guard++ < 999) {
+        if (cur === groupId) throw new Error(BAD);
+        const p = gs.find(g => g.id === cur);
+        cur = p ? p.parent : '';
+      }
+      const g = this.getGroup(groupId);
+      if (g) g.parent = parentId;
     },
     newChoice(node, text) {
       const c = { id: this.nextId('ch'), text: text || '新选项', condition: '', hiddenIf: '', effects: [], next: null, note: '' };
@@ -4873,7 +5420,7 @@ var REL_KINDS = [
          结果作者**手动打**的 $继续$ 场景链收不起来
          （2026-10-21 报「展开收起好像只局限于导入的连续征文节点」）。
          折叠是纯显示行为、判据只依赖**选项长什么样**，
-         与这块卡是谁生成的无��� —— 手动打的链在语义上同样是
+         与这块卡是谁生成的无关 —— 手动打的链在语义上同样是
          "一串没分支的过场"，该收就收。fromNovel 现在只在
          novelStacks 里用来找候选起点（见下），不再当准入门槛。 */
     isPlainStep(n) {
@@ -4913,7 +5460,7 @@ var REL_KINDS = [
        ③ 候选 =「纯步骤」+「其后紧跟的那块断点」，**不看 fromNovel**。
           早先整个函数按 n.fromNovel 筛，手动打的 $继续$ 链一条都进不来
           （2026-10-21 作者报「展开收起只局限于导入的节点」）。
-          折叠是纯显示行为，与这块卡是谁生成的无��� —— 语义上同样是
+          折叠是纯显示行为，与这块卡是谁生成的无关 —— 语义上同样是
           "一串没分支的过场"，就该一样能收。 */
     novelStacks() {
       const d = this.data;
@@ -5885,6 +6432,10 @@ var REL_KINDS = [
      那本来就该命中（作者明确"不要限制什么节点不能连什么节点"）。
      真实浏览器里量 DOM 才准，这条只在 jsdom / 节点还没渲染时兜底。 */
   function nodeH(n) {
+    /* 手动定高（作者拖过下边缘手柄）→ 直接用 n.h。
+       量 DOM 放在后面：有 DOM 时量到的就是设上去的高度，两者一致；
+       没有 DOM（jsdom / 还没渲染）时靠 n.h 兜底。 */
+    if (n && n.h != null && Number(n.h) > 0) return Number(n.h);
     const dom = document.querySelector(`[data-id="${n.id}"]`);
     if (dom) {
       const r = dom.getBoundingClientRect();
@@ -5941,6 +6492,9 @@ var REL_KINDS = [
     zoom: 1, panX: 0, panY: 0,
     _dragging: null, _linking: null, _marquee: null, _space: false,
     _clipboard: null,
+    /* 选中的自由连线（关联线）下标，2026-10-23 #108 新增。
+       null = 没选中。 */
+    _selLinkIdx: null,
 
     init() {
       this.wrap = document.getElementById('canvasWrap');
@@ -5966,7 +6520,10 @@ var REL_KINDS = [
         const sel = MODEL.get('node', hit) || (MODEL.sel && MODEL.sel.kind === 'node' ? MODEL.get('node', MODEL.sel.id) : null);
         if (sel) { this.nodeMenu(sel, e); return; }
         const picked = (MODEL.selNodes || []).filter(id => !!MODEL.get('node', id));
-        if (picked.length) { APP.popMenu(e, this.nodeMenuItems(picked.map(id => MODEL.get('node', id)))); return; }
+        /* 第三参要传 ev —— 「加入盒子…」这一项只在有 ev 时才挂进菜单
+           （它要拿 ev 的坐标弹二级菜单）。早先漏传，于是"选中一片再右键"
+           永远看不到这一项，只有右键单张卡才有。 */
+        if (picked.length) { APP.popMenu(e, this.nodeMenuItems(picked.map(id => MODEL.get('node', id)), null, e)); return; }
         APP.popMenu(e, [
           { t: '在这里新建场景…', f: () => APP.promptNewNodeAt(w.x, w.y) },
         ]);
@@ -5983,6 +6540,14 @@ var REL_KINDS = [
       document.querySelectorAll('.canvas-tools [data-node]').forEach(b => {
         b.onclick = () => { const n = this.createAtCenter(b.dataset.node); MODEL.select('node', n.id); };
       });
+      /* 「＋编集」：作者 2026-10-23 —— 「另外我觉得这里也要有个+编集」。
+         建一个空盒子并落在画布中间偏上（emptyGroupPos），建完立刻画出来 ——
+         空盒子在画布上是看得见、拖得动、双击能改名的（见 renderGroups）。 */
+      const bng = document.getElementById('btnNewGroup');
+      if (bng) bng.onclick = () => {
+        MODEL.transact(_T('新建盒子'), () => MODEL.newGroup(_T('新盒子'), '', this.emptyGroupPos()));
+        this.render();
+      };
       document.getElementById('chkShowLinks').onchange = e => { this.showLinks = e.target.checked; this.render(); };
       document.getElementById('chkMiniMap').onchange = e => { document.getElementById('minimap').style.display = e.target.checked ? '' : 'none'; };
       this.showLinks = true;
@@ -6076,7 +6641,7 @@ var REL_KINDS = [
       /* 导入小说生成的纯 $继续$ 链 → 每条画成一张可展开的堆叠卡。
          不这么做没法用：画布是全量渲染（没有视口裁剪），
          几千个节点铺开必然卡死。堆叠把屏幕上的节点数压到几十个。 */
-      this._stacks = MODEL.novelStacks();
+      this._stacks = MODEL.stacks();
       const inStack = {};
       this._stacks.forEach(st => { st.nodes.forEach(n => { inStack[n.id] = st; }); });
       this._inStack = inStack;
@@ -6084,6 +6649,10 @@ var REL_KINDS = [
       const frag = document.createDocumentFragment();
       d.nodes.forEach(n => {
         if (!this.nodeVisible(n, q)) return;
+        /* 被**收起**的盒子"收进去"的卡片不画（图层组收起 → 里面的东西藏起来）。
+           盒子处于展开态时这里恒为 false，所以展开态下成员**一个都不会被漏画** ——
+           "盒子里有东西、打开却看不见"是 bug，这条判断只在真的收起时才生效。 */
+        if (MODEL.nodeCollapsedByGroup(n)) return;
         const st = inStack[n.id];
         /* 折叠中的堆：**链头也不画普通卡**，整堆统一交给 buildStackCard。
            链头和折叠卡的 data-id 是同一个，叠在一起会出两个问题：
@@ -6097,14 +6666,278 @@ var REL_KINDS = [
       /* 把堆叠卡插到它链头的位置 */
       this._stacks.forEach(st => {
         if (this._openStacks[st.key]) return;
+        /* 整堆都被收进盒子里了 → 这张折叠卡也不画（否则会露出一张"凭空多出来"的卡） */
+        if (st.nodes.every(x => MODEL.nodeCollapsedByGroup(x))) return;
         const head = st.head;
         if (!this.nodeVisible(head, q)) return;
         const card = this.buildStackCard(st, q, sel, selSet);
         if (card) frag.appendChild(card);
       });
+      /* 编集盒子：大虚线框，画在节点之下（先入 root，节点后入，靠 DOM 顺序压在底下）。
+         只画"此刻有可见成员"的盒子，空盒子不占地方。 */
+      const gfrag = document.createDocumentFragment();
+      this.renderGroups(gfrag, q);
+      this.root.appendChild(gfrag);
       this.root.appendChild(frag);
       if (this.showLinks) this.renderEdges();
       this.applyTransform();
+    },
+    /* 编集盒子的大虚线框（图层组语义）。
+       盒子矩形 = 它的**直接**成员节点 + 所有子盒子的矩形，再统一外扩 PAD。
+       这样嵌套的盒子画出来是一圈套一圈（外层自然比内层大一圈），
+       和绘画软件里点开一个图层组看到的选择框是同一个观感。
+       ⚠️ 这里**不能**直接用 groupMembers()（传递包含）去算矩形 ——
+       那样父子盒子的矩形会完全相等、两条虚线框叠在一起看着就是一条。 */
+    /* 某个盒子**直接**归组单元的包围盒（世界坐标，不含外扩）。
+       视图相关：折叠的堆按折叠卡算（画面上只有那一张），
+       展开的堆按各个成员算。作者 2026-10-23 拍板：「两个状态两个框」。 */
+    groupUnitBounds(g, q) {
+      const qq = q != null ? q : this.query();
+      let r = null;
+      const add = (x1, y1, x2, y2) => {
+        if (!r) r = { x1, y1, x2, y2 };
+        else {
+          r.x1 = Math.min(r.x1, x1); r.y1 = Math.min(r.y1, y1);
+          r.x2 = Math.max(r.x2, x2); r.y2 = Math.max(r.y2, y2);
+        }
+      };
+      MODEL.groupUnits(g.id).forEach(unit => {
+        /* 这一单元是不是一串折叠堆？ */
+        const st = this._stacks && this._stacks.find(s => s.nodes[0] && s.nodes[0].id === unit[0].id);
+        if (st && !this._openStacks[st.key]) {
+          /* 折叠态：按折叠卡算。折叠卡画在链头位置、宽度 = 场景卡宽。 */
+          const head = st.head;
+          if (!this.nodeVisible(head, qq)) return;
+          const w = NODE_W.scene || 220;
+          add(head.x, head.y, head.x + w, head.y + 210);
+          return;
+        }
+        unit.forEach(n => {
+          if (!this.nodeVisible(n, qq)) return;
+          const w = n.w || NODE_W[n.type] || 220;
+          add(n.x, n.y, n.x + w, n.y + nodeH(n));
+        });
+      });
+      return r;
+    },
+    /* ⚠️ 曾经这里有一份"盒子地盘 g.rect（只增不减）"，2026-10-24 已彻底删掉。
+       当时的想法是"拖卡片只把盒子撑大、盒子不挪窝"，但代价是：
+       **把卡片移出/删掉之后框不会缩回去**，一个大空框永远占着画布，
+       作者原话：「移除卡不减少面积的话，用户以后的操作都要给盒子让路吗，这不合适吧」。
+       现在只有一条规则：**框永远贴合它现在的内容**（直接成员 + 子盒），
+       内容变少就缩、内容变多就长、拖盒子时内容一起平移。
+       单张卡被拖远时框当然会跟着长（没有别的成员可以锚住它），这是可接受的 ——
+       比起"框永远不缩"那种会让用户给盒子让路的行为，这个更符合直觉。 */
+    /* 某个盒子在画布上的矩形（世界坐标，含外扩 PAD）。
+       renderGroups 画框、"把卡拖进盒子" 判定命中，用的是**同一个**函数 ——
+       两处算法必须一致，否则"看见的框"和"能丢进去的范围"会对不上。
+       memo 用来避免嵌套盒子重复算；depth 是防成环的保险。 */
+    groupRectOf(g, depth, memo, q) {
+      const PAD = 26;
+      memo = memo || {};
+      if (memo[g.id] !== undefined) return memo[g.id];
+      if (depth > 50) return null;
+      const qq = q != null ? q : this.query();
+      const units = MODEL.groupUnits(g.id);
+      const kids = MODEL.childGroups(g.id);
+      /* 空盒子（没有直接成员、没有子盒）：画它自己的固定小框，
+         位置就是 g.x/g.y。老规矩：空盒的框**不外扩**（画出来正好在 g.x/g.y）。 */
+      if (!units.length && !kids.length) {
+        const hasPos = isFinite(g.x) && isFinite(g.y);
+        memo[g.id] = hasPos ? { x1: g.x, y1: g.y, x2: g.x + 220, y2: g.y + 120 } : null;
+        return memo[g.id];
+      }
+      let r = null;
+      const add = (x1, y1, x2, y2) => {
+        if (!r) r = { x1, y1, x2, y2 };
+        else {
+          r.x1 = Math.min(r.x1, x1); r.y1 = Math.min(r.y1, y1);
+          r.x2 = Math.max(r.x2, x2); r.y2 = Math.max(r.y2, y2);
+        }
+      };
+      /* 收起态（作者点 ▸ 把盒子收起来）：框缩成"一张卡大一点"的小框。
+         ⚠️ 早先这里没判 g.collapsed —— 收起后成员被藏起来不画了，
+         框却还按老成员坐标算 → 一个巨大的空框，
+         成员之间的连线还照样画着（作者截图 3：「线条都晾着，也没有真正折叠」）。 */
+      if (g.collapsed) {
+        /* 收起后成员**不画**，所以这里按"成员的实际坐标"定位（q 传空 = 不受搜索框影响），
+           否则一搜关键词框就跳到别处去。 */
+        const ub = this.groupUnitBounds(g, '');
+        const ox = ub ? ub.x1 : (isFinite(g.x) ? g.x : 0);
+        const oy = ub ? ub.y1 : (isFinite(g.y) ? g.y : 0);
+        const w = (NODE_W.scene || 220) + 20;
+        const h = 210 + 20;
+        memo[g.id] = { x1: ox - PAD, y1: oy - PAD, x2: ox + w + PAD, y2: oy + h + PAD };
+        return memo[g.id];
+      }
+      /* 直接成员（视图相关：折叠堆按折叠卡算 / 展开按成员算）。 */
+      const ub = this.groupUnitBounds(g, qq);
+      if (ub) add(ub.x1, ub.y1, ub.x2, ub.y2);
+      /* 子盒子的框 */
+      kids.forEach(cg => {
+        const cr = this.groupRectOf(cg, depth + 1, memo, qq);
+        if (cr) add(cr.x1, cr.y1, cr.x2, cr.y2);
+      });
+      memo[g.id] = r ? { x1: r.x1 - PAD, y1: r.y1 - PAD, x2: r.x2 + PAD, y2: r.y2 + PAD } : null;
+      return memo[g.id];
+    },
+    /* 所有盒子的矩形（{gid: rect}）。空盒子（没有可见成员）给的是
+       它自己的固定框（g.x/g.y 220×120）。 */
+    groupRects() {
+      const out = {};
+      const memo = {};
+      (MODEL.data.groups || []).forEach(g => {
+        let r = this.groupRectOf(g, 0, memo);
+        if (!r && isFinite(g.x) && isFinite(g.y)) r = { x1: g.x, y1: g.y, x2: g.x + 220, y2: g.y + 120 };
+        if (r) out[g.id] = r;
+      });
+      return out;
+    },
+    /* 把画出来的框同步到当前成员位置（拖动盒子时用，不整块重画 —— 那样每动一下
+       鼠标就重建一次画布，拖起来会卡）。框的算法仍是 groupRectOf 同一份。 */
+    syncGroupBoxes() {
+      const rects = this.groupRects();
+      this.root.querySelectorAll('.group-box').forEach(b => {
+        const r = rects[b.dataset.group];
+        if (!r) return;
+        b.style.left = r.x1 + 'px'; b.style.top = r.y1 + 'px';
+        b.style.width = (r.x2 - r.x1) + 'px'; b.style.height = (r.y2 - r.y1) + 'px';
+      });
+    },
+    /* 开始拖一个盒子。
+       两条规则来自作者 2026-10-23：
+       ① 「应该卡片跟着盒子走，而不是盒子跟着卡片走」→ 拖盒子时整盒成员**一起平移**；
+       ② 「盒子本身无法拖动，盒子应该要可移动」→ 空盒 / 非空盒一视同仁都能拖。
+       只点一下不挪动 = 选中全部成员（在 onUp 里按 moved 判）。 */
+    beginGroupDrag(ev, g) {
+      /* 传递包含：子盒里的卡也算这个盒子的成员，一起走 */
+      const members = MODEL.groupMembers(g.id);
+      const start = {};
+      members.forEach(n => { start[n.id] = { x: n.x, y: n.y }; });
+      /* 子孙盒子（含自己）的位置一起挪：空子盒的框是按 g.x/g.y 画的，
+         不挪的话"空的子盒"会被落在原地。 */
+      const kids = [];
+      const walk = id => {
+        const gg = MODEL.getGroup(id);
+        if (!gg) return;
+        kids.push({ id: gg.id, x: isFinite(gg.x) ? gg.x : null, y: isFinite(gg.y) ? gg.y : null });
+        MODEL.childGroups(id).forEach(c => walk(c.id));
+      };
+      walk(g.id);
+      this._dragging = {
+        mode: 'moveGroup', id: g.id, moved: false,
+        sx: ev.clientX, sy: ev.clientY,
+        ox: isFinite(g.x) ? g.x : 0, oy: isFinite(g.y) ? g.y : 0,
+        start, members: members.map(n => n.id), kids,
+        snap: MODEL.snapshot(),
+      };
+    },
+    renderGroups(frag, q) {
+      const PAD = 26;
+      const memo = {};
+      /* 矩形算法搬到了 groupRectOf() —— "画出来的框"和"能丢进去的范围"
+         必须是同一份算法，否则两处会对不上。 */
+      const rectOf = (g, depth) => this.groupRectOf(g, depth, memo, q);
+      const drawOne = g => {
+        const all = MODEL.groupMembers(g.id);     /* 传递包含：子盒里的卡也算 */
+        const r = rectOf(g, 0);
+        /* 空盒子（没有可见成员）：以前直接不画 → 作者「新建盒子后无法编辑任何事情」——
+           建了盒子，画布上什么都没有，既看不见也拖不动。
+           现在给空盒一个自己的位置（g.x/g.y）画一个固定大小的空框，能拖、能改名。 */
+        /* "空盒子"的判据是**没有成员**，不是"算不出矩形" ——
+           groupRectOf 现在给空盒也返回一个固定矩形（好让它看得见、拖得动），
+           再用 !r 判空的话这个标记永远打不上。 */
+        const empty = all.length === 0 && !MODEL.childGroups(g.id).length;
+        if (empty && !isFinite(g.x) && !isFinite(g.y)) {
+          /* 还没落过位置的空盒：给它一个默认位置（画布视口中间偏上），
+             下次 render 就有了 —— 不然它永远画不出来。 */
+          const c = this.toWorld(
+            this.wrap.getBoundingClientRect().left + this.wrap.getBoundingClientRect().width / 2,
+            this.wrap.getBoundingClientRect().top + 120
+          );
+          g.x = Math.round(c.x - 110); g.y = Math.round(c.y - 60);
+        }
+        const rr = r || { x1: g.x, y1: g.y, x2: g.x + 220, y2: g.y + 120 };
+        const box = div('group-box' + (g.collapsed ? ' collapsed' : '') + (empty ? ' empty' : ''));
+        box.style.left = rr.x1 + 'px';
+        box.style.top = rr.y1 + 'px';
+        box.style.width = (rr.x2 - rr.x1) + 'px';
+        box.style.height = (rr.y2 - rr.y1) + 'px';
+        box.dataset.group = g.id;
+
+        const lab = div('group-label');
+        /* 折叠箭头（▸收起 / ▾展开），和绘画软件的图层组一致：点箭头收起/展开，
+           收起后里面的卡片被"收进去"（不显示），框上直接标出里面有多少个。 */
+        const car = div('group-caret', g.collapsed ? '▸' : '▾');
+        car.title = g.collapsed ? _T('展开（把收进去的 {n} 个显示出来）', { n: all.length }) : _T('收起（把 {n} 个收进盒子里）', { n: all.length });
+        car.addEventListener('mousedown', ev => {
+          ev.stopPropagation(); ev.preventDefault();
+          MODEL.transact(g.collapsed ? _T('展开盒子') : _T('收起盒子'), () => MODEL.setGroupCollapsed(g.id, !g.collapsed));
+          this.render();
+        });
+        lab.appendChild(car);
+        lab.appendChild(div('group-dot'));
+        const nm = document.createElement('span'); nm.textContent = g.name; lab.appendChild(nm);
+        if (g.collapsed && all.length) {
+          const cnt = document.createElement('span');
+          cnt.className = 'group-cnt';
+          cnt.textContent = ' ' + all.length;
+          lab.appendChild(cnt);
+        }
+        box.appendChild(lab);
+        box.title = g.collapsed
+          ? _T('编集盒子：{n}（已收起，{m} 个在里面 · 点 ▸ 展开 · 拖动可挪位置 · 点一下选中全部）', { n: g.name, m: all.length })
+          : empty
+            ? _T('编集盒子：{n}（空盒子 · 拖动可挪位置 · 双击可改名 · 把卡片拖进来或选中卡片右键「加入盒子」）', { n: g.name })
+            : _T('编集盒子：{n}（含子盒共 {m} 个成员 · 点 ▾ 收起 · 拖动可挪整个盒子 · 点一下选中全部）', { n: g.name, m: all.length });
+        box.addEventListener('mousedown', ev => {
+          ev.stopPropagation();
+          if (ev.button !== 0) return;
+          /* 空盒子 / 非空盒子**都能拖** ——
+             作者 2026-10-23：「另外目前盒子本身无法拖动，我觉得手感也不好，盒子应该要可移动」。
+             只点一下（没挪动）= 选中全部成员，在 onUp 里判，和"拖动"用阈值分开。
+             （落在节点上的点击会被节点自己拦截；点箭头是收起/展开，也已拦截。） */
+          this.beginGroupDrag(ev, g);
+        });
+        /* 右键盒子 —— 作者 2026-10-24：「右键盒子也要有加入盒子」。
+           加入盒子 = 把这个**整盒**放进另一个盒子（套娃），和卡片的「加入盒子…」同一套观感。 */
+        box.addEventListener('contextmenu', ev => {
+          ev.preventDefault(); ev.stopPropagation();
+          this.groupMenu(g, ev);
+        });
+        /* 双击盒子标题改名 —— 作者「新建盒子后无法编辑任何事情」：
+           名字得能在画布上直接改，不用回大纲。 */
+        lab.addEventListener('dblclick', ev => {
+          ev.stopPropagation();
+          const nm = prompt(_T('新名称：'), g.name);
+          if (nm === null || !nm.trim()) return;
+          MODEL.transact(_T('重命名盒子'), () => { g.name = nm.trim(); });
+          this.render();
+        });
+        frag.appendChild(box);
+      };
+      /* 自上而下画：外层先入 DOM、内层后入 → 内层的框压在外层上面，
+         点内层区域选内层成员、点外层那一圈选外层全部（含子盒里的），和图层组一致。
+         ⚠️ 外层收起时**不再往下画子盒** —— 子盒也一起被收进去了，再画一个框就是凭空多出来的框。 */
+      const seen = {};
+      const draw = parentId => {
+        MODEL.childGroups(parentId).forEach(g => {
+          if (seen[g.id]) return;          /* 防御：数据万一成环，别递归爆栈 */
+          seen[g.id] = 1;
+          drawOne(g);
+          if (!g.collapsed) draw(g.id);
+        });
+      };
+      draw('');
+      /* 兜底：parent 指向已被删掉的盒子的"孤儿盒子"，上面从顶层往下走会漏掉它 ——
+         补画一次，别让它凭空消失（删盒时 removeGroup 已经把子盒上提，正常不该出现）。
+         但外层收起的孤儿盒子仍然不画 —— 它同样是被收进去的状态。 */
+      ((MODEL.data && MODEL.data.groups) || []).forEach(g => {
+        if (seen[g.id]) return;
+        seen[g.id] = 1;
+        if (MODEL.ancestorCollapsed(g.id)) return;
+        drawOne(g);
+      });
     },
     _openStacks: {},
     /* 堆叠卡本体：一张卡片代表 N 段连续剧情。点一下展开，也能按住卡身拖动。 */
@@ -6211,22 +7044,33 @@ var REL_KINDS = [
       const self = this;
       const ids = st.nodes.map(n => n.id);
       const items = [
-        { t: '展开这 ' + st.nodes.length + ' 段', f: () => { self._openStacks[st.key] = true; self.render(); } },
-      ].concat(this.nodeMenuItems(st.nodes).map(it => ({
-        t: it.t.replace('选中的节点', '这 ' + st.nodes.length + ' 段'), f: it.f,
-      })));
+        { t: _T('展开这 {n} 段', { n: st.nodes.length }), f: () => { self._openStacks[st.key] = true; self.render(); } },
+      ].concat(this.nodeMenuItems(st.nodes, 'seg', ev));
       APP.popMenu(ev, items);
     },
     /* 普通节点 / 选区的右键菜单项（批量年份是 4.1 新增） */
-    nodeMenuItems(ns) {
+    /* unit='seg' 时这批节点是一个折叠堆（按「段」计数），否则按「个节点」计数 */
+    nodeMenuItems(ns, unit, ev) {
       const ids = ns.map(n => n.id);
-      return [
+      const self = this;
+      /* 关联线数量：只在真的有连线时才显示这一项，免得菜单里堆一条永远灰的项。 */
+      const linkCnt = (MODEL.data.links || []).filter(l => ids.indexOf(l.from) >= 0 || ids.indexOf(l.to) >= 0).length;
+      const items = [
         {
-          t: '把选中的 ' + ns.length + ' 个节点一起设年份…',
+          t: unit === 'seg' ? _T('把这 {n} 段的起始年份一起改…', { n: ns.length })
+            : _T('把选中的 {n} 个节点一起设起始年份…', { n: ns.length }),
           f: () => APP.batchYear(ids),
         },
         {
-          t: '按顺序每年铺开年份…',
+          /* 截止年份是另一件事：改"这张卡跨到哪一年为止"（作者 2026-10-24 选的"乙"口径）。
+             和上面的起始年份互不干涉 —— 一个填了另一个没填是完全正常的，
+             没填的那个就留空，不给默认数字。 */
+          t: unit === 'seg' ? _T('把这 {n} 段的截止年份一起改…', { n: ns.length })
+            : _T('把选中的 {n} 个节点一起设截止年份…', { n: ns.length }),
+          f: () => APP.batchEndYear(ids),
+        },
+        {
+          t: _T('按顺序每年铺开年份…'),
           f: () => APP.batchYearSpread(ids),
         },
         {
@@ -6234,6 +7078,178 @@ var REL_KINDS = [
           f: () => { CANVAS._openStacks = {}; CANVAS.render(); },
         },
       ];
+      if (linkCnt) {
+        items.push({
+          t: _T('删掉这些节点上的 {n} 条关联线', { n: linkCnt }),
+          f: () => self.deleteLinksOfNodes(ids),
+        });
+      }
+      /* 「加入盒子…」：批量归组（作者 #106：「没办法批量设置卡片在某个盒子里」）。
+         点开是一份盒子清单，选一个就归进去；也可以当场新建一个盒子。
+         归组按**整串堆叠**算 —— 堆里任一卡进盒，整串都进。 */
+      if (ev) {
+        items.push({
+          t: _T('加入盒子…'),
+          f: () => self.openGroupPicker(ids, ev),
+        });
+      }
+      return items;
+    },
+    /* 在鼠标位置弹一个 ctx-menu（画布自己的二级菜单都走这里，和 APP.popMenu 一个观感）。
+       ⚠️ 必须用 **HTML 助手 div(cls, txt)**，不能用 SVG 助手 el(tag, attrs)。
+       早先写成 el('div', 'ctx-menu') —— 第二个参数被当 attrs 对象，
+       Object.keys('ctx-menu') 变成一串数字索引，class 从来没被设上，
+       于是这个"菜单"是 document 末尾一个普通块（没有 .ctx-menu 的 fixed 定位），
+       表现为「加入盒子是个无效操作」（作者 2026-10-23）。 */
+    ctxMenuAt(ev, items) {
+      document.querySelectorAll('.ctx-menu').forEach(m => m.remove());
+      const m = div('ctx-menu');
+      items.forEach(it => {
+        const b = div('ctx-item' + (it.danger ? ' danger' : ''), it.t);
+        b.onclick = () => { m.remove(); it.f(); };
+        m.appendChild(b);
+      });
+      document.body.appendChild(m);
+      const r = m.getBoundingClientRect();
+      let x = ev ? ev.clientX : 40, y = ev ? ev.clientY : 40;
+      if (x + r.width > window.innerWidth - 8) x = window.innerWidth - r.width - 8;
+      if (y + r.height > window.innerHeight - 8) y = window.innerHeight - r.height - 8;
+      m.style.left = Math.max(4, x) + 'px';
+      m.style.top = Math.max(4, y) + 'px';
+      const close = e2 => { if (!m.contains(e2.target)) { m.remove(); document.removeEventListener('mousedown', close); } };
+      setTimeout(() => document.addEventListener('mousedown', close), 0);
+      return m;
+    },
+    /* 卡片清单（右键「加入盒子…」弹出的二级菜单）。 */
+    openGroupPicker(ids, ev) {
+      const self = this;
+      const items = [];
+      const gs = MODEL.data.groups || [];
+      const newThen = () => {
+        const g = MODEL.transact(_T('新建盒子'), () => MODEL.newGroup(_T('新盒子'), '', self.emptyGroupPos()));
+        self.assignToGroup(ids, g.id);
+      };
+      if (!gs.length) {
+        items.push({ t: _T('（还没有盒子，先新建一个）'), f: newThen });
+      } else {
+        gs.forEach(g => {
+          const cnt = MODEL.groupMembers(g.id).length;
+          items.push({
+            t: g.name + (cnt ? _T('（{n} 个）', { n: cnt }) : ''),
+            f: () => self.assignToGroup(ids, g.id),
+          });
+        });
+        items.push({ t: _T('＋ 新建一个盒子'), f: newThen });
+        items.push({ t: _T('移出盒子（放回画布）'), f: () => self.assignToGroup(ids, ''), danger: true });
+      }
+      this.ctxMenuAt(ev, items);
+    },
+    /* 盒子自己的右键菜单（作者 2026-10-24：「右键盒子也要有加入盒子」）。 */
+    groupMenu(g, ev) {
+      const self = this;
+      const all = MODEL.groupMembers(g.id);
+      const items = [
+        {
+          t: _T('重命名盒子…'),
+          f: () => {
+            const nm = prompt(_T('新名称：'), g.name);
+            if (nm === null || !nm.trim()) return;
+            MODEL.transact(_T('重命名盒子'), () => { g.name = nm.trim(); });
+            self.render();
+          },
+        },
+        {
+          t: g.collapsed ? _T('展开盒子') : _T('收起盒子'),
+          f: () => {
+            MODEL.transact(g.collapsed ? _T('展开盒子') : _T('收起盒子'), () => MODEL.setGroupCollapsed(g.id, !g.collapsed));
+            self.render();
+          },
+        },
+        { t: _T('加入盒子…'), f: () => self.openGroupParentPicker(g, ev) },
+      ];
+      if (g.parent) {
+        items.push({
+          t: _T('移出所在盒子（放到顶层）'),
+          f: () => {
+            MODEL.transact(_T('移出盒子'), () => MODEL.setGroupParent(g.id, ''));
+            self.render();
+          },
+        });
+      }
+      if (all.length) {
+        items.push({
+          t: _T('选中盒子里这 {n} 个'),
+          f: () => { MODEL.selNodes = all.map(n => n.id); MODEL.select(null); self.render(); },
+        });
+      }
+      items.push({
+        t: _T('删除盒子（里面的卡片放回画布）'),
+        f: () => {
+          MODEL.transact(_T('删除盒子'), () => MODEL.removeGroup(g.id));
+          self.render();
+          toast(_T('已删除盒子「{a}」，卡片留在画布上', { a: g.name }), 'ok');
+        },
+        danger: true,
+      });
+      this.ctxMenuAt(ev, items);
+    },
+    /* 把一个**盒子**放进另一个盒子（嵌套的第二种入口：画布上右键盒子）。
+       候选里剔除自己和自己的子孙 —— 那是"不能这样嵌套"，与其点了报错，不如干脆不列。 */
+    openGroupParentPicker(g, ev) {
+      const self = this;
+      const bad = { [g.id]: 1 };
+      const mark = id => MODEL.childGroups(id).forEach(c => { if (!bad[c.id]) { bad[c.id] = 1; mark(c.id); } });
+      mark(g.id);
+      const items = [];
+      (MODEL.data.groups || []).forEach(o => {
+        if (bad[o.id]) return;
+        const cnt = MODEL.groupMembers(o.id).length;
+        items.push({
+          t: o.name + (cnt ? _T('（{n} 个）', { n: cnt }) : ''),
+          f: () => {
+            MODEL.transact(_T('加入盒子'), () => MODEL.setGroupParent(g.id, o.id));
+            self.render();
+            toast(_T('已把「{a}」放进「{b}」', { a: g.name, b: o.name }), 'ok');
+          },
+        });
+      });
+      items.push({
+        t: _T('＋ 新建一个盒子（并把这个盒子放进去）'),
+        f: () => {
+          const ng = MODEL.transact(_T('新建盒子'), () => MODEL.newGroup(_T('新盒子'), '', self.emptyGroupPos()));
+          MODEL.transact(_T('加入盒子'), () => MODEL.setGroupParent(g.id, ng.id));
+          self.render();
+        },
+      });
+      if (g.parent) {
+        items.push({
+          t: _T('移出所在盒子（放到顶层）'),
+          f: () => {
+            MODEL.transact(_T('移出盒子'), () => MODEL.setGroupParent(g.id, ''));
+            self.render();
+          },
+        });
+      }
+      this.ctxMenuAt(ev, items);
+    },
+    /* 把一批节点归到某个盒子（groupId = '' 表示移出）。
+       归组单位是**折叠堆**（MODEL.setNodeGroup 内部按整串写），
+       所以这里逐个 id 调它就够了，不用自己算堆。 */
+    assignToGroup(ids, groupId) {
+      MODEL.transact(groupId ? _T('加入盒子') : _T('移出盒子'), () => {
+        ids.forEach(id => MODEL.setNodeGroup(id, groupId || ''));
+      });
+      this.render();
+      const g = groupId ? MODEL.getGroup(groupId) : null;
+      toast(g ? _T('已放进盒子「{a}」', { a: g.name }) : _T('已移出盒子'), 'ok');
+    },
+    /* 新建空盒子时给它落在哪：画布视口中间偏上。
+       以前空盒子没有位置 → 画布上什么都看不见（作者 #106：
+       「新建后无法编辑任何事情」）。 */
+    emptyGroupPos() {
+      const r = this.wrap.getBoundingClientRect();
+      const c = this.toWorld(r.left + r.width / 2, r.top + 120);
+      return { x: Math.round(c.x - 110), y: Math.round(c.y - 60) };
     },
     nodeMenu(n, ev) {
       const self = this;
@@ -6242,7 +7258,155 @@ var REL_KINDS = [
       const ids = (MODEL.selNodes || []).length && (MODEL.selNodes || []).indexOf(n.id) >= 0
         ? MODEL.selNodes.slice() : [n.id];
       const ns = ids.map(id => MODEL.get('node', id)).filter(Boolean);
-      APP.popMenu(ev, this.nodeMenuItems(ns));
+      const items = this.nodeMenuItems(ns, null, ev);
+      /* 「设置伏笔和回收」：从这张卡顺手挂到某条伏笔的埋设/提及/回收，
+         不用切到左侧面板。结局卡也能用 —— 玩家打出的某个结局完全可以
+         是未来版本新剧情的伏笔（埋设），不只是本次剧情的回收点。
+         浮层列出每条伏笔并显示本卡当前角色，点开即可切换。 */
+      items.push({
+        t: _T('设置伏笔和回收 ▸'),
+        f: () => self.openForeshadowPicker(n.id, ev),
+      });
+      /* 便签 / 实体卡没有前后端口，只能连「纯关联线」，且不给按钮 ——
+         用右键菜单项触发（作者原话：不设按钮）。场景卡等带端口的卡不在此列，
+         它们的关联线走端口 / 入口拖拽，不必在右键里重复。 */
+      if (n.type === 'note' || n.type === 'card') {
+        items.unshift({
+          t: _T('标注关联线 →'),
+          f: () => self.startAssoc(n.id)
+        });
+      }
+      APP.popMenu(ev, items);
+    },
+    /* 右键「设置伏笔和回收」浮层：列出每条伏笔并显示本卡当前角色，
+       点开某一行即可设它为本卡的埋设/提及/回收，或移除。
+       顶部「＋ 新建伏笔并关联此卡（埋设）」：正写到这张卡、想顺手埋个新线索时一键建好。
+       结局卡也能用 —— 它可以是未来剧情的伏笔（埋设），不只是本次剧情的回收。 */
+    openForeshadowPicker(nodeId, ev) {
+      const self = this;
+      document.querySelectorAll('.ctx-menu').forEach(m => m.remove());
+      const m = div('ctx-menu fs-picker');
+      const nodeTitle = MODEL.nodeTitle(nodeId) || nodeId;
+      /* 顶部：新建伏笔并挂为本卡埋设 */
+      const top = div('fs-picker-top');
+      const newBtn = div('fs-picker-new', _T('＋ 新建伏笔并关联此卡（埋设）'));
+      newBtn.onclick = () => {
+        let f = null;
+        MODEL.transact(_T('新建伏笔并关联'), () => {
+          f = MODEL.addForeshadow(_T('新伏笔'));
+          MODEL.addForeshadowLink(f.id, 'plant', nodeId);
+        });
+        m.remove();
+        if (f) { APP.fsOpen[f.id] = true; APP.renderForeshadows(); toast(_T('已新建伏笔并埋设于「{a}」', { a: nodeTitle }), 'ok'); }
+      };
+      top.appendChild(newBtn);
+      m.appendChild(top);
+      const fs = MODEL.data.foreshadows || [];
+      if (!fs.length) {
+        m.appendChild(div('fs-picker-empty', _T('还没有伏笔，点上面先建一条。')));
+      }
+      const rebuild = () => {
+        /* 清掉已有行（保留 top） */
+        Array.from(m.querySelectorAll('.fs-pick-row')).forEach(r => r.remove());
+        (MODEL.data.foreshadows || []).forEach(f => {
+          const roles = MODEL.foreshadowRolesOfNode(f.id, nodeId);
+          const row = div('fs-pick-row');
+          const head = div('fs-pick-head');
+          head.appendChild(div('fs-pick-title', f.title || _T('（无标题）')));
+          const chips = div('fs-pick-chips');
+          const chip = (on, cls, t) => { const c = div('fs-pick-chip' + (on ? ' on-' + cls : ''), t); return c; };
+          chips.appendChild(chip(roles.plant, 'plant', _T('埋')));
+          chips.appendChild(chip(roles.mention, 'mention', _T('提')));
+          chips.appendChild(chip(roles.payoff, 'payoff', _T('收')));
+          head.appendChild(chips);
+          head.onclick = () => row.classList.toggle('open');
+          row.appendChild(head);
+          const acts = div('fs-pick-actions');
+          const mkAct = (role, label) => {
+            const a = div('fs-pick-act', label);
+            a.onclick = e => {
+              e.stopPropagation();
+              MODEL.transact(_T('设置伏笔关联'), () => MODEL.toggleForeshadowLink(f.id, role, nodeId));
+              APP.renderForeshadows(); rebuild();
+            };
+            return a;
+          };
+          acts.appendChild(mkAct('plant', _T('设为埋设')));
+          acts.appendChild(mkAct('mention', _T('提及')));
+          acts.appendChild(mkAct('payoff', _T('设为回收')));
+          const rm = div('fs-pick-act danger', _T('移除关联'));
+          rm.onclick = e => {
+            e.stopPropagation();
+            MODEL.transact(_T('移除伏笔关联'), () => {
+              ['plant', 'mention', 'payoff'].forEach(r2 => MODEL.removeForeshadowLink(f.id, r2, nodeId));
+            });
+            APP.renderForeshadows(); rebuild();
+          };
+          acts.appendChild(rm);
+          row.appendChild(acts);
+          m.appendChild(row);
+        });
+      };
+      rebuild();
+      document.body.appendChild(m);
+      const r = m.getBoundingClientRect();
+      let x = ev ? ev.clientX : 40, y = ev ? ev.clientY : 40;
+      if (x + r.width > window.innerWidth - 8) x = window.innerWidth - r.width - 8;
+      if (y + r.height > window.innerHeight - 8) y = window.innerHeight - r.height - 8;
+      m.style.left = Math.max(4, x) + 'px';
+      m.style.top = Math.max(4, y) + 'px';
+      const close = e2 => { if (!m.contains(e2.target)) { m.remove(); document.removeEventListener('mousedown', close); } };
+      setTimeout(() => document.addEventListener('mousedown', close), 0);
+    },
+    /* 自由连线（关联线）的右键菜单。2026-10-23 #108：
+       作者原话「已经可以了，但我不要的话怎么删呢？」—— 所以给它一份能删的菜单。 */
+    linkMenu(li, ev) {
+      const self = this;
+      const l = (MODEL.data.links || [])[li];
+      if (!l) return;
+      const items = [
+        {
+          t: _T('删除这条关联线'),
+          f: () => { self.deleteLink(li); },
+        },
+      ];
+      APP.popMenu(ev, items);
+    },
+    /* 删掉第 li 条自由连线（li = MODEL.data.links 的下标）。
+       走 transact → 能撤销；删完清掉选中态并重画。 */
+    deleteLink(li) {
+      const l = (MODEL.data.links || [])[li];
+      if (!l) return;
+      MODEL.transact('删除关联线', () => {
+        MODEL.data.links.splice(li, 1);
+      });
+      this._selLinkIdx = null;
+      this.render();
+      toast(_T('已删除关联线'), 'ok');
+    },
+    /* 删掉所有与这批节点相关的自由连线（节点右键菜单用）。
+       节点本身不删 —— 作者可能只是不要这几条线，卡还要留着。 */
+    deleteLinksOfNodes(ids) {
+      const set = new Set(ids);
+      const links = MODEL.data.links || [];
+      const n = links.filter(l => set.has(l.from) || set.has(l.to)).length;
+      if (!n) { toast(_T('这些节点上没有关联线'), 'warn'); return; }
+      MODEL.transact('删除关联线', () => {
+        MODEL.data.links = links.filter(l => !(set.has(l.from) || set.has(l.to)));
+      });
+      this._selLinkIdx = null;
+      this.render();
+      toast(_T('已删除 {n} 条关联线', { n }), 'ok');
+    },
+    /* 从某张卡（便签 / 实体卡）开始画一条纯关联线：进入连线模式，
+       再点目标卡即完成。目标可以是便签 / 实体卡 / 场景卡，互连 + 连场景都支持。 */
+    startAssoc(fromId) {
+      const n = MODEL.get('node', fromId);
+      if (!n) return;
+      this._linking = { from: fromId, key: '', label: '', free: true, fromInlet: false, sx: 0, sy: 0, moved: false, armed: true, w: null };
+      this.setLinkMode(true);
+      toast(_T('关联线：点击另一张卡完成连接（Esc 取消）'), 'ok');
+      this.drawGhost();
     },
     /* 某个节点是不是当前展开的堆里的成员（连线/框选要用） */
     inOpenStack(id) {
@@ -6285,6 +7449,9 @@ var REL_KINDS = [
       const e = div('node type-' + n.type);
       e.dataset.id = n.id;
       e.style.left = n.x + 'px'; e.style.top = n.y + 'px'; e.style.width = w + 'px';
+      /* 手动定高（作者拖过下边缘手柄）→ 固定高度，内容超出时可滚动。
+         没定高时高度由内容自动决定（老行为）。 */
+      if (n.h != null && Number(n.h) > 0) { e.style.height = Number(n.h) + 'px'; e.classList.add('fixed-h'); }
       if (sel && sel.kind === 'node' && sel.id === n.id) e.classList.add('sel');
       if (selSet.has(n.id)) e.classList.add('sel');
 
@@ -6368,7 +7535,23 @@ var REL_KINDS = [
          结局没有的是**出口**（outels 里不给它出口端口）——
          "能走进来，走不出去"。 */
       if (n.type !== 'note' && n.type !== 'card') {
-        const pin = div('port-in'); e.appendChild(pin);
+        const pin = div('port-in');
+        /* 入口也能拉出关联线：从「后一张卡」的入口拖向「前一张卡」的出口，
+           松手后方向会自动反转成「前 → 后」（见 doLink 的 nodeOrder 归一）。
+           这是作者要的"后卡入口拖向前卡出口也自动反转"的落地手势。 */
+        pin.title = _T('从这里也能拉关联线：拖向另一张卡即可（方向自动归一成「前 → 后」）');
+        pin.addEventListener('mousedown', ev => {
+          /* 连线模式（armed）下点入口 = 完成连线，交给 onNodeDown，不要在这里另起一条 */
+          if (self._linking && self._linking.armed) return;
+          ev.stopPropagation(); ev.preventDefault();
+          self._linking = {
+            from: n.id, key: '', label: '', free: true, fromInlet: true,
+            sx: ev.clientX, sy: ev.clientY, moved: false, armed: false,
+            w: self.toWorld(ev.clientX, ev.clientY)
+          };
+          self.drawGhost();
+        });
+        e.appendChild(pin);
       }
 
       // 出口端口
@@ -6396,6 +7579,29 @@ var REL_KINDS = [
 
       e.addEventListener('mousedown', ev => self.onNodeDown(ev, n));
       e.addEventListener('dblclick', ev => { ev.stopPropagation(); self.editInline(n, e); });
+
+      /* 选中态下的**下边缘**拖拽手柄：拖它改卡片高度（n.h）。
+         2026-10-23 作者反馈：「宽度数值设定删掉了，这点做对了；
+         但拖动卡片侧面加宽的设计就不对…某些情况下连接线会和端口断开」——
+         根因是出口端口在**右边缘**（.ports{right:-7px}），一改宽度端口就横向挪，
+         而连线端点是按 n.w 算的，两边一旦不同步线就"断开"了。
+         改成拖**下边缘**改高度：出口端口位置不动（top:26px 是固定的），
+         连线永远对得上，作者想看清更多内容就往下拉。
+         手柄只在 .sel 时显示，9px 高贴下边缘。 */
+      {
+        const rh = div('resize-h-handle');
+        rh.addEventListener('mousedown', ev => {
+          ev.stopPropagation(); ev.preventDefault();
+          self.beginHeightDrag(ev, n);
+        });
+        rh.addEventListener('dblclick', ev => {
+          /* 双击手柄 = 恢复"高度由内容自动决定" */
+          ev.stopPropagation();
+          MODEL.transact('恢复卡片自动高度', () => { delete n.h; });
+          self.render();
+        });
+        e.appendChild(rh);
+      }
       return e;
     },
 
@@ -6417,9 +7623,31 @@ var REL_KINDS = [
       if (!st || this._openStacks[st.key]) return null;
       return st;
     },
-    /* 连线端点用的几何：折叠堆返回堆卡的位置（可见性按链头判，与渲染一致）。 */
+    /* 这个节点是不是被**收起**的盒子"收进去"了；是的话返回该画出来的那个小框所属的盒子。
+       ⚠️ 取**最外层**那个收起的祖先 —— renderGroups 自上而下画，遇到收起的盒子就不再往下画
+       子盒了，所以画面上真正存在的框是最外层那个收起的，不是最内层。 */
+    collapsedGroupOf(n) {
+      if (!n) return null;
+      const unit = MODEL.groupUnitOf(n.id);
+      const gid = MODEL.groupUnitGroup(unit);
+      if (!gid) return null;
+      const chain = MODEL.groupChain(gid);        /* 最内层 → 最外层 */
+      for (let i = chain.length - 1; i >= 0; i--) {
+        const g = MODEL.getGroup(chain[i]);
+        if (g && g.collapsed) return g;
+      }
+      return null;
+    },
+    /* 连线端点用的几何：折叠堆返回堆卡的位置（可见性按链头判，与渲染一致）；
+       被收起盒子收进去的卡返回那个小框的位置（黑盒：线接到框上，而不是晾在半空）。 */
     edgeGeo(n) {
       if (!n) return null;
+      const cg = this.collapsedGroupOf(n);
+      if (cg) {
+        const r = this.groupRectOf(cg, 0, {});
+        if (!r) return null;
+        return { x: r.x1, y: r.y1, w: r.x2 - r.x1, grp: cg.id };
+      }
       const st = this.stackRepOf(n);
       if (st) {
         if (!this.nodeVisible(st.head, this.query())) return null;
@@ -6452,6 +7680,8 @@ var REL_KINDS = [
       const geoOf = (n, out, key) => {
         if (!n) return null;
         const g = this.edgeGeo(n);
+        /* 收起的盒子 = 一个黑盒小框：进线接到框左边、出线从框右边出去。 */
+        if (g && g.grp) return out ? { x: g.x + g.w, y: g.y + 80 } : { x: g.x, y: g.y + 40 };
         if (g && g.st) return out ? { x: g.x + g.w, y: g.y + 60 } : { x: g.x, y: g.y + 20 };
         const x = n.x, y = n.y;
         const w = n.w || NODE_W[n.type] || 220;
@@ -6468,6 +7698,9 @@ var REL_KINDS = [
          后者在节点被搜索过滤时会返回 null，判不出"这两个端点在同一堆里"，
          内部边就会漏出来变成一条莫名其妙的线。 */
       const stKeyOf = n => { const st = this.stackRepOf(n); return st ? st.key : null; };
+      /* 收起盒子的"身份"：两端都收进同一个盒子时，那条线是盒子的内部连线 ——
+         盒子里的内容已经不画了，这条线也不该留在外面晾着（作者 2026-10-23 截图）。 */
+      const grpKeyOf = n => { const g = this.collapsedGroupOf(n); return g ? g.id : null; };
 
       // 先算端口占用，避免多条线从同一点出发重叠
       const used = {};
@@ -6489,6 +7722,8 @@ var REL_KINDS = [
           /* 折叠堆内部的边不画：两端都在同一张卡上，画出来是一条自环。 */
           const ks = stKeyOf(n), kt = stKeyOf(byId[tgt.id]);
           if (ks && kt && ks === kt) return;
+          const gs2 = grpKeyOf(n), gt2 = grpKeyOf(byId[tgt.id]);
+          if (gs2 && gt2 && gs2 === gt2) return;      /* 整条线都在同一个收起的盒子里 */
           const a0 = geoOf(n, true, o.key), b0 = geoOf(pair.b, false);
           if (!a0 || !b0) return;
           const a = claim(a0.x, a0.y), b = claim(b0.x, b0.y);
@@ -6506,19 +7741,39 @@ var REL_KINDS = [
         });
       });
       // 自由连线
-      (d.links || []).forEach(l => {
+      (d.links || []).forEach((l, li) => {
         const a = byId[l.from], b = byId[l.to];
         if (!a || !b) return;
         if (!ok2(a, b)) return;
         /* 同一张堆叠卡内部的自由连线同理不画 */
         const ks = stKeyOf(a), kt = stKeyOf(b);
         if (ks && kt && ks === kt) return;
+        const gs2 = grpKeyOf(a), gt2 = grpKeyOf(b);
+        if (gs2 && gt2 && gs2 === gt2) return;         /* 整条线都在同一个收起的盒子里 */
         const ga = geoOf(a, true), gb = geoOf(b, false);
         if (!ga || !gb) return;
         const p1 = ga, p2 = gb;
         const dx = Math.max(30, Math.abs(p2.x - p1.x) * 0.4);
         const path = `M${p1.x},${p1.y} C${p1.x + dx + 20},${p1.y - 20} ${p2.x - dx},${p2.y} ${p2.x},${p2.y}`;
-        g.appendChild(el('path', { class: 'edge edge-free', d: path }));
+        /* 2026-10-23 #108：自由连线要能被选中、能被删掉。
+           虚线本身只有 1.8px 粗，点不准 → 另加一条**透明宽线**当命中区
+           （stroke-width 14，pointer-events:stroke），盖在可见线下面。
+           选中后可见线加 .sel 高亮；Delete 删；右键给「删除这条关联线」。 */
+        const isSel = this._selLinkIdx === li;
+        const hit = el('path', { class: 'edge-free-hit', d: path });
+        hit.dataset.linkIdx = String(li);
+        hit.addEventListener('mousedown', ev => {
+          ev.stopPropagation();
+          this._selLinkIdx = li;
+          this.render();
+        });
+        hit.addEventListener('contextmenu', ev => {
+          ev.preventDefault(); ev.stopPropagation();
+          this._selLinkIdx = li;
+          this.linkMenu(li, ev);
+        });
+        g.appendChild(hit);
+        g.appendChild(el('path', { class: 'edge edge-free' + (isSel ? ' sel' : ''), d: path }));
         if (l.label) {
           const t = el('text', { class: 'edge-lbl', x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 - 12, 'text-anchor': 'middle' });
           t.textContent = l.label.slice(0, 18); g.appendChild(t);
@@ -6533,7 +7788,8 @@ var REL_KINDS = [
       if (!g) { g = el('path', { id: 'ghostEdge', class: 'edge sel' }); g.setAttribute('stroke-dasharray', '4 3'); this.edgeRoot.appendChild(g); }
       const n = MODEL.get('node', this._linking.from);
       if (!n) return;
-      const a = this.portPos(n, this._linking.key);
+      /* 从入口拉线（fromInlet）时，起点用左侧入口而不是右侧出口端口 */
+      const a = this._linking.fromInlet ? this.inPos(n) : this.portPos(n, this._linking.key);
       const b = this._linking.w || { x: a.x + 80, y: a.y };
       g.setAttribute('d', `M${a.x},${a.y} C${a.x + 60},${a.y} ${b.x - 60},${b.y} ${b.x},${b.y}`);
     },
@@ -6551,6 +7807,8 @@ var REL_KINDS = [
       const r = this.wrap.getBoundingClientRect();
       this._marquee = { sx: e.clientX - r.left, sy: e.clientY - r.top, x: e.clientX - r.left, y: e.clientY - r.top };
       if (!e.shiftKey) { MODEL.selNodes = []; MODEL.select(null); }
+      /* 点空白 = 取消"选中的关联线"（否则选中的线会一直高亮着） */
+      if (this._selLinkIdx != null) { this._selLinkIdx = null; this.render(); }
     },
     onNodeDown(e, n) {
       if (e.button !== 0) return;
@@ -6570,6 +7828,21 @@ var REL_KINDS = [
        于是"折叠着的连续剧情拖不动，必须先展开"（作者 2026-10-16 报）。
        抽成一个函数，两边不可能再走岔。
        ids = 要一起挪的节点（折叠堆传整堆）；primaryId = 代表节点（选中态 / 属性面板）。 */
+    /* 开始一次"拖卡片下边缘改高度"。和 beginMoveDrag 同理拍快照，
+       拖完由 onUp 提交（否则撤销栈里多一串噪音、且 before===after 不进栈）。
+       2026-10-23：原来这里是改**宽度**（n.w），作者反馈"拖动卡片侧面加宽的设计就不对，
+       某些情况下连接线会和端口断开" —— 根因是出口端口在右边缘（.ports{right:-7px}），
+       宽度一变端口就横移，和连线端点不同步。现在只改高度，端口不动。 */
+    beginHeightDrag(ev, n) {
+      if (this._space) return;
+      /* 起始高度取"当前实际高度"：有 DOM 就量 DOM（自动高度的内容卡），
+         量不到就按 nodeH 的估算值 / 已设的 n.h。 */
+      let startH = 0;
+      const dom = this.root.querySelector(`.node[data-id="${n.id}"]`);
+      if (dom) { const r = dom.getBoundingClientRect(); if (r && r.height > 4) startH = r.height / (MODEL.data.canvas.zoom || 1); }
+      if (!startH) startH = nodeH(n);
+      this._dragging = { mode: 'resizeH', id: n.id, sy: ev.clientY, startH: Math.round(startH), moved: false, snap: MODEL.snapshot() };
+    },
     beginMoveDrag(ev, ids, primaryId) {
       if (this._space) return;
       /* 已经选中了多个（含自己）→ 拖整个选区，和普通节点的既有行为一致 */
@@ -6609,6 +7882,47 @@ var REL_KINDS = [
         }
         return;
       }
+      if (dg && dg.mode === 'moveGroup') {
+        /* 拖盒子：①盒子自己的位置跟着走；②**成员卡片跟着盒子走**
+           （作者：「应该卡片跟着盒子走，而不是盒子跟着卡片走」）。
+           只改数据 + 改 DOM，不整块重画（否则每动一下鼠标就重建一次画布，拖起来会卡）。 */
+        const dx = (e.clientX - dg.sx) / this.zoom, dy = (e.clientY - dg.sy) / this.zoom;
+        if (Math.abs(dx) + Math.abs(dy) > 1) dg.moved = true;
+        if (dg.moved) {
+          const g = MODEL.getGroup(dg.id);
+          if (g) { g.x = Math.round(dg.ox + dx); g.y = Math.round(dg.oy + dy); }
+          (dg.members || []).forEach(id => {
+            const s0 = dg.start && dg.start[id];
+            const o = MODEL.get('node', id);
+            if (!s0 || !o) return;
+            o.x = Math.round(s0.x + dx); o.y = Math.round(s0.y + dy);
+            const el2 = this.root.querySelector(`.node[data-id="${id}"]`);
+            if (el2) { el2.style.left = o.x + 'px'; el2.style.top = o.y + 'px'; }
+          });
+          /* 子孙盒子（含自己）的位置一起平移（空子盒的框是按 g.x/g.y 画的） */
+          (dg.kids || []).forEach(k => {
+            const gg = MODEL.getGroup(k.id);
+            if (!gg || k.x == null) return;
+            gg.x = Math.round(k.x + dx); gg.y = Math.round(k.y + dy);
+          });
+          this.syncGroupBoxes();
+          this.edgeRoot.innerHTML = ''; this.renderEdges();
+        }
+        return;
+      }
+      if (dg && dg.mode === 'resizeH') {
+        const dh = (e.clientY - dg.sy) / this.zoom;
+        if (Math.abs(dh) > 1) dg.moved = true;
+        const o = MODEL.get('node', dg.id); if (!o) return;
+        /* 最小 120，避免拖成一条缝；不设上限，作者要拉多高都行。 */
+        o.h = Math.max(120, Math.round(dg.startH + dh));
+        const el2 = this.root.querySelector(`.node[data-id="${dg.id}"]`);
+        if (el2) { el2.style.height = o.h + 'px'; el2.classList.add('fixed-h'); }
+        /* 高度变了 → 命中判定（nodeH）跟着变 → 重新画连线，
+           免得线还挂在旧高度上。 */
+        this.edgeRoot.innerHTML = ''; this.renderEdges();
+        return;
+      }
       if (this._linking) {
         const w = this.toWorld(e.clientX, e.clientY);
         if (Math.abs(e.clientX - this._linking.sx) + Math.abs(e.clientY - this._linking.sy) > 5) this._linking.moved = true;
@@ -6628,9 +7942,33 @@ var REL_KINDS = [
     onUp(e) {
       const dg = this._dragging;
       if (dg && dg.mode === 'move' && dg.moved) {
+        /* 拖卡片**不改归属**（作者：「一旦进了盒子就不要那么容易出来」）。
+           框的尺寸不写进数据 —— 框永远是"贴合当前内容"算出来的，
+           所以卡片拖出去框跟着长、被移出盒子后框自动缩回去。 */
         /* 快照必须在 onDown 时拍 —— 此刻坐标已改完，transact 会得到 before===after */
         MODEL.commitSnapshot('移动节点', dg.snap);
         MODEL.data.canvas.x = this.panX; MODEL.data.canvas.y = this.panY; MODEL.data.canvas.zoom = this.zoom;
+        /* 落在某个**空盒子**的框里 → 自动归组（作者 #106：「把卡片拖进来」）。
+           只认空盒子：非空盒子的框是贴着它的成员自动算出来的，
+           往里丢一张卡会和已有的成员重叠、说不清是想进哪个盒。
+           空盒子的框是固定矩形（g.x/g.y 220×120），落点唯一、没有歧义。 */
+        this.dropIntoEmptyGroup(dg);
+      }
+      if (dg && dg.mode === 'resizeH' && dg.moved) {
+        MODEL.commitSnapshot('调整卡片高度', dg.snap);
+      }
+      if (dg && dg.mode === 'moveGroup' && dg.moved) {
+        MODEL.commitSnapshot('移动盒子', dg.snap);
+      }
+      /* 只点了一下框（没挪动）= 选中盒子里全部成员（含子盒里的），
+         便于批量改年份 / 整体操作。拖动过就不算点击。 */
+      if (dg && dg.mode === 'moveGroup' && !dg.moved) {
+        const all = MODEL.groupMembers(dg.id);
+        if (all.length) {
+          MODEL.selNodes = all.map(n => n.id);
+          MODEL.select(null);
+          this.render();
+        }
       }
       if (dg && dg.mode === 'pan') { MODEL.data.canvas.x = this.panX; MODEL.data.canvas.y = this.panY; }
       this._dragging = null;
@@ -6693,6 +8031,8 @@ var REL_KINDS = [
           const q = this.query();
           const hit = MODEL.data.nodes.filter(n => {
             if (!this.nodeVisible(n, q)) return false;
+            /* 收进盒子里的卡片看不见，框选也不该选中它（否则按 Delete 会删掉看不见的东西） */
+            if (MODEL.nodeCollapsedByGroup(n)) return false;
             /* 折叠堆里的块虽然没画出来，但它占着真实坐标 ——
                框选覆盖到就该被选中，否则"框一片改年份"对导入的主线完全无效。 */
             if (this._inStack && this._inStack[n.id] && !this.inOpenStack(n.id)) {
@@ -6726,12 +8066,66 @@ var REL_KINDS = [
       const to = MODEL.get('node', targetId);
       if (!from || !to) return;
       if (lk.free) {
-        MODEL.transact('自由连线', () => { MODEL.data.links.push({ from: from.id, to: targetId, label: lk.label || '' }); });
-        toast('已标注联系：' + (from.title || from.id) + ' ⇢ ' + (to.title || to.id), 'ok');
+        let fromId = from.id, toId = targetId;
+        /* 关联线方向归一为「前 → 后」：ord / 年份 / 画布纵向位置更小者算「前」。
+           这样无论作者从哪头拉（含「后卡入口拖向前卡出口」的反向手势），
+           存进 links 的 from → to 永远指向前方，箭头语义一致。 */
+        if (this.nodeOrder(MODEL.get('node', toId)) < this.nodeOrder(from)) {
+          const t = fromId; fromId = toId; toId = t;
+        }
+        MODEL.transact('自由连线', () => { MODEL.data.links.push({ from: fromId, to: toId, label: lk.label || '' }); });
+        toast(_T('已标注联系：{a} ⇢ {b}', { a: MODEL.get('node', fromId).title || fromId, b: MODEL.get('node', toId).title || toId }), 'ok');
       } else {
         MODEL.transact('连接', () => this.setOutletTarget(from, lk.key, targetId));
         toast('「' + (lk.label || '') + '」→ ' + (to.title || to.id), 'ok');
       }
+    },
+    /* 把刚拖完的卡片放进某个**空盒子**（作者 #106：「把卡片拖进来」）。
+       只认空盒子 —— 空盒子的框是固定矩形，落在哪儿就是哪儿，没有歧义；
+       非空盒子的框是贴着成员自动算出来的，往里丢卡会和已有成员重叠。
+       归组按**整串堆叠**算（MODEL.setNodeGroup 内部已处理）。 */
+    dropIntoEmptyGroup(dg) {
+      const gs = MODEL.data.groups || [];
+      if (!gs.length) return;
+      /* 用 groupRects() —— 和画框同一个算法（见 groupRectOf 的说明）。
+         只认**空盒子**：空盒子的框是固定矩形，落在哪儿就是哪儿，没有歧义；
+         非空盒子的框是贴着成员自动算出来的，往里丢卡会和已有成员重叠，
+         说不清是想进哪个盒（要批量归组请用右键「加入盒子…」）。 */
+      const rects = this.groupRects();
+      const boxes = gs.filter(g => !MODEL.groupUnits(g.id).length && rects[g.id]);
+      if (!boxes.length) return;
+      const hits = [];
+      (dg.ids || []).forEach(id => {
+        const n = MODEL.get('node', id); if (!n) return;
+        /* ⚠️ 已经在某个盒子里的卡**不抢** ——
+           作者 2026-10-23：「一旦进了盒子就不要那么容易出来」。
+           拖一下就被别的空盒抢走 = 拖卡片能改归属，正是他要避免的。
+           要挪请用右键「加入盒子…」或属性面板的下拉（都是显式操作）。 */
+        if (n.group) return;
+        const w = n.w || NODE_W[n.type] || 220;
+        const cx = n.x + w / 2, cy = n.y + nodeH(n) / 2;
+        boxes.forEach(g => {
+          const r = rects[g.id];
+          if (cx >= r.x1 && cx <= r.x2 && cy >= r.y1 && cy <= r.y2) hits.push(g);
+        });
+      });
+      if (!hits.length) return;
+      /* 多个空盒子都被命中 → 取面积最小的那个（更像是"精准放进小盒子"）。 */
+      hits.sort((a, b) => {
+        const ra = rects[a.id], rb = rects[b.id];
+        return (ra.x2 - ra.x1) * (ra.y2 - ra.y1) - (rb.x2 - rb.x1) * (rb.y2 - rb.y1);
+      });
+      const g = hits[0];
+      const ids = (dg.ids || []).slice();
+      MODEL.transact(_T('加入盒子'), () => { ids.forEach(id => MODEL.setNodeGroup(id, g.id)); });
+      toast(_T('已放进盒子「{a}」', { a: g.name }), 'ok');
+    },
+    /* 节点的"前后"排序值：越小越靠前。优先用导入顺序 ord，其次年份，最后画布纵向坐标。 */
+    nodeOrder(n) {
+      if (n == null) return Infinity;
+      if (typeof n.ord === 'number') return n.ord;
+      if (n.year != null && n.year !== '' && isFinite(Number(n.year))) return Number(n.year);
+      return (n.y == null ? 0 : n.y);
     },
 
     /* 命中一个节点。pad = 向外放宽的像素（世界坐标）。
@@ -6800,6 +8194,13 @@ var REL_KINDS = [
       return n;
     },
     deleteSelection() {
+      /* 选中的是一条自由连线（关联线）→ 删它。
+         2026-10-23 #108：作者原话「已经可以了，但我不要的话怎么删呢？」。
+         连线选中态优先于节点 —— 点线的时候不会同时选中节点。 */
+      if (this._selLinkIdx != null && (MODEL.data.links || [])[this._selLinkIdx]) {
+        this.deleteLink(this._selLinkIdx);
+        return;
+      }
       let ids = (MODEL.selNodes || []).slice();
       if (!ids.length && MODEL.sel && MODEL.sel.kind === 'node') ids = [MODEL.sel.id];
       if (ids.length) {
@@ -7020,7 +8421,7 @@ var REL_KINDS = [
       /* 经纬网格与水文这两个勾选框读写的是**当前底图自己附带的那一套**设置
          （MODEL.mapLayer()），所以切底图时它们会自动变成那张底图的状态。
          关系连线 / 名称 与底图无关，保持全局。 */
-      ['chkRelLines', 'chkLabels', 'chkRegions', 'chkTerr', 'chkPcRoute'].forEach(id => {
+      ['chkRelLines', 'chkLabels', 'chkRegions', 'chkTerr', 'chkPcRoute', 'chkChars'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.onchange = () => this.render();
       });
@@ -7234,6 +8635,7 @@ var REL_KINDS = [
       const showRel = document.getElementById('chkRelLines').checked;
       const showLbl = document.getElementById('chkLabels').checked;
       const showRegions = document.getElementById('chkRegions').checked;
+      const showChars = (document.getElementById('chkChars') || { checked: true }).checked;
       const showTerr = document.getElementById('chkTerr').checked;
       const showPcRoute = document.getElementById('chkPcRoute').checked;
       const visYr = yr;        // 恒等于当前年份：地图是"此刻"的世界
@@ -7336,6 +8738,10 @@ var REL_KINDS = [
           'stroke-width': isSel ? 2.4 : 1.4, 'stroke-dasharray': isSel ? null : '6 4',
           'vector-effect': 'non-scaling-stroke',
         });
+        /* 未激活（未选中）= 虚线；**但按住就能直接拖**。
+           之前这里只做 MODEL.select('faction')，要再点一次才能拖 → 作者反馈"依旧没实现"。
+           现在一次 mousedown 同时做两件事：激活（选中）+ 进入 move 拖拽。
+           onTerrDown 内部已经会 MODEL.select('faction', fid)，这里不再重复调。 */
         fill.style.cursor = 'move';
         fill.style.pointerEvents = 'all';
         fill.addEventListener('mousedown', e => this.onTerrDown(e, f.id, 'move'));
@@ -7343,25 +8749,118 @@ var REL_KINDS = [
         tt.textContent = f.name + '（势力范围）\n' + fmtYearShort(terr.from) + (terr.from !== terr.to ? '~' + fmtYearShort(terr.to) : '') + '\n' + terr.lon.toFixed(2) + '°, ' + terr.lat.toFixed(2) + '°\n半径 ' + Math.round(terr.radius) + '°（拖动圆心移动 · 拖边缘圆点改大小）';
         fill.appendChild(tt);
         g.appendChild(fill);
-        /* 边缘 resize 把手：拖它改变半径 */
-        const handle = sv('circle', {
-          cx: cx + rad, cy, r: 5, stroke: col, 'stroke-width': 2,
-          'vector-effect': 'non-scaling-stroke',
-        });
-        /* ⚠️ SVG 的 presentation attribute（fill=）**不解析 CSS 变量**，
-           必须走 style 才能拿到 var(--map-bg)。写成 attribute 会静默失效，
-           表现为"亮色皮肤下这个点还是深色的"。 */
-        handle.style.fill = 'var(--map-bg)';
-        handle.style.cursor = 'ew-resize';
-        handle.style.pointerEvents = 'all';
-        handle.addEventListener('mousedown', e => this.onTerrDown(e, f.id, 'resize'));
-        g.appendChild(handle);
+        /* 边缘 resize 把手：拖它改变半径。**一直都在**（不再只在 isSel 时出现），
+           免得作者想改半径还要先点一下激活。 */
+        {
+          const handle = sv('circle', {
+            cx: cx + rad, cy, r: 5, stroke: col, 'stroke-width': 2,
+            'vector-effect': 'non-scaling-stroke',
+            'fill-opacity': isSel ? 1 : 0.55,
+          });
+          /* ⚠️ SVG 的 presentation attribute（fill=）**不解析 CSS 变量**，
+             必须走 style 才能拿到 var(--map-bg)。写成 attribute 会静默失效，
+             表现为"亮色皮肤下这个点还是深色的"。 */
+          handle.style.fill = 'var(--map-bg)';
+          handle.style.cursor = 'ew-resize';
+          handle.style.pointerEvents = 'all';
+          handle.addEventListener('mousedown', e => this.onTerrDown(e, f.id, 'resize'));
+          g.appendChild(handle);
+        }
         if (showLbl) {
           const t = sv('text', { class: 'faction-terr-lbl', x: cx, y: cy - rad - 6, 'text-anchor': 'middle', fill: col });
           t.textContent = f.name;
           t.style.pointerEvents = 'none';
           g.appendChild(t);
         }
+        this.gOver.appendChild(g);
+      });
+
+      /* 角色 / NPC 标记（#111）：主角是星形、地区是菱形，
+         角色用**圆形** —— 三种形状互不混淆，一眼能分。
+         位置取"当年生效的轨迹段"，没有轨迹就退回显式坐标，
+         再退回常驻地区（常驻地区 = 住在那儿，画在那个点上）。
+         恒定屏幕尺寸（px/py 已经是屏幕坐标，gOver 没有父层 scale）。 */
+      if (showChars) (d.characters || []).forEach(c => {
+        if (!MODEL.aliveIn(c.exist, visYr)) return;
+        const p = this.charPos(c, visYr);
+        if (!p) return;
+        const x = this.px(p.lon), y = this.py(p.lat);
+        const isSel = MODEL.sel && MODEL.sel.kind === 'character' && MODEL.sel.id === c.id;
+        const R = isSel ? 11 : 8;
+        const g = sv('g', { class: 'chr-dot', transform: `translate(${x},${y})` });
+        g.appendChild(sv('circle', { class: 'rgn-halo', cx: 0, cy: 0, r: 15 }));
+        const core = sv('circle', { cx: 0, cy: 0, r: R });
+        core.style.fill = c.color || '#4a9eff';
+        core.style.stroke = 'var(--map-stroke)';
+        core.style.strokeWidth = '1.2';
+        g.appendChild(core);
+        if (isSel) {
+          const ring = sv('circle', { cx: 0, cy: 0, r: 15, fill: 'none', 'stroke-width': 2 });
+          ring.style.stroke = 'var(--sel-stroke)';
+          g.appendChild(ring);
+        }
+        /* 透明命中圈：视觉不变，可点区域扩大到 24px 半径 */
+        g.appendChild(sv('circle', { class: 'rgn-hit', cx: 0, cy: 0, r: 24, fill: 'transparent' }));
+        if (showLbl) {
+          const t = sv('text', { class: 'rgn-lbl' + (isSel ? ' sel' : ''), x: 10, y: 4 });
+          t.textContent = c.name; g.appendChild(t);
+        }
+        const tt = sv('title');
+        tt.textContent = c.name + (c.alias ? `（${c.alias}）` : '') +
+          `\n${p.lon.toFixed(2)}°, ${p.lat.toFixed(2)}°` +
+          (p.label ? `\n${p.label}` : '');
+        g.appendChild(tt);
+        g.addEventListener('mousedown', e => this.onCharDown(e, c, p));
+        g.addEventListener('mouseenter', e => {
+          const tip = document.getElementById('mapTip');
+          tip.innerHTML = `<b>${esc(c.name)}</b> <span style="color:var(--dim)">${_T('角色')}</span><br>` +
+            `<span style="color:var(--dim)">${p.lon.toFixed(2)}°, ${p.lat.toFixed(2)}°</span>`;
+          tip.style.display = 'block';
+          const wr = this.wrapEl.getBoundingClientRect();
+          let lx = e.clientX - wr.left + 14, ly = e.clientY - wr.top + 12;
+          if (lx + 270 > wr.width) lx = wr.width - 275;
+          tip.style.left = lx + 'px'; tip.style.top = ly + 'px';
+        });
+        g.addEventListener('mouseleave', () => this.hideTip());
+        this.gOver.appendChild(g);
+      });
+
+      /* 势力标记（#111）：势力范围是个大圆（地理尺度），中心再点一个小三角，
+         表示"这个势力在这儿"。三角形 = 第三种形状，跟菱形（地区）、
+         圆形（角色）、星形（主角）都不撞。 */
+      if (showTerr) (d.factions || []).forEach(f => {
+        if (!MODEL.aliveIn(f.exist, visYr)) return;
+        const terr = MODEL.factionTerritoryAt(f, visYr);
+        if (!terr) return;
+        const cx = this.px(terr.lon), cy = this.py(terr.lat);
+        const isSel = MODEL.sel && MODEL.sel.kind === 'faction' && MODEL.sel.id === f.id;
+        const col = f.color || '#e0567a';
+        const R = isSel ? 11 : 8;
+        const g = sv('g', { class: 'fac-dot', transform: `translate(${cx},${cy})` });
+        g.appendChild(sv('circle', { class: 'rgn-halo', cx: 0, cy: 0, r: 15 }));
+        /* 三角形 path：以原点为中心、外接圆半径 R */
+        const tri = sv('path', {
+          d: `M0,${-R} L${R * 0.87},${R * 0.5} L${-R * 0.87},${R * 0.5} Z`,
+          fill: col, stroke: 'var(--map-stroke)', 'stroke-width': 1.2,
+        });
+        g.appendChild(tri);
+        if (isSel) {
+          const ring = sv('circle', { cx: 0, cy: 0, r: 15, fill: 'none', 'stroke-width': 2 });
+          ring.style.stroke = 'var(--sel-stroke)';
+          g.appendChild(ring);
+        }
+        g.appendChild(sv('circle', { class: 'rgn-hit', cx: 0, cy: 0, r: 22, fill: 'transparent' }));
+        if (showLbl) {
+          const t = sv('text', { class: 'rgn-lbl' + (isSel ? ' sel' : ''), x: 11, y: 4 });
+          t.textContent = f.name; g.appendChild(t);
+        }
+        const tt = sv('title');
+        tt.textContent = _T('{a}（势力）\n{b}°, {c}°\n拖动圆心可移动整个范围', {
+          a: f.name, b: terr.lon.toFixed(2), c: terr.lat.toFixed(2),
+        });
+        g.appendChild(tt);
+        /* 点它 = 选中势力，并把整个势力圈一起拖着走（跟圈心同一份数据）。 */
+        g.addEventListener('mousedown', e => this.onTerrDown(e, f.id, 'move'));
         this.gOver.appendChild(g);
       });
 
@@ -7399,21 +8898,16 @@ var REL_KINDS = [
           return { x: this.px(r.lon), y: this.py(r.lat), name: r.name };
         }
         if (kind === 'character') {
-          const c = MODEL.get('character', id);
           /* 角色位置优先取"当年生效的轨迹段"；没有轨迹再退回显式坐标；再退回常驻地区。
-             这样 NPC 才能随年份在不同地点出现（轨迹由 tracks 字段按年份分段承载）。 */
+             这样 NPC 才能随年份在不同地点出现（轨迹由 tracks 字段按年份分段承载）。
+             复用 charPos() —— 角色标记画的就是同一个位置，两处必须一致。 */
+          const c = MODEL.get('character', id);
           if (!c) return null;
           const aliveC = visYr === null ? true : MODEL.aliveIn(c.exist, visYr);
           if (!aliveC) return null;
-          const trk = (c.tracks || []).find(t => visYr != null && visYr >= t.from && visYr <= t.to);
-          if (trk && isFinite(trk.lon) && isFinite(trk.lat)) return { x: this.px(trk.lon), y: this.py(trk.lat), name: c.name };
-          if (isFinite(c.lon) && isFinite(c.lat)) return { x: this.px(c.lon), y: this.py(c.lat), name: c.name };
-          if (c.home) {
-            const hr = MODEL.get('region', c.home);
-            if (hr && alive[hr.id] && isFinite(hr.lon) && isFinite(hr.lat))
-              return { x: this.px(hr.lon), y: this.py(hr.lat), name: c.name };
-          }
-          return null;
+          const p = this.charPos(c, visYr);
+          if (!p) return null;
+          return { x: this.px(p.lon), y: this.py(p.lat), name: c.name };
         }
         return null;
       };
@@ -7486,7 +8980,7 @@ var REL_KINDS = [
              而让人误以为那条点也在这条关系里。 */
           [[x1, y1], [x2, y2]].forEach(pt => {
             const q = sv('rect', {
-              class: 'rel-anchor', x: pt[0] - 3.2, y: pt[1] - 3.2, width: 6.4, height: 6.4,
+              class: 'rel-anchor', x: pt[0] - 4, y: pt[1] - 4, width: 8, height: 8,
               stroke: v.color, 'stroke-width': 1.6,
               'vector-effect': 'non-scaling-stroke',
             });
@@ -7497,9 +8991,11 @@ var REL_KINDS = [
         });
       }
 
-      /* 地区点：整体反缩放，保证点/标签在任何 zoom 下都是固定屏幕尺寸，不会变成"巨球" */
+      /* 地区点：px/py 已返回屏幕坐标，标记不再套 scale(invZ)——
+         gOver 本身没被父层 scale(z)，原来的 scale(invZ) 净缩放 = 1/z，
+         会让"放大地图时标记反而变小"（用户报的"标记忽大忽小"）。
+         不缩放 = 恒定屏幕尺寸。 */
       const sel = MODEL.sel;
-      const invZ = 1 / this.z;
       /* 主角行走路线：把各年位置按顺序连成一条金线，让人一眼看到"他从A走到B走到C"。
          只有 ≥2 段坐标才连得成线（1 段只画点，已在下面的主角标记里）。
          chkPcRoute 勾选框控制是否显示（默认显示）。 */
@@ -7515,11 +9011,14 @@ var REL_KINDS = [
           route.style.stroke = 'var(--accent-lite)';
           route.style.pointerEvents = 'none';
           this.gOver.appendChild(route);
-          /* 每段位置的序号小点，和右侧编辑面板里的 #1 #2 对得上 */
+          /* 每段位置的序号小点，和右侧编辑面板里的 #1 #2 对得上。
+             半径与关系锚点统一（4px），别一个粗一个细。 */
           trk.forEach((t) => {
             const x = this.px(t.lon), y = this.py(t.lat);
-            const dot = sv('circle', { cx: x, cy: y, r: 3.2, 'vector-effect': 'non-scaling-stroke' });
+            const dot = sv('circle', { cx: x, cy: y, r: 4, 'vector-effect': 'non-scaling-stroke' });
             dot.style.fill = 'var(--accent-lite)';
+            dot.style.stroke = 'var(--map-bg)';
+            dot.style.strokeWidth = '1.2';
             dot.style.pointerEvents = 'none';
             this.gOver.appendChild(dot);
           });
@@ -7529,7 +9028,8 @@ var REL_KINDS = [
          p_r 关系线也就无处可画 —— 用「📍图钉」模式在地图上点一下即可落点。 */
       if (pcHasPos && pcAlive) {
         const x = this.px(pcLon), y = this.py(pcLat);
-        const pg = sv('g', { class: 'pc-dot', transform: `translate(${x},${y}) scale(${invZ})` });
+        /* 不缩放 = 恒定屏幕尺寸（见上方地区点注释）。 */
+        const pg = sv('g', { class: 'pc-dot', transform: `translate(${x},${y})` });
         const isPcSel = sel && sel.kind === 'protagonist';
         pg.appendChild(sv('circle', { class: 'rgn-halo', cx: 0, cy: 0, r: 14 }));
         const pcStar = sv('path', {
@@ -7596,17 +9096,16 @@ var REL_KINDS = [
       if (showRegions) d.regions.forEach(r => {
         if (!alive[r.id]) return;
         const x = this.px(r.lon), y = this.py(r.lat);
-        const g = sv('g', { class: 'rgn-dot', transform: `translate(${x},${y}) scale(${invZ})` });
+        /* 不缩放 = 恒定屏幕尺寸（见上方地区点注释）。地区标记改成菱形。 */
+        const g = sv('g', { class: 'rgn-dot', transform: `translate(${x},${y})` });
         g.appendChild(sv('circle', { class: 'rgn-halo', cx: 0, cy: 0, r: 19 }));
         const isSel = sel && sel.kind === 'region' && sel.id === r.id;
-        /* 圆点半径 5.5 → 8 → 11：用户两次反馈"点太小"。
-           SVG 的 circle 没有 CSS 命中区扩展，视觉半径就决定了它在缩放后的
-           可辨识度 —— 8px 在大范围地图（跨洲视角）上仍然只是个小点，
-           所以这次直接把视觉半径提到 11，并用描边让它在深色底上不糊。
-           命中圈另外给 26px：眼睛看着够大 + 手点得中，两件事分开做。 */
-        g.appendChild(sv('circle', { class: 'rgn-core', cx: 0, cy: 0, r: isSel ? 14 : 11, fill: r.color || '#c9a227' }));
+        const R = isSel ? 14 : 11;
+        /* 菱形标记点：以原点为中心、对角线 2R 的 path（作者要菱形而非圆）。 */
+        g.appendChild(sv('path', { class: 'rgn-core', d: `M0,${-R} L${R},0 L0,${R} L${-R},0 Z`, fill: r.color || '#c9a227' }));
         if (isSel) {
-          const rgnRing = sv('circle', { cx: 0, cy: 0, r: 19, fill: 'none', 'stroke-width': 2.5 });
+          const RR = 19;
+          const rgnRing = sv('path', { d: `M0,${-RR} L${RR},0 L0,${RR} L${-RR},0 Z`, fill: 'none', 'stroke-width': 2.5 });
           rgnRing.style.stroke = 'var(--sel-stroke)';
           g.appendChild(rgnRing);
         }
@@ -7698,7 +9197,8 @@ var REL_KINDS = [
         this.dropPin(e);
         return;
       }
-      if (e.target.closest('.rgn-dot') || e.target.closest('.pc-dot')) return;
+      if (e.target.closest('.rgn-dot') || e.target.closest('.pc-dot')
+        || e.target.closest('.chr-dot') || e.target.closest('.fac-dot')) return;
       this._drag = { sx: e.clientX, sy: e.clientY, tx: this.tx, ty: this.ty, moved: false };
       this.svg.classList.add('panning');
     },
@@ -7771,6 +9271,31 @@ var REL_KINDS = [
       this.pinLabel();
       this.render();
     },
+    /* 角色在某一年的地图位置（#111）：轨迹段 → 显式坐标 → 常驻地区。
+       返回 {lon, lat, label, track?}；都没有就 null（地图上不画这个角色）。 */
+    charPos(c, visYr) {
+      if (!c) return null;
+      const y = visYr == null ? MODEL.data.timeline.current : visYr;
+      const t = MODEL.charPosAt(c, y);
+      if (t) return { lon: t.lon, lat: t.lat, label: t.label, track: t.track };
+      if (isFinite(c.lon) && isFinite(c.lat)) return { lon: c.lon, lat: c.lat, label: '' };
+      if (c.home) {
+        const hr = MODEL.get('region', c.home);
+        if (hr && isFinite(hr.lon) && isFinite(hr.lat))
+          return { lon: hr.lon, lat: hr.lat, label: MODEL.regionName(c.home) };
+      }
+      return null;
+    },
+    /* 角色标记按下：立刻进入拖拽（改的是"当年生效的那一段轨迹"）。 */
+    onCharDown(e, c, p) {
+      e.stopPropagation();
+      if (e.button !== 0) return;
+      MODEL.select('character', c.id);
+      this._dot = {
+        kind: 'char', id: c.id, sx: e.clientX, sy: e.clientY,
+        lon: p.lon, lat: p.lat, moved: false, snap: MODEL.snapshot(),
+      };
+    },
     onDotDown(e, r) {
       e.stopPropagation();
       if (e.button !== 0) return;
@@ -7804,12 +9329,16 @@ var REL_KINDS = [
          拖动必须改 .ref 才落得进模型（只改副本，render 一刷新又回原样）。
          同时记下该段在 territorySegs 里的下标，拖拽时好同步右侧面板输入框。 */
       const idx = (f.territorySegs || []).indexOf(seg.ref);
-      MODEL.select('faction', fid);
+      /* ⚠️ 必须先建好 _terr 再 select：MODEL.select 会 emit('select') →
+         MAPVIEW.render() 把整张 SVG 重建一遍。反过来（先 select）的话，
+         拖拽状态是在"已经重画过的世界"里才建起来的，第一帧容易丢。
+         拖拽本身走 window 级 mousemove，SVG 重建不影响后续帧。 */
       this._terr = {
         fid, mode, sx: e.clientX, sy: e.clientY,
         seg, idx, ox: seg.lon, oy: seg.lat, orad: seg.radius,
         moved: false, snap: MODEL.snapshot(),
       };
+      MODEL.select('faction', fid);
     },
     onMove(e) {
       if (this._pin) {
@@ -7832,6 +9361,11 @@ var REL_KINDS = [
             /* 拖动改的是"当前年份所在的那一段轨迹"，不是某个全局坐标。
                不分段 —— 拖动是微调，同一段里挪位置，拆段会让记录碎掉。 */
             MODEL.setPcPos(+lon.toFixed(3), +lat.toFixed(3), MODEL.data.timeline.current, { split: false });
+          } else if (this._dot.kind === 'char') {
+            /* 角色同理：改"当年生效的那一段轨迹"。角色原本没有轨迹段时，
+               setCharPos 会新开一段（这样角色的位置从此独立于常驻地区）。 */
+            const c = MODEL.get('character', this._dot.id);
+            if (c) MODEL.setCharPos(c, +lon.toFixed(3), +lat.toFixed(3), MODEL.data.timeline.current, {});
           } else {
             const r = MODEL.get('region', this._dot.id);
             if (r) { r.lon = MODEL._lon(+lon.toFixed(3)); r.lat = MODEL._lat(+lat.toFixed(3)); }
@@ -7847,8 +9381,12 @@ var REL_KINDS = [
         if (!seg) { this._terr = null; return; }
         if (this._terr.mode === 'move') {
           const lon = this._terr.ox + dx / this.z, lat = this._terr.oy - dy / this.z;
-          seg.ref.lon = this._lon(+lon.toFixed(3));
-          seg.ref.lat = this._lat(+lat.toFixed(3));
+          /* ⚠️ 经纬度合法化在 **MODEL** 上（_lon/_lat），不在 MAPVIEW 上。
+             早先这里写成 this._lon(...) → 第一次 mousemove 就抛
+             "this._lon is not a function"，圈看着能选中却拖不动
+             （作者 2026-10-23 报：「出现了代表移动的光标，但点了拖不动」）。 */
+          seg.ref.lon = MODEL._lon(+lon.toFixed(3));
+          seg.ref.lat = MODEL._lat(+lat.toFixed(3));
           const li = document.getElementById('facLon-' + this._terr.idx); if (li) li.value = seg.ref.lon;
           const la = document.getElementById('facLat-' + this._terr.idx); if (la) la.value = seg.ref.lat;
         } else {        // resize：鼠标到圆心的屏幕距离 / z = 半径（度）
@@ -7859,7 +9397,9 @@ var REL_KINDS = [
           seg.ref.radius = Math.max(0.5, +(dist / this.z).toFixed(2));
           const ri = document.getElementById('facRad-' + this._terr.idx); if (ri) ri.value = seg.ref.radius;
         }
-        this.render();
+        /* 只在真的动过时才重画 —— 每帧整张 SVG 重建一次，纯按着不动的
+           mousemove 也重画会让拖动明显发涩。 */
+        if (this._terr.moved) this.render();
         return;
       }
       if (this._drag) {
@@ -7877,7 +9417,8 @@ var REL_KINDS = [
         MODEL.commitSnapshot('调整势力范围', this._terr.snap);
       this._terr = null;
       if (this._dot && this._dot.moved)
-        MODEL.commitSnapshot(this._dot.kind === 'pc' ? '移动主角位置' : '移动地区坐标', this._dot.snap);
+        MODEL.commitSnapshot(this._dot.kind === 'pc' ? '移动主角位置'
+          : this._dot.kind === 'char' ? '移动角色位置' : '移动地区坐标', this._dot.snap);
       this._dot = null;
       this._drag = null;
       this.svg.classList.remove('panning');
@@ -8135,7 +9676,7 @@ var REL_KINDS = [
       this.svg.appendChild(this.gEdge); this.svg.appendChild(this.gNode);
       this.svg.addEventListener('mousedown', e => this.onDown(e));
       window.addEventListener('mousemove', e => { this.onMove(e); this.onPortMove(e); });
-      window.addEventListener('mouseup', e => { this.onUp(e); this.endPortDrag(); });
+      window.addEventListener('mouseup', e => { this.onUp(e); this.endPortDrag(e); });
       this.svg.addEventListener('wheel', e => this.onWheel(e), { passive: false });
       this.svg.addEventListener('contextmenu', e => e.preventDefault());
       window.addEventListener('resize', () => { this.resize(); this.render(); });
@@ -8237,6 +9778,8 @@ var REL_KINDS = [
         };
       }
       return {
+        /* 地区这张图只放地区（作者 2026-10-24：「势力和地区之间可以先不要连线」——
+           势力不进来，两边也就不会互相连线）。 */
         kinds: ['p_r', 'r_r'],
         nodes: [{ id: 'pc', name: MODEL.pcName(), pc: true, kind: 'protagonist' }]
           .concat(d.regions.map(r => ({ id: r.id, name: r.name, pc: false, kind: 'region' }))),
@@ -8261,6 +9804,8 @@ var REL_KINDS = [
       if (ka === 'character' && kb === 'faction') return 'c_f';
       if (ka === 'faction' && kb === 'character') return 'c_f';
       if (ka === 'character' && kb === 'character') return 'c_c';
+      if (ka === 'character' && kb === 'region') return 'c_r';
+      if (ka === 'region' && kb === 'character') return 'c_r';
       if (ka === 'region' && kb === 'region') return 'r_r';
       return null;
     },
@@ -8462,6 +10007,10 @@ var REL_KINDS = [
           class: 'gnode' + (n.pc ? ' pc' : '') +
             (this._flash === n.id ? ' flash' : '') +
             (this._portHover === n.id ? ' link-target' : '') +
+            /* 拖线时，除了当前吸住的那个，其它可连的节点也淡淡地标出来 ——
+               作者的另一个常见困惑是"能往哪儿放"。之前只有吸住的那一个会亮，
+               剩下的节点跟平时长得一模一样，于是作者不敢往那儿放。 */
+            (this._portDrag && this._portDrag.from !== n.id && !this._portHover ? ' linkable' : '') +
             (sel && sel.kind === nkind && sel.id === n.id ? ' sel' : ''),
           transform: `translate(${p.x},${p.y}) scale(${invZ})`,
         });
@@ -8570,14 +10119,26 @@ var REL_KINDS = [
         /* 连接点：像流程画布的端口一样，鼠标按住它拖到另一个节点就连线。
            之前只有"点起点 → 再点终点"两步式，作者得先想好从谁连谁、
            再去点对应的节点 —— 想验证"连两个节点能不能用"都无从下手。
-           现在每个节点四周摆四个端口（上下左右），hover 才显形，
-           按住拖出一条线，落在另一个节点上即成。 */
+           现在每个节点四周摆四个端口（上下左右），按住拖出一条线，
+           落在另一个节点上即成。
+
+           ⚠️ 但它们原来是 opacity:0 —— **看不见却能点到**。
+           作者根本不知道节点边上那儿能拉线，只能挨个位置乱试：
+           试中了就是连线、试不中就变成挪位置 ——
+           于是手感"完全摸不出规律"（作者 2026-10-24 原话：
+           「连线还是偶有不爽，我也摸不出规律…看起来能连上吧…实际上不行」）。
+           现在改成：平时就**淡淡地显形**（不再 hover 才出现），
+           鼠标移上去变实、变粗。作者一眼能看到"这儿能拉线"。
+           命中圈也从 12px 放大到 20px —— 端口圆点只有 7px，
+           目标那么小，"点不中"和"连不上"在作者眼里是一回事。 */
         [[0, -1], [0, 1], [-1, 0], [1, 0]].forEach(([dx, dy]) => {
           const pr = NODE_R + 11;
           const pg = sv('g', { class: 'gnode-port' });
           const pc = sv('circle', { cx: dx * pr, cy: dy * pr, r: 7 });
           pg.appendChild(pc);
-          pg.appendChild(sv('circle', { class: 'gnode-port-hit', cx: dx * pr, cy: dy * pr, r: 12, fill: 'transparent' }));
+          pg.appendChild(sv('circle', { class: 'gnode-port-hit', cx: dx * pr, cy: dy * pr, r: 20, fill: 'transparent' }));
+          const tt2 = sv('title', {}); tt2.textContent = _T('按住拖到另一个节点，就连上关系');
+          pg.appendChild(tt2);
           pg.addEventListener('mousedown', e => {
             e.stopPropagation(); e.preventDefault();
             this.startPortDrag(n, dx, dy);
@@ -8643,7 +10204,7 @@ var REL_KINDS = [
       const d = MODEL.data;
       const y = d.timeline.current;
       const alive = d.relations.filter(r => MODEL.relsAt(y, this.scope().kinds).indexOf(r) >= 0).length;
-      h.textContent = `当前年份 ${y}　·　此刻成立的关系 ${alive} 条　·　拖空白平移，滚轮缩放，双击节点改名`;
+      h.textContent = _T('当前年份 {a}　·　此刻成立的关系 {b} 条　·　拖节点圆挪位置，拖节点外的小点拉线到别的节点', { a: y, b: alive });
     },
 
     /* ── 连线模式：从一个节点拉线到另一个节点 ── */
@@ -8689,13 +10250,29 @@ var REL_KINDS = [
         const nkind = n.kind || (this.mode === 'people' ? 'character' : 'region');
         MODEL.select(nkind, n.id);
       }
-      /* 拖动改坐标 */
+      /* 拖动节点 = 挪位置（跟流程画布一致：拖卡片本体是挪卡片，
+         拖端口才是连线）。
+         ⚠️ 早先试过"按住节点圆拖动就起线"，作者 2026-10-24 的原话是
+         「连线还是偶有不爽，我也摸不出规律」—— 起线入口只有节点四周
+         4 个小端口、而且平时 opacity:0（看不见却能点到），
+         作者根本不知道那儿能拖，只能靠猜，猜中就是连线、猜不中就变成挪位置。
+         那样"摸不出规律"的问题只会更严重。
+         现在把规则收敛成两条、互不重叠：
+           · 按住**节点圆**拖 → 挪位置（圆心到圆边这一圈）；
+           · 按住**节点外的端口**拖 → 拉线（圆外那一圈）。
+         端口改成"平时也看得见"（淡淡的），作者一眼就知道哪儿能拉线。 */
       const w = this.toWorld(e.clientX, e.clientY);
-      this._drag = { id: n.id, ox: w[0] - (this.getPos(n.id) || { x: 0, y: 0 }).x, oy: w[1] - (this.getPos(n.id) || { x: 0, y: 0 }).y, snap: MODEL.snapshot(), moved: false };
+      this._drag = {
+        id: n.id, ox: w[0] - (this.getPos(n.id) || { x: 0, y: 0 }).x,
+        oy: w[1] - (this.getPos(n.id) || { x: 0, y: 0 }).y,
+        snap: MODEL.snapshot(), moved: false,
+      };
     },
 
     createRel(a, b) {
       const kind = this.kindFor(a, b);
+      /* 两端类型之间没有可用的关系类别时，别硬造一条坏数据。 */
+      if (!kind) { this.toast(_T('这两类之间现在没有可用的关系类别')); return; }
       /* 主角固定放 a 端：p_c / p_r / p_f 是单方面视角，方向不能反 */
       let ra = a, rb = b;
       if ((kind === 'p_c' || kind === 'p_r' || kind === 'p_f')) { ra = 'pc'; rb = a === 'pc' ? b : a; }
@@ -8800,9 +10377,17 @@ var REL_KINDS = [
       if (this._portDrag) {
         const pa = this.getPos(this._portDrag.from);
         if (pa) {
+          /* 线头吸到目标节点上：作者能一眼看出"抓住了"，松手就成。
+             之前线头永远跟着鼠标走，差一点点没吸上时完全看不出来。 */
+          let x2 = this._portDrag.w[0], y2 = this._portDrag.w[1];
+          const tp = this._portDrag.target ? this.getPos(this._portDrag.target) : null;
+          if (tp) { x2 = tp.x; y2 = tp.y; }
+          /* 起点用**端口位置**（startPortDrag 记下的 _portDrag.w 起点），
+             不是节点圆心 —— 线从作者按下的那个点出发，最直观。 */
+          const p0 = this._portDrag.from0 || [pa.x, pa.y];
           const line = sv('line', {
-            id: 'graphGhost', x1: pa.x, y1: pa.y,
-            x2: this._portDrag.w[0], y2: this._portDrag.w[1], class: 'gghost',
+            id: 'graphGhost', x1: p0[0], y1: p0[1],
+            x2: x2, y2: y2, class: 'gghost' + (this._portDrag.target ? ' snapped' : ''),
           });
           this.gEdge.appendChild(line);
         }
@@ -8822,37 +10407,117 @@ var REL_KINDS = [
     startPortDrag(n, dx, dy) {
       const p = this.getPos(n.id);
       if (!p) return;
-      this._portDrag = { from: n.id, name: n.name, w: [p.x, p.y], target: null };
+      /* 线从**端口所在的位置**出发，不是从节点圆心 ——
+         端口在圆外（NODE_R+11），从圆心画线会让线头看起来"缩在圆里"，
+         作者松手时判断"到底落在哪儿"就更容易犹豫。 */
+      const pr = NODE_R + 11;
+      this._portDrag = {
+        from: n.id, name: n.name,
+        /* from0 = 线的起点（端口所在处）；w = 线头当前位置。 */
+        from0: [p.x + dx * pr, p.y + dy * pr],
+        w: [p.x + dx * pr, p.y + dy * pr],
+        target: null,
+      };
       this.wrap.classList.add('linking');
       const hint = document.getElementById('graphHint');
-      if (hint) hint.textContent = `从「${n.name}」拉线到另一个节点即成关系　（Esc 取消）`;
+      if (hint) hint.textContent = _T('从「{a}」拉线到另一个节点即成关系　（Esc 取消）', { a: n.name });
+      /* 起线这一刻就重画一次：让"其它可连的节点"淡淡地标出来，
+         作者能一眼看到"能往哪儿放"，而不是满图都一样、只能靠猜。 */
+      this.render();
     },
     onPortMove(e) {
       if (!this._portDrag) return;
       const w = this.toWorld(e.clientX, e.clientY);
       this._portDrag.w = w;
-      /* 命中检测：离哪个节点最近就在 NODE_R + 18 之内算落在它上面 */
-      let best = null, bd = 1e9;
-      this.scope().nodes.forEach(nd => {
-        if (nd.id === this._portDrag.from) return;
-        const p = this.getPos(nd.id);
-        if (!p) return;
-        const d = Math.hypot(p.x - w[0], p.y - w[1]);
-        if (d < bd) { bd = d; best = nd; }
-      });
-      this._portDrag.target = (best && bd <= NODE_R + 20) ? best.id : null;
+      this._portDrag.target = this.portHit(w, this._portDrag.from);
+      /* 记下"最近一次吸住的目标"：松手时落点偏了一点也认这个账（见 endPortDrag）。 */
+      if (this._portDrag.target) {
+        this._portDrag.lastTarget = this._portDrag.target;
+        this._portDrag.lastTargetAt = [w[0], w[1]];   /* 吸住那一刻线头在哪 */
+      }
+      const prev = this._portHover;
       this._portHover = this._portDrag.target;
+      /* 目标变了才重绘节点：让"吸住了"的目标节点亮一圈（link-target）。
+         只重画 ghost 的话，这个高亮永远不会出现 —— 作者看不见自己吸没吸上。 */
+      if (prev !== this._portHover) this.render();
       this.renderGhost();
     },
-    endPortDrag() {
+    /* 线头落在哪个节点上（null = 没落在任何节点上）。
+
+       ⚠️🔴 判定必须按**屏幕像素**算，不能按世界坐标算。
+       节点在图上是"反缩放"的（scale(1/z)），所以它在**屏幕上永远 30px 半径**，
+       跟当前缩放无关 —— 但线头是跟着鼠标走的，鼠标位置在**屏幕**上。
+       早先用世界坐标阈值（NODE_R + 24 = 54 世界单位），
+       换算到屏幕上就是 54 × z 像素：
+         z=0.25 → 13.5px（节点本身才 30px！点在圆里都连不上）
+         z=0.45 → 24.3px（还是比节点的 30px 小）
+         z=1.0  → 54px
+         z=2.2  → 118.8px（会误连到旁边的节点）
+       于是"缩放一变、手感就变"，作者完全摸不出规律（2026-10-24 反馈：
+       「连线还是偶有不爽，我也摸不出规律…看起来能连上吧…实际上不行」）。
+       现在改成：先算屏幕距离（世界距离 × z），再跟**屏幕上的**节点半径 + 余量比，
+       命中范围在任何缩放下都一样。 */
+    portHit(w, excludeId) {
+      /* 排除起点。excludeId 要显式传进来：
+         endPortDrag 里在判命中之前已经把 this._portDrag 清空了，
+         靠 this._portDrag.from 去排除会失效（拿到 null）→ 起点自己成了最近点，
+         拖到原地松手就会连出一条「自己连自己」的坏关系。 */
+      const ex = (excludeId !== undefined) ? excludeId : (this._portDrag && this._portDrag.from);
+      const z = this.z || 1;
+      const reach = NODE_R + 24;              /* 屏幕像素 */
+      let best = null, bd = reach;
+      this.scope().nodes.forEach(nd => {
+        if (nd.id === ex) return;
+        const p = this.getPos(nd.id);
+        if (!p) return;
+        const d = Math.hypot(p.x - w[0], p.y - w[1]) * z;   /* ← 屏幕距离 */
+        /* ⚠️ 早先的写法是"先找最近的那个，再看它有没有超阈值"，
+           超了就整条放弃 —— 于是**旁边明明有个节点在范围内也不算数**。
+           改成"在范围内的里面挑最近的"。 */
+        if (d <= reach && d < bd) { bd = d; best = nd; }
+      });
+      return best ? best.id : null;
+    },
+    endPortDrag(ev) {
       const d = this._portDrag;
       this._portDrag = null; this._portHover = null;
       this.wrap.classList.remove('linking');
       const hint = document.getElementById('graphHint');
       if (hint) this.hintAt();
       if (!d) return;
-      if (!d.target) { this.renderGhost(); this.toast('松开位置没有节点，这次没有连线'); return; }
+      /* ⚠️ 松手那一刻要**按 mouseup 的位置再判一次命中**。
+         之前只用"最后一次 mousemove"的位置算 target —— 手一甩，
+         最后一次 move 还在半路上，target 就是 null，明明松在节点上却说"没连上"。
+         这是"拖出来总是连不到下一个"的真正原因。 */
+      if (ev) {
+        const w = this.toWorld(ev.clientX, ev.clientY);
+        d.w = w;
+        d.target = this.portHit(w, d.from);
+      }
+      /* ★ 兜底：落点没命中，但**刚刚吸住过**某个目标 → 还是连它。
+         作者的原话是「看起来能连上吧……实际上不行」——
+         常见情形是：线头已经吸到目标上了（节点亮了一圈、线也变粗了），
+         作者一看"成了"，手一松鼠标又飘出去几像素，
+         按落点重判就成了 null → 白拖一趟，还弹出"没落在节点上"。
+         既然中途已经吸住过，就该认这个账。
+
+         ⚠️ 判据必须是「**松手落点**离那个目标还有多远」，
+         不能用"吸住那一刻的位置"—— 吸住那一刻线头就在目标中心上，
+         拿它当参照距离恒等于 0，条件恒成立 →
+         作者只是路过一个节点、最后拖到空处松手，也会被连上，
+         那就变成另一种"摸不出规律"。
+         现在改成：松手落点离目标还在命中范围内（放宽到 1.6 倍）就认账。 */
+      if (!d.target && d.lastTarget) {
+        const p = this.getPos(d.lastTarget);
+        if (p && d.w) {
+          const z = this.z || 1;
+          const sd = Math.hypot(p.x - d.w[0], p.y - d.w[1]) * z;
+          /* 落点离目标还有 1.6 倍命中半径以内 → 算"作者就是想连它，只是手滑了"。 */
+          if (sd <= (NODE_R + 24) * 1.6) d.target = d.lastTarget;
+        }
+      }
       this.renderGhost();
+      if (!d.target) { this.toast(_T('线头没落在节点上，这次没有连成')); return; }
       this.createRel(d.from, d.target);
     },
     cancelPortDrag() {
@@ -8881,6 +10546,25 @@ var REL_KINDS = [
 (function (global) {
   'use strict';
   const ROW_H = 34, HEAD_W = 150;
+
+  /* 条的长度必须**忠实反映数值**（跨度几年就画几宽）。
+     以前这里写死 Math.max(26, len*ppy) —— 26px 是硬下限，
+     于是「1 年的段」和「400 年的时代」被拍成同一个宽度，
+     作者看着就是"长度不受到数值变化而变，似乎有个长度上限"（作者 2026-10-23 反馈）。
+     剧情节点行最明显：样例工程里 50→51、51→52 这种 1 年间隔的段
+     全被抬成 26px，既看不出长短还会互相压叠。
+     现在下限只留 2px（保证还能看见一条细线、还能点中），
+     其余完全按 len*ppy 走 —— 长度就是数值。 */
+  const BAR_MIN = 2;
+  /* 「适应」视图里每年至少给多少像素。
+     区间一大（前20000 ~ 后30000 共 5 万年），若把整段硬塞进一屏就变成每年 0.02 像素，
+     40 年的事件只画 0.8px、80 年的画 1.6px —— 数值变了、长度几乎没变，
+     作者看着就是"长度不受到数值变化而变，似乎有个长度上限"（作者 2026-10-23 反馈）。
+     现在：跨度大时时间轴**允许横向滚动**（#timelineWrap 本来就是 overflow:auto，
+     inner 的宽度本来就按整个区间算），换来条长真的随数值变化。
+     「全貌」按钮仍然保留 —— 作者想一眼看完整段时随时切过去
+     （那时条确实会变短，那是"塞进一屏"的必然代价，不是 bug）。 */
+  const MIN_PPY = 0.5;
 
   function div(cls, txt) { const e = document.createElement('div'); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
@@ -8965,9 +10649,16 @@ var REL_KINDS = [
     init() {
       this.wrap = document.getElementById('timelineWrap');
       this.inner = document.getElementById('timelineInner');
-      document.getElementById('btnTlFit').onclick = () => this.fit();
-      document.getElementById('btnTlZoomIn').onclick = () => { this.ppy *= 1.35; this.render(); };
-      document.getElementById('btnTlZoomOut').onclick = () => { this.ppy /= 1.35; this.render(); };
+      document.getElementById('btnTlFit').onclick = () => this.fitReadable();
+      /* 「全貌」= 把整段区间塞进一屏（看全局分布用）。
+         与「适应」的区别：跨度大的时候「适应」会保持条长可读（可横向滚动），
+         「全貌」则强行压进一屏 —— 这时条会很短，作者自己权衡。 */
+      const btnAll = document.getElementById('btnTlAll');
+      if (btnAll) btnAll.onclick = () => this.fit();
+      /* 手动缩放：设 _zoom='manual'，之后 onShown 不会把作者调的缩放覆盖掉
+         （以前窗口一变就重新 fit，作者调好的比例被冲掉）。 */
+      document.getElementById('btnTlZoomIn').onclick = () => { this.ppy *= 1.35; this._zoom = 'manual'; this.render(); };
+      document.getElementById('btnTlZoomOut').onclick = () => { this.ppy /= 1.35; this._zoom = 'manual'; this.render(); };
       document.getElementById('btnTlRange').onclick = () => UI.timeEditor();
       /* 年份直达：跨度大的工程（前20000 ~ 后30000）用滑块根本没法定位，
          必须能直接键入。parseYear 认 -20000 / 前3000 / 3000年 各种写法。
@@ -8983,7 +10674,7 @@ var REL_KINDS = [
             this.setStart(Math.min(this.start, y));
             this.setEnd(Math.max(this.end, y));
           });
-          this.fit();
+          this.fitReadable();
         }
         APP.setYear(y);
         inp.value = '';
@@ -9020,10 +10711,27 @@ var REL_KINDS = [
          底部时间条上的「⚙」、以及菜单「编辑 ▸ 打开时间轴设置」。 */
       MODEL.on('change', () => { if (this._inited) this.render(); });
       window.addEventListener('resize', () => { if (this._inited) this.onShown(); });
+      /* 容器宽度变了就重新适配 —— 只靠 window resize 不够：
+         左侧大纲 / 右侧面板的内容一变，可用宽度就变了，而窗口尺寸一个像素都没动。
+         没有这条的话，时间轴会一直用"上一版布局"的 ppy 去画，
+         刻度是对的、条长却是按旧宽度算的（作者 2026-10-24 报「条没对应好实际年份」）。
+         ⚠️ 只在"宽度真的变了"时才重算，否则 observe → render → 尺寸变化 → observe 会自激。 */
+      if (typeof ResizeObserver === 'function' && this.wrap) {
+        let raf = 0;
+        this._ro = new ResizeObserver(() => {
+          if (!this._inited) return;
+          cancelAnimationFrame(raf);
+          raf = requestAnimationFrame(() => {
+            const w = this.wrap.getBoundingClientRect().width;
+            if (w > 60 && Math.abs(w - (this._fittedW || 0)) > 8) this.onShown();
+          });
+        });
+        this._ro.observe(this.wrap);
+      }
       this._inited = true;
       /* 不在这里 fit：此刻视图还没显示，量不到宽度。
          真正显示时由 VIEW.show('timeline') → TL.onShown() 负责首次适配。 */
-      this.fit();
+      this.fitReadable();
     },
 
     /* 时间轴视图整套跑在"实体年份刻度"（当前最小单位）坐标里 ——
@@ -9041,12 +10749,17 @@ var REL_KINDS = [
     x(year) { return HEAD_W + (year - this.start) * this.ppy; },
     yearAt(px) { return Math.round(this.start + (px - HEAD_W) / this.ppy); },
 
+    /* 条长 = 数值 × 每像素多少年。**没有额外的"最小宽度"概念**，
+       只有 BAR_MIN 那个 2px 的"至少看得见一条线"下限。
+       以前这里还额外算了一次 Math.max(26, ...) 来做"轨道避让用的宽度"，
+       于是避让宽度和实际画出来的宽度不一致（26 ≠ len*ppy），
+       轨道分配会误判"这两条不重叠"→ 实际画出来压在一起。
+       两处现在共用同一个 barW()。 */
+    barW(lenYears) { return Math.max(BAR_MIN, lenYears * this.ppy); },
+
     fit() {
-      /* 量宽度时视图可能仍是隐藏的（首次 init 就调 fit）。
-         隐藏元素 getBoundingClientRect().width === 0，
-         以前直接退回 900px，于是 ppy 按一个错的宽度算出来 ——
-         首次打开时间轴就是"挤成一团"，点「适应」才正常。
-         现在量不到宽度就干脆不 fit，等 VIEW.show('timeline') 真正显示后再算。 */
+      /* 「适应」= 把整个区间塞进一屏（作者要看全局分布时用）。
+         注意这**不是**默认视图：默认视图是 fitReadable()（见下）。 */
       const r = this.wrap.getBoundingClientRect();
       const w = r.width;
       if (!(w > 60)) { this._needFit = true; return; }
@@ -9058,16 +10771,42 @@ var REL_KINDS = [
       this.ppy = Math.max(0.004, usable / span);
       this._needFit = false;
       this._fittedW = w;
-      document.getElementById('tlZoomVal').textContent = this.ppy < 0.1 ? this.ppy.toFixed(4) + '×' : this.ppy.toFixed(2) + '×';
+      this._zoom = 'fit';
+      this.render();
+    },
+    /* 默认视图：**保证每年至少 MIN_PPY 个像素**。
+       为什么不是"整段塞进一屏"：
+       区间一大（前20000 ~ 后30000 共 5 万年），塞进一屏就变成每年 0.02 像素，
+       40 年的事件只画 0.8px、80 年的画 1.6px —— 数值变了、长度几乎没变，
+       作者看着就是"长度不受到数值变化而变，似乎有个长度上限"（作者 2026-10-23 反馈）。
+       现在：跨度大时时间轴**允许横向滚动**（#timelineWrap 本来就是 overflow:auto，
+       inner 的宽度也本来就按整个区间算），换来条长真的随数值变化。
+       「适应」按钮仍然保留 —— 作者想看全局分布时随时能切过去。 */
+    fitReadable() {
+      const r = this.wrap.getBoundingClientRect();
+      const w = r.width;
+      if (!(w > 60)) { this._needFit = true; return; }
+      const span = Math.max(1, this.end - this.start);
+      const usable = w - HEAD_W - 24;
+      if (!(usable > 40)) { this._needFit = true; return; }
+      this.ppy = Math.max(MIN_PPY, usable / span);
+      this._needFit = false;
+      this._fittedW = w;
+      this._zoom = 'auto';
       this.render();
     },
     /* 视图真正显示出来后调用：宽度这时才量得到。
-       若期间窗口尺寸变了，也重新按新宽度 fit —— 时间轴是"整段一览"的页面，
-       缩放级别应该始终贴着可用宽度，而不是沿用一个陈旧的值。 */
+       若期间窗口尺寸变了，也重新按新宽度算 —— 时间轴是"整段一览"的页面，
+       缩放级别应该始终贴着可用宽度，而不是沿用一个陈旧的值。
+       ⚠️ 手动缩放（＋/－）之后不要把作者的缩放覆盖掉：
+       onShown 在窗口尺寸变化时也会被调，那时作者调的缩放必须还在。 */
     onShown() {
       const w = this.wrap.getBoundingClientRect().width;
-      if (this._needFit || !this._fittedW || Math.abs(w - this._fittedW) > 8) this.fit();
-      else this.render();
+      const mode = this._zoom || 'auto';
+      if (mode === 'manual') { this.render(); return; }
+      if (mode === 'fit' || this._needFit || !this._fittedW || Math.abs(w - this._fittedW) > 8) {
+        if (mode === 'fit') this.fit(); else this.fitReadable();
+      } else this.render();
     },
     /* 换了单位或区间之后调用：强制重新 fit。
        为什么 onShown 不够—— 它只在"容器宽度变了或上次没量到宽度"时才重算缩放，
@@ -9171,8 +10910,8 @@ var REL_KINDS = [
           };
           it.onmousedown = ev => {
             if (ev.target.classList.contains('tl-mark-lbl') && ev.detail >= 2) return;
-            this.startDrag(ev, it, m, (dy, obj) => {
-              obj.year = Math.max(this.start, Math.min(this.end, this.yearAt(this.x(obj.year) + dy)));
+            this.startDrag(ev, it, m, (dy, obj, mode, orig) => {
+              obj.year = Math.max(this.start, Math.min(this.end, this.yearAt(this.x(orig.year) + dy)));
             });
           };
           row.appendChild(it);
@@ -9201,11 +10940,24 @@ var REL_KINDS = [
       function put(row, year, lenYears, label, cls, onClick, onDrag, obj, lane, endLabel) {
         const it = div('tl-item ' + (cls || ''));
         const x = self.x(year);
-        const w = Math.max(26, lenYears * self.ppy);
+        const w = self.barW(lenYears);
         it.style.left = x + 'px'; it.style.width = w + 'px';
+        /* 条很窄时去掉左右内边距：box-sizing:border-box 下 padding 6+6 会把条
+           硬撑到 14px —— 1 年的条看着像 4 年（作者 2026-10-24 要"条长对应年份"）。
+           条里的文字本来就会被 overflow 裁掉，hover 的 title 里还有完整区间。 */
+        if (w < 24) it.style.padding = '0';
         if (lane) it.style.top = (6 + lane * (ROW_H - 4)) + 'px';
-        it.innerHTML = esc(label);
         const endY = endLabel == null ? year + lenYears : endLabel;
+        /* 区间条要**当场看得见**真实的年份区间。
+           以前只写进 title（鼠标悬停才出现），作者盯着条看不出它到底从哪年到哪年 ——
+           现在把区间直接渲染成条内的一小段文字（.tl-span-rng，颜色更淡、不抢标题）。 */
+        it.textContent = label;
+        /* timeline.js 里没有 el() 助手（那是 canvas.js 的），这里直接建 <span> ——
+           用 span 而不是 div，才能和标题排在同一行（.tl-item 是 line-height:20px 的单行条）。 */
+        const rng = document.createElement('span');
+        rng.className = 'tl-span-rng';
+        rng.textContent = fmtYear(year) + (endY > year ? ' → ' + fmtYear(endY) : '');
+        it.appendChild(rng);
         it.title = label + '　' + fmtYear(year) + (endY > year ? ' → ' + fmtYear(endY) : '');
         if (onClick) it.onclick = ev => { if (!self._dragMoved) onClick(ev); };
         if (onDrag) it.onmousedown = ev => self.startDrag(ev, it, obj, onDrag);
@@ -9213,11 +10965,15 @@ var REL_KINDS = [
         return it;
       }
       /* 轨道分配：让同一行里互相重叠的条目错开，不再糊在一起 */
-      function laneAlloc() {
+      /* gap = 同一轨道两条之间要留的像素间隙，默认 6。
+         剧情节点那条用 gap=0：节点条是按"到下一个节点的距离"首尾相接铺的，
+         彼此紧贴、不会重叠，再要求 6px 间隙反而会把每一段挤到不同轨道上去。 */
+      function laneAlloc(gap) {
         const ends = [];   // 每条轨道已占用的最右像素
+        const g = (gap == null ? 6 : gap);
         return (x, w) => {
           for (let i = 0; i < ends.length; i++) {
-            if (x >= ends[i] + 6) { ends[i] = x + w; return i; }
+            if (x >= ends[i] + g) { ends[i] = x + w; return i; }
           }
           ends.push(x + w); return ends.length - 1;
         };
@@ -9229,9 +10985,9 @@ var REL_KINDS = [
         const row = section('时代标记', 'era', ROW_H);
         eras.forEach((er, i) => {
           const len = (i + 1 < eras.length ? eras[i + 1].year : this.end) - er.year;
-          put(row, er.year, Math.max(1, len), er.label || '(时代)', 'era-span',
-            () => MODEL.select('era', er.id), (dy, obj, mode) => {
-              if (mode === 'move') obj.year = self.yearAt(self.x(obj.year) + dy);
+          put(row, er.year, Math.max(1, len), er.label || _T('(时代)'), 'era-span',
+            () => MODEL.select('era', er.id), (dy, obj, mode, orig) => {
+              if (mode === 'move') obj.year = self.yearAt(self.x(orig.year) + dy);
             }, er, 0);
         });
         if (!eras.length) {
@@ -9251,14 +11007,14 @@ var REL_KINDS = [
         evs.forEach(ev => {
           const span = Math.max(0, Number(ev.span) || 0);
           const len = Math.max(1, span + 1);
-          const x = this.x(ev.year), w = Math.max(26, len * this.ppy);
+          const x = this.x(ev.year), w = this.barW(len);
           const lane = alloc(x, w);
           const it = put(row0, ev.year, len, (ev.fixed ? '🔒 ' : '') + (ev.title || '事件'),
             'evt' + (ev.fixed ? ' fixed-lock' : '') + (span > 0 ? ' evt-span' : ''),
-            () => { MODEL.select('event', ev.id); }, (dy, obj, mode) => {
-              if (mode === 'move') obj.year = self.yearAt(self.x(obj.year) + dy);
-              else if (mode === 'l') { obj.span = Math.max(0, Math.round((obj.year + obj.span) - self.yearAt(self.x(obj.year) + dy))); obj.year = self.yearAt(self.x(obj.year) + dy); }
-              else obj.span = Math.max(0, Math.round(self.yearAt(self.x(obj.year + obj.span) + dy) - obj.year));
+            () => { MODEL.select('event', ev.id); }, (dy, obj, mode, orig) => {
+              if (mode === 'move') obj.year = self.yearAt(self.x(orig.year) + dy);
+              else if (mode === 'l') { obj.span = Math.max(0, Math.round((orig.year + orig.span) - self.yearAt(self.x(orig.year) + dy))); obj.year = self.yearAt(self.x(orig.year) + dy); }
+              else obj.span = Math.max(0, Math.round(self.yearAt(self.x(orig.year + orig.span) + dy) - orig.year));
             }, ev, lane, ev.year + span);
           if (span > 0) it.title += `　有效期 ${span} 年`;
         });
@@ -9271,15 +11027,41 @@ var REL_KINDS = [
 
       /* 剧情节点 */
       if (showNd) {
-        const row0 = section('剧情节点', null, ROW_H);
-        const alloc = laneAlloc();
-        const nds = (d.nodes || []).filter(n => n.year !== '' && n.year != null).sort((a, b) => Number(a.year) - Number(b.year));
-        nds.forEach(n => {
-          const y = Number(n.year), len = 2;
-          const lane = alloc(this.x(y), Math.max(26, len * this.ppy));
-          put(row0, y, len, n.title || n.id, 'node',
-            () => { MODEL.select('node', n.id); CANVAS.focusNode(n.id); VIEW.show('canvas'); },
-            (dy, obj, mode) => { if (mode === 'move') obj.year = self.yearAt(self.x(Number(obj.year)) + dy); }, n, lane);
+        const row0 = section(_T('剧情节点'), null, ROW_H);
+        /* 节点条首尾相接铺（无需间隙），所以 gap=0，见 laneAlloc 注释。 */
+        const alloc = laneAlloc(0);
+        /* 便签不进时间轴 —— 作者 2026-10-24：「便签卡不要进时间轴甘特图」。
+           便签是作者随手记的东西（不参与剧情推进），混进"剧情节点"这一行
+           只会把节奏搅乱：一条"三年"的便签会占掉一段本该属于剧情的时间。 */
+        const nds = (d.nodes || []).filter(n => n.type !== 'note' && n.year !== '' && n.year != null).sort((a, b) => Number(a.year) - Number(b.year));
+        nds.forEach((n, i) => {
+          const y = Number(n.year);
+          /* 节点长度口径（2026-10-24 作者拍板，代号"乙"）：
+             节点自己有一个可选的「截止年份」（n.to）。
+               · 填了 → 这张卡占 [起始年, 截止年] 这一段（区间条）；
+               · 没填 → 这张卡只是一个时间点（长 1 年的短标记）。
+             ⚠️ 不再"借用下一个节点的年份"当长度。作者原话：
+             「这就要求下一个场景卡要决定三年后是什么时候，而不是实际上讲述三年后的
+             那张场景卡 —— 这是错误的，跨时间还是得由提及的这张卡定义」。
+             也就是说：谁讲了"我在沙漠里穿行了三年"，谁就自己填截止年份。 */
+          const toRaw = (n.to === '' || n.to == null) ? null : Number(n.to);
+          const hasTo = toRaw != null && isFinite(toRaw) && toRaw >= y;
+          const len = hasTo ? (toRaw - y + 1) : 1;
+          const lane = alloc(this.x(y), this.barW(len));
+          const it = put(row0, y, len, n.title || n.id, 'node',
+            /* 单击 = **只选中**（右侧属性面板就能编辑）。
+               作者 2026-10-24：「我点时间轴甘特条是为了选中、选中是为了编辑，
+               但现在实际情况是点击甘特条会跳转到画布界面」—— 一跳走就没法边看边改。
+               双击才跳到画布并把那张卡挪到中间，保留"从时间轴定位到画布"这条路。 */
+            () => { MODEL.select('node', n.id); },
+            (dy, obj, mode, orig) => { if (mode === 'move') obj.year = self.yearAt(self.x(Number(orig.year)) + dy); }, n, lane,
+            /* endLabel = 真实截止年（没有就等于起始年，条内不显示区间文字） */
+            hasTo ? toRaw : y);
+          it.ondblclick = () => {
+            MODEL.select('node', n.id);
+            CANVAS.focusNode(n.id);
+            VIEW.show('canvas');
+          };
         });
         if (!nds.length) {
           const e0 = div(''); e0.style.cssText = 'position:absolute;left:' + (HEAD_W + 8) + 'px;top:7px;color:var(--dim2);font:11px var(--sans)';
@@ -9303,7 +11085,7 @@ var REL_KINDS = [
             const segs = MODEL.relSegs(o);
             segs.forEach(sg => {
               const len = Math.max(1, sg.to - sg.from + 1);
-              const lane = alloc(this.x(sg.from), Math.max(26, len * this.ppy));
+              const lane = alloc(this.x(sg.from), this.barW(len));
               const kd = MODEL.relNature(o.kind, sg.type);
               const label = MODEL.relNatureLabel(o.kind, sg);
               const it = put(row0, sg.from, len,
@@ -9325,13 +11107,18 @@ var REL_KINDS = [
           }
           const y0 = o.exist ? o.exist[0] : this.start, y1 = o.exist ? o.exist[1] : this.end;
           const len = Math.max(1, y1 - y0 + 1);
-          const lane = alloc(this.x(y0), Math.max(26, len * this.ppy));
+          const lane = alloc(this.x(y0), this.barW(len));
+          /* 第一次移动时拍下原始存续区间作基准，之后每帧都从基准算，
+             不再读已被改过的 obj.exist（否则越拖越偏）。exist 可能在拖拽
+             起点还不存在，所以不能依赖 orig 快照，要在首帧现抓。 */
+          const exBase = {};
           const mkDrag = draggable === false ? null : (dy, obj, mode) => {
             if (!obj.exist) obj.exist = [this.start, this.end];
-            const ln = obj.exist[1] - obj.exist[0];
-            if (mode === 'move') { obj.exist[0] = self.yearAt(self.x(obj.exist[0]) + dy); obj.exist[1] = obj.exist[0] + ln; }
-            else if (mode === 'l') { obj.exist[0] = Math.min(obj.exist[1] - 1, self.yearAt(self.x(obj.exist[0]) + dy)); }
-            else { obj.exist[1] = Math.max(obj.exist[0] + 1, self.yearAt(self.x(obj.exist[1]) + dy)); }
+            if (exBase.e0 === undefined) { exBase.e0 = obj.exist[0]; exBase.e1 = obj.exist[1]; }
+            const ln = exBase.e1 - exBase.e0;
+            if (mode === 'move') { obj.exist[0] = self.yearAt(self.x(exBase.e0) + dy); obj.exist[1] = obj.exist[0] + ln; }
+            else if (mode === 'l') { obj.exist[0] = Math.min(obj.exist[1] - 1, self.yearAt(self.x(exBase.e0) + dy)); }
+            else { obj.exist[1] = Math.max(obj.exist[0] + 1, self.yearAt(self.x(exBase.e1) + dy)); }
           };
           const it = put(row0, y0, len, labelOf(o), 'node',
             () => MODEL.select(selKind, o.id),
@@ -9407,9 +11194,12 @@ var REL_KINDS = [
     },
     onMove(e) {
       if (!this._drag) return;
-      const dy = (e.clientX - this._drag.sx) / this.ppy;
-      if (Math.abs(e.clientX - this._drag.sx) > 2) this._dragMoved = true;
-      this._drag.apply(this._drag.sx * 0 + (e.clientX - this._drag.sx), this._drag.obj, this._drag.mode);
+      const px = e.clientX - this._drag.sx;            // 像素位移（自拖拽起点的累计值）
+      if (Math.abs(px) > 2) this._dragMoved = true;
+      /* ⚠️ 第四参 orig = 按下时拍的快照。**必须以 orig 为基准坐标**，
+         绝不能读 obj（obj 已被上一帧改过）→ 否则每帧在「已移动的位置」上
+         再加一次累计位移，条会越拖越往右飞（作者报的"拖动条往右飞走"）。 */
+      this._drag.apply(px, this._drag.obj, this._drag.mode, this._drag.orig);
       this.render();
     },
     onUp() {
@@ -9505,17 +11295,21 @@ var REL_KINDS = [
        否则 -20000 会被「前」的匹配吃掉前缀当成绝对值。 */
     let yv = out.y == null ? null : out.y;
     const bare = /(-?\d+)$/.exec(rest);
+    let era = '';
     if (bare) {
-      const raw = Number(bare[1]);
-      const era = rest.slice(0, rest.length - bare[0].length);
-      const eu = era.toUpperCase();
-      /* 判断「是不是纪元前」要看紧邻数字的那个字，而不是整串里有没有「公元」——
-         「公元前3000」里就含「公元」两个字。前缀一律取绝对值当负年。 */
-      const before = era.indexOf('前') >= 0 || eu.indexOf('BC') >= 0;
-      yv = before ? -Math.abs(raw) : raw;
+      era = rest.slice(0, rest.length - bare[0].length);
+      yv = Number(bare[1]);
     } else if (!hasUnit) {
       return null;
     }
+    /* 「是不是纪元前」只看紧邻数字的那段前缀，不看整串里有没有「公元」——
+       「公元前3000」里就含「公元」两个字。前缀一律取绝对值当负年。
+       ⚠️ 早先这段判断被写在「裸数字」分支里面，于是**带「年」字时符号丢了**：
+       parseYear('公元前480年') 返回 +480（2026-10-24 发现 —— 时间轴刻度标签
+       正是这种写法，反向解析出来全变正数）。带单位时前缀留在 rest 里，这里统一判。 */
+    if (!era) era = rest;
+    const eu = era.toUpperCase();
+    if (era.indexOf('前') >= 0 || eu.indexOf('BC') >= 0) yv = -Math.abs(yv);
     if (yv === null) return null;
     if (hasUnit) return global.TIME.compose(yv, out.m, out.d, unit);
     return yv;
@@ -9801,12 +11595,146 @@ var REL_KINDS = [
     w.appendChild(i); w.appendChild(el('span', null, label));
     return w;
   }
+  /* ── 颜色选择器 ───────────────────────────────────
+     去掉原生 <input type=color>（浏览器自带吸管，作者不需要、也容易误用），
+     改成本面板：预设色板 + "已用过的颜色"（工程里当前仍在用的颜色，方便复用）
+     + 十六进制精确填写。**保留**作者原有的选色能力，只是换了个没有吸管的界面。
+     2026-10-23 #109 作者原话：「预设很多预设色且按色彩规律排列 /
+     回到之前的色板但抛去吸管只在色板上选色」——
+     所以色板是**主**（一大片按色相排好的方块，点哪取哪），
+     十六进制是**辅**（要精确值时才填），全程没有吸管。 */
+  /* 色相 → RGB。h: 0~360，s/l: 0~1。 */
+  function hslToHex(h, s, l) {
+    h = ((h % 360) + 360) % 360;
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    const m = l - c / 2;
+    let r = 0, g = 0, b = 0;
+    if (h < 60) { r = c; g = x; }
+    else if (h < 120) { r = x; g = c; }
+    else if (h < 180) { g = c; b = x; }
+    else if (h < 240) { g = x; b = c; }
+    else if (h < 300) { r = x; b = c; }
+    else { r = c; b = x; }
+    const to = v => Math.round((v + m) * 255).toString(16).padStart(2, '0');
+    return '#' + to(r) + to(g) + to(b);
+  }
+  /* 预设色板：**按色相排成矩阵** ——
+     列 = 色相（红 0° → 玫瑰 330°，每 30° 一列，肉眼能看出冷暖走向），
+     行 = 明度（深 → 浅，每行一档）。灰阶单独一行。
+     这是"按色彩规律排列"的字面做法：想找"偏蓝但浅一点"就横着走两格、往下一行。 */
+  const PALETTE_HUES = [];
+  for (let h = 0; h < 360; h += 30) PALETTE_HUES.push(h);
+  const PALETTE_ROWS = [
+    { l: 0.28, s: 0.62 }, { l: 0.44, s: 0.58 }, { l: 0.60, s: 0.52 }, { l: 0.76, s: 0.44 },
+  ];
+  const PALETTE_GRAY = ['#f2f2f2', '#d0d0d0', '#9a9a9a', '#6b6b6b', '#3a3a3a', '#1a1a1a'];
+  /* 规整颜色字符串：只认 #rgb / #rrggbb（大小写均可），其余返回 null。
+     2026-10-23 #109：作者原话「编码超过位数或没有打#都算错误输入」——
+     他要的是**别把这些当错误**：少打 # 自动补、三位自动展开成六位、
+     打多了截取前六位、混进来的其它字符直接忽略。
+     只有"一个十六进制数字都没有"才算真的填错。 */
+  function normalizeHex(c) {
+    if (typeof c !== 'string') return null;
+    let s = c.trim().toLowerCase().replace(/^#+/, '');
+    /* 只留十六进制数字（顺带把常见的分隔符扔掉） */
+    s = s.replace(/[^0-9a-f]/g, '');
+    if (!s) return null;
+    if (s.length === 3) return '#' + s.split('').map(x => x + x).join('');
+    /* 超过六位 → 截前六位（多打的算"补齐"而不是"错误"） */
+    if (s.length > 6) s = s.slice(0, 6);
+    return '#' + s;
+  }
+  /* 收集工程里"已经用过且现在仍存在"的颜色，作为快速重选色板。 */
+  function collectUsedColors() {
+    const out = [], seen = {};
+    const push = c => { c = normalizeHex(c); if (!c || seen[c]) return; seen[c] = 1; out.push(c); };
+    ['regions', 'characters', 'factions'].forEach(k => (MODEL.data[k] || []).forEach(o => push(o.color)));
+    (MODEL.data.schema && MODEL.data.schema.relNatures || []).forEach(o => push(o.color));
+    return out;
+  }
+  /* 点击空白处关闭所有颜色面板（只挂一次）。 */
+  if (!global.__cpDocClose) {
+    global.__cpDocClose = 1;
+    document.addEventListener('click', ev => {
+      document.querySelectorAll('.cp-panel').forEach(p => {
+        const w = p.parentNode;                 // .color-pick 包裹
+        if (w && !w.contains(ev.target)) p.style.display = 'none';
+      });
+    });
+  }
   function colorInput(obj, key) {
-    const i = el('input'); i.type = 'color'; i.value = obj[key] || '#c9a227';
-    i.style.cssText = 'width:38px;padding:1px;height:24px';
-    i.oninput = () => { beginEdit(); obj[key] = i.value; };
-    i.onchange = () => endEdit('改颜色');
-    return i;
+    const wrap = el('div', 'color-pick');
+    const cur = el('div', 'cp-cur');
+    const setCur = () => { cur.style.background = normalizeHex(obj[key]) || '#c9a227'; };
+    setCur();
+    cur.title = _T('点击展开选色');
+    const panel = el('div', 'cp-panel');
+    panel.style.display = 'none';
+    const closePanel = () => { panel.style.display = 'none'; };
+    const buildPanel = () => {
+      panel.innerHTML = '';
+      const swRow = colors => {
+        const row2 = el('div', 'cp-row');
+        colors.forEach(c => {
+          const s = el('div', 'cp-sw'); s.style.background = c; s.title = c; s.onclick = () => pick(c);
+          row2.appendChild(s);
+        });
+        return row2;
+      };
+      const used = collectUsedColors();
+      if (used.length) {
+        panel.appendChild(el('div', 'cp-h', _T('已用过的颜色')));
+        panel.appendChild(swRow(used));
+      }
+      /* 预设色板：行 = 明度档，列 = 色相 —— 一眼能看出色相走向。 */
+      panel.appendChild(el('div', 'cp-h', _T('预设色板')));
+      PALETTE_ROWS.forEach(rowDef => {
+        const row2 = el('div', 'cp-row');
+        PALETTE_HUES.forEach(h => {
+          const c = hslToHex(h, rowDef.s, rowDef.l);
+          const s = el('div', 'cp-sw'); s.style.background = c; s.title = c; s.onclick = () => pick(c);
+          row2.appendChild(s);
+        });
+        panel.appendChild(row2);
+      });
+      /* 灰阶单独一行（含纯白纯黑） */
+      panel.appendChild(swRow(PALETTE_GRAY.concat(['#ffffff', '#000000'])));
+      const hexWrap = el('div', 'cp-hex');
+      const hex = el('input'); hex.type = 'text'; hex.value = normalizeHex(obj[key]) || ''; hex.placeholder = '#rrggbb';
+      /* 2026-10-23 #109 的两个毛病在这里修：
+         ① 「输入有误时标记色不变，十六进制码变回上一个预设色」——
+            旧代码 oninput 只在合法时改预览色，非法时**预览色停在上一次的值**，
+            onchange 又把输入框内容整个重置 → 作者看到的是"我明明填了，怎么变回原来的"。
+            现在：非法时**保留作者写的内容**并给红字提示，不静默回退。
+         ② 「编码超过位数或没有打#都算错误输入」——
+            交给 normalizeHex 容错处理（补# / 三位展开 / 超长截断 / 忽略杂字符）。
+            只有"一个十六进制数字都没有"才算错。 */
+      const err = el('div', 'cp-err');
+      const showErr = msg => { err.textContent = msg || ''; hex.classList.toggle('bad', !!msg); };
+      hex.oninput = () => {
+        const v = normalizeHex(hex.value);
+        if (v) { cur.style.background = v; showErr(''); }
+        else showErr(_T('这里填十六进制颜色，比如 #4a9eff'));
+      };
+      hex.onchange = () => {
+        const v = normalizeHex(hex.value);
+        if (v) { pick(v); showErr(''); }
+        else {
+          /* 填错了：留住他写的内容 + 红字说明，不动实际颜色 */
+          showErr(_T('这里填十六进制颜色，比如 #4a9eff'));
+        }
+      };
+      hexWrap.appendChild(el('span', 'cp-h2', _T('十六进制')));
+      hexWrap.appendChild(hex);
+      panel.appendChild(hexWrap);
+      panel.appendChild(err);
+      panel.onclick = e => e.stopPropagation();   // 面板内点击不冒泡到 document 关闭
+    };
+    const pick = c => { beginEdit(); obj[key] = c; endEdit('改颜色'); setCur(); closePanel(); };
+    cur.onclick = e => { e.stopPropagation(); panel.style.display = panel.style.display === 'block' ? 'none' : 'block'; if (panel.style.display === 'block') buildPanel(); };
+    wrap.appendChild(cur); wrap.appendChild(panel);
+    return wrap;
   }
   /* 人设设定的三个字段控件：值存在 obj.profile 里（不污染顶层字段）。
      性格标签用顿号/逗号分隔输入，存成数组。 */
@@ -9895,11 +11823,19 @@ var REL_KINDS = [
        但那依赖巧合，显式处理更清楚。 */
     const selVal = s => { const v = s ? s.value : ''; return (v === '' || v == null) ? 0 : Number(v); };
     const read = () => {
+      /* 可空的年份框（节点的截止年份）：框里空 = "没设"，
+         不能当成 0 —— 作者原话：「不能我设置了起始年份没设置截止年份，
+         截止年份就被默认成某个数字」。 */
+      if (opts.allowEmpty && !String(yi.value == null ? '' : yi.value).trim()) return null;
       const s = TIME.yearOnly(yi.value, cfg);
       if (s === null) return null;
       return TIME.composeTicks(s, selVal(selM), selVal(selD), unit);
     };
     const sync = () => {
+      if (opts.allowEmpty && (obj[key] == null || obj[key] === '')) {
+        yi.value = ''; selM.value = '0'; selD.value = '0';
+        return;
+      }
       const p = TIME.decompose(Number(obj[key]) || 0, unit);
       yi.value = p.y;
       /* 直接给 select.value 赋值，不要碰 selectedOptions[0] ——
@@ -9935,7 +11871,16 @@ var REL_KINDS = [
     };
     const commitVal = () => {
       const v = read();
-      if (v === null) return;
+      if (v === null) {
+        /* 可空框：清空 = 真的清空（写 null），不是"保持原样"。
+           没设就是没设，不留一个默认数字在数据里。 */
+        if (opts.allowEmpty) {
+          beginEdit();
+          obj[key] = null;
+          if (opts.onChange) opts.onChange(null);
+        }
+        return;
+      }
       beginEdit();
       obj[key] = v;
       maybeWiden(v);
@@ -9945,6 +11890,12 @@ var REL_KINDS = [
       /* 年份框只接受"年份本体"（可带纪元词），月日由下拉负责 ——
          用户明确要求年自填月日下拉，这里就不能再让框去解析 "3年2个月"，
          否则两套来源打架。 */
+      if (opts.allowEmpty && !String(yi.value == null ? '' : yi.value).trim()) {
+        beginEdit();
+        obj[key] = null;
+        if (opts.onChange) opts.onChange(null);
+        return;
+      }
       const s = TIME.yearOnly(yi.value, cfg);
       if (s === null) return;
       beginEdit();
@@ -11037,9 +12988,14 @@ var REL_KINDS = [
       bd.appendChild(st);
 
       const [pa, pb] = this.relPools(rel.kind);
-      const isF = rel.kind === 'f_f' || rel.kind === 'p_f';
-      const lblA = isF ? '势力 A' : ((rel.kind === 'r_r' || rel.kind === 'p_r') ? '地区 A' : '角色 A');
-      const lblB = isF ? '势力 B' : ((rel.kind === 'r_r' || rel.kind === 'p_r') ? '地区 B' : '角色 B');
+      /* 两端的标签按 kind 派生（REL_KINDS 是单一事实来源）。
+         以前是三段 if/else 手写：势力(f_f/p_f) / 地区(r_r/p_r) / 其余当角色 ——
+         于是 p_c 的 a 端（其实是主角）被写成"角色 A"，p_r 的 a 端也被写成"地区 A"，
+         名字和实际端点对不上。现在按 kind 里的端点类型取名。 */
+      const _rk0 = (REL_KINDS.find(x => x.kind === rel.kind)) || {};
+      const _endLbl = k => (k === 'faction' ? '势力' : k === 'region' ? '地区' : k === 'character' ? '角色' : '主角');
+      const lblA = _endLbl(_rk0.a) + ' A';
+      const lblB = _endLbl(_rk0.b) + ' B';
       if (pa) {
         bd.appendChild(row(lblA, select(rel, 'a', pa.map(o => ({ v: o.id, t: o.name })), { label: lblA })));
       } else {
@@ -11159,8 +13115,10 @@ var REL_KINDS = [
         const selT = el('select', 'seg-nature-sel');
         MODEL.relNatureList(rel.kind).forEach(k => {
           const o = el('option'); o.value = k.id;
-          /* 选项文字带上预填数值，作者能一眼看出每个性质"默认长什么样" */
-          o.textContent = k.name + (k.def != null ? `（默认 ${k.def}）` : '');
+          /* 选项文字只显示性质名。预填数值（def）仍保留在设置里、
+             换性质时照常生效，但不再在这个下拉里写出"默认 X"——
+             作者觉得每个性质后面都挂个"默认 X"既诡异又没用。 */
+          o.textContent = k.name;
           selT.appendChild(o);
         });
         if (!kd) {
@@ -11588,22 +13546,32 @@ var REL_KINDS = [
 
       /* 新建关系：列出本实体能连的各类另一端。
          protagonist 身份时 id === 'pc'，且 p_x 的 a 端恒为 'pc'。
-         pcOther=true 表示"另一端是主角"，此时 a 端固定为 'pc'、b 端是当前实体。 */
+         ⚠️ 作者 2026-10-24：
+         ① 「人物关系得是所有人物互相的，包括但不限于主角」→ 除自己那一类，
+            角色 / 地区 / 势力 全都给。
+         ② 「关联角色和关联主角大可以合并一下，主角有星标即可」→ 主角不再单独占一个
+            「选择主角…」下拉，而是并进「选择角色…」里（带 ★）。
+            pcKind = 选到主角时用哪一类关系（角色面板 p_c / 势力面板 p_f / 地区面板 p_r）。
+         ③ 「势力和地区之间可以先不要连线」→ 没有「势力 ↔ 地区」这一类，
+            势力面板也就没有「选择地区…」。 */
       const defs = {
         region: [
-          { label: '选择地区…', kind: 'r_r', pool: d.regions, pcOther: false },
-          { label: '选择角色…', kind: 'c_r', pool: d.characters, pcOther: false },
-          { label: '选择主角…', kind: 'p_r', pool: null, pcOther: true },
+          { label: '选择地区…', kind: 'r_r', pool: d.regions, pcKind: null },
+          { label: '选择角色…', kind: 'c_r', pool: d.characters, pcKind: 'p_r' },
         ],
         character: [
-          { label: '选择角色…', kind: 'c_c', pool: d.characters, pcOther: false },
-          { label: '选择地区…', kind: 'c_r', pool: d.regions, pcOther: false },
-          { label: '选择主角…', kind: 'p_c', pool: null, pcOther: true },
+          { label: '选择角色…', kind: 'c_c', pool: d.characters, pcKind: 'p_c' },
+          { label: '选择地区…', kind: 'c_r', pool: d.regions, pcKind: null },
+          { label: '选择势力…', kind: 'c_f', pool: d.factions, pcKind: null },
+        ],
+        faction: [
+          { label: '选择势力…', kind: 'f_f', pool: d.factions, pcKind: null },
+          { label: '选择角色…', kind: 'c_f', pool: d.characters, pcKind: 'p_f' },
         ],
         protagonist: [
-          { label: '选择角色…', kind: 'p_c', pool: d.characters, pcOther: false },
-          { label: '选择地区…', kind: 'p_r', pool: d.regions, pcOther: false },
-          { label: '选择势力…', kind: 'p_f', pool: d.factions, pcOther: false },
+          { label: '选择角色…', kind: 'p_c', pool: d.characters, pcKind: null },
+          { label: '选择地区…', kind: 'p_r', pool: d.regions, pcKind: null },
+          { label: '选择势力…', kind: 'p_f', pool: d.factions, pcKind: null },
         ],
       }[kind] || [];
 
@@ -11615,25 +13583,26 @@ var REL_KINDS = [
     /* 按"本实体能连的各类另一端"生成一组「新建关系」下拉（见 relationsOf 的 defs 说明）。 */
     relCreateSection(kind, id) {
       const box = el('div');
+      /* 与 relationsOf 里的 defs 保持同一套：任意两类实体之间都能连，
+         主角并进「选择角色…」下拉（带 ★），没有「势力 ↔ 地区」这一类。 */
       const defs = {
         region: [
-          { label: '选择地区…', kind: 'r_r', pool: MODEL.data.regions, pcOther: false },
-          { label: '选择角色…', kind: 'c_r', pool: MODEL.data.characters, pcOther: false },
-          { label: '选择主角…', kind: 'p_r', pool: null, pcOther: true },
+          { label: '选择地区…', kind: 'r_r', pool: MODEL.data.regions, pcKind: null },
+          { label: '选择角色…', kind: 'c_r', pool: MODEL.data.characters, pcKind: 'p_r' },
         ],
         character: [
-          { label: '选择角色…', kind: 'c_c', pool: MODEL.data.characters, pcOther: false },
-          { label: '选择地区…', kind: 'c_r', pool: MODEL.data.regions, pcOther: false },
-          { label: '选择主角…', kind: 'p_c', pool: null, pcOther: true },
+          { label: '选择角色…', kind: 'c_c', pool: MODEL.data.characters, pcKind: 'p_c' },
+          { label: '选择地区…', kind: 'c_r', pool: MODEL.data.regions, pcKind: null },
+          { label: '选择势力…', kind: 'c_f', pool: MODEL.data.factions, pcKind: null },
         ],
         protagonist: [
-          { label: '选择角色…', kind: 'p_c', pool: MODEL.data.characters, pcOther: false },
-          { label: '选择地区…', kind: 'p_r', pool: MODEL.data.regions, pcOther: false },
-          { label: '选择势力…', kind: 'p_f', pool: MODEL.data.factions, pcOther: false },
+          { label: '选择角色…', kind: 'p_c', pool: MODEL.data.characters, pcKind: null },
+          { label: '选择地区…', kind: 'p_r', pool: MODEL.data.regions, pcKind: null },
+          { label: '选择势力…', kind: 'p_f', pool: MODEL.data.factions, pcKind: null },
         ],
         faction: [
-          { label: '选择势力…', kind: 'f_f', pool: MODEL.data.factions, pcOther: false },
-          { label: '选择主角…', kind: 'p_f', pool: null, pcOther: true },
+          { label: '选择势力…', kind: 'f_f', pool: MODEL.data.factions, pcKind: null },
+          { label: '选择角色…', kind: 'c_f', pool: MODEL.data.characters, pcKind: 'p_f' },
         ],
       }[kind] || [];
       defs.forEach(def => {
@@ -11645,46 +13614,53 @@ var REL_KINDS = [
     },
 
     /* 生成"新建关系"下拉：选一个另一端即建立一条关系（从当前年份起，到时间轴末）。
-       pcOther=true 时另一端是主角（选项只列出"主角"），a 端恒为 'pc'。 */
+       def.pcKind 有值时，下拉里多一个「★ 主角」选项（作者 2026-10-24：
+       「关联角色和关联主角大可以合并一下，主角有星标即可」）。
+       选到主角时用 pcKind 那一类关系（角色面板 p_c / 势力面板 p_f / 地区面板 p_r），
+       主角恒在 a 端。 */
     relCreateDropdown(def, id, kind) {
-      const { label, kind: rk, pool, pcOther } = def;
-      let opts;
-      if (pcOther) {
-        opts = [{ v: '', t: label }, { v: 'pc', t: '★ ' + MODEL.pcName() + '（主角）' }];
-      } else {
-        const selfId = (kind === 'protagonist') ? 'pc' : id;
-        opts = [{ v: '', t: label }].concat(
-          pool.filter(x => x.id !== selfId && !MODEL.findRel(rk, selfId, x.id) && !MODEL.findRel(rk, x.id, selfId))
-            .map(r => ({ v: r.id, t: r.name })));
+      const { label, kind: rk, pool, pcKind } = def;
+      const selfId = (kind === 'protagonist') ? 'pc' : id;
+      const opts = [{ v: '', t: label }];
+      /* 已经建过的那一对不重复出现（同理：主角端也一样） */
+      if (pcKind && !MODEL.findRel(pcKind, 'pc', selfId) && !MODEL.findRel(pcKind, selfId, 'pc')) {
+        opts.push({ v: '__pc__', t: '★ ' + MODEL.pcName() + '（主角）' });
       }
+      (pool || []).forEach(x => {
+        if (x.id === selfId) return;
+        if (MODEL.findRel(rk, selfId, x.id) || MODEL.findRel(rk, x.id, selfId)) return;
+        opts.push({ v: x.id, t: x.name });
+      });
       return row('新建关系', select({}, '_x', opts, {
         label: '新建关系',
         onchange: v => {
           if (!v) return;
+          const isPc = v === '__pc__';
+          const useKind = isPc ? pcKind : rk;
+          const target = isPc ? 'pc' : v;
           /* 按端点类型决定 a/b 顺序：relEndKinds 规定 p_x 的 a 端恒为主角，
              c_r 的 a 端是角色、b 端是地区。当前实体可能是 a 端也可能是 b 端，
              必须按它的"端点 kind"落位，否则顺序错会让关系的两端性质对不上。 */
           const myEndKind = (kind === 'protagonist') ? null : kind;
-          const target = pcOther ? 'pc' : v;
-          const ka = MODEL.endKindOf(rk, 'a'), kb = MODEL.endKindOf(rk, 'b');
+          const ka = MODEL.endKindOf(useKind, 'a'), kb = MODEL.endKindOf(useKind, 'b');
           let a, b;
           if (ka === myEndKind) { a = id; b = target; }
           else if (kb === myEndKind) { a = target; b = id; }
           else { a = id; b = target; }   // 兜底（理论上不会走到）
           /* 建之前再确认一次：同一对实体只允许一条关系（findRel 已按无向判定） */
-          if (MODEL.findRel(rk, a, b) || MODEL.findRel(rk, b, a)) {
+          if (MODEL.findRel(useKind, a, b) || MODEL.findRel(useKind, b, a)) {
             toast('这两者之间已经有关系了，请在列表里点开它加区间', 'warn');
             return;
           }
           /* 空表时不能继续 —— nr 会是 null，nr.segments[0] 直接崩。
              明确告诉作者先去加一条性质。 */
-          if (!MODEL.relNatureList(rk).length) { UI.needNature(rk); return; }
+          if (!MODEL.relNatureList(useKind).length) { UI.needNature(useKind); return; }
           commit('新建关系', () => {
-            const nr = MODEL.newRelation(rk, a, b);
+            const nr = MODEL.newRelation(useKind, a, b);
             /* 从当前年份起，到时间轴末尾。性质和数值沿用 newRelation 的默认值。
                不从时间轴起点开始 —— 作者是在"这一刻"建立关系的，
                从起点铺满会让所有历史年份凭空多出这条关系。 */
-            const kd = MODEL.relNature(rk, nr.segments[0].type);
+            const kd = MODEL.relNature(useKind, nr.segments[0].type);
             nr.segments = [{
               from: MODEL.data.timeline.current, to: MODEL.data.timeline.end,
               type: nr.segments[0].type,
@@ -11704,10 +13680,42 @@ var REL_KINDS = [
       const bd = el('div', 'sect-bd');
       bd.appendChild(row('标题', textInput(n, 'title', { label: '节点标题' })));
       bd.appendChild(row('类型', select(n, 'type', [{ v: 'scene', t: '场景' }, { v: 'check', t: '检定' }, { v: 'roll', t: '抽事件' }, { v: 'effect', t: '结算' }, { v: 'ending', t: '结局' }, { v: 'note', t: '便签' }, { v: 'card', t: '实体卡' }], { label: '节点类型' })));
-      const mr = el('div', 'fld-row');
-      mr.appendChild(row('年份', yearInput(n, 'year', { label: '年份' })));
-      mr.appendChild(row('宽度', numInput(n, 'w', { step: 10, label: '宽度' })));
-      bd.appendChild(mr);
+      /* 宽度不再放在面板里（作者实测调它没显示效果）。
+         改成在画布上直接拖卡片右边缘改宽——更直观，也能让看不全内容的卡直接拉宽。 */
+      bd.appendChild(row('年份', yearInput(n, 'year', { label: '年份' })));
+      /* 截止年份（可留空）—— 作者 2026-10-24 选定的口径：
+         「我在沙漠里穿行了三年」这种跳过式表达是存在的，**跨时间由提及的这张卡定义**，
+         不该由下一张卡决定（作者原话：「这就要求下一个场景卡要决定三年后是什么时候，
+         而不是实际上讲述三年后的那张场景卡 —— 这是错误的」）。
+         所以每张卡自己可以有一个"到哪一年为止"：
+           · 填了 → 这张卡在时间轴上占 [起始, 截止] 这一段；
+           · 留空 → 这张卡只是一个时间点（甘特图上是一条短标记）。
+         ⚠️ 留空必须真的留空（存 null），不能默认填一个数字。 */
+      bd.appendChild(row('截止年份', yearInput(n, 'to', { label: '截止年份', allowEmpty: true })));
+      bd.appendChild(el('div', 'mini',
+        _T('留空 = 这张卡只发生在起始那一年；填了截止年份 = 它跨到那一年为止（比如「在沙漠里穿行了三年」）。')));
+      /* 所属编集盒子：作者手动归类用的分组（画布上画大虚线框，导出会带上成员 id）。
+         一个节点最多属于一个盒子 —— 换盒子就是"移动"，不可能同属两盒（交集不会出现）。
+         ⚠️ 这里不用通用的 select()：它会直接写 n.group，
+            而归组单位是**折叠堆**（作者 2026-10-23 拍板「要么进要么都不进」），
+            必须走 MODEL.setNodeGroup —— 它会把整串堆叠一起搬。 */
+      const gsel = el('select');
+      [{ v: '', t: _T('（不在任何盒子里）') }]
+        .concat((MODEL.data.groups || []).map(g => ({ v: g.id, t: g.name })))
+        .concat([{ v: '__new__', t: _T('＋ 新建盒子') }])
+        .forEach(o => { const op = el('option'); op.value = o.v; op.textContent = o.t; gsel.appendChild(op); });
+      gsel.value = MODEL.groupUnitGroup(MODEL.groupUnitOf(n.id)) || '';
+      gsel.onchange = () => {
+        const v = gsel.value;
+        if (v === '__new__') {
+          const g = MODEL.transact(_T('新建盒子'), () => MODEL.newGroup(n.title || _T('新盒子'), '', CANVAS.emptyGroupPos()));
+          MODEL.transact(_T('加入盒子'), () => MODEL.setNodeGroup(n.id, g.id));
+          INSPECTOR.render(); CANVAS.render(); return;
+        }
+        MODEL.transact(v ? _T('加入盒子') : _T('移出盒子'), () => MODEL.setNodeGroup(n.id, v));
+        INSPECTOR.render(); CANVAS.render();
+      };
+      bd.appendChild(row('编集盒子', gsel));
 
       if (n.type === 'scene') {
         bd.appendChild(row('说话人 / 视角', textInput(n, 'speaker', { label: '说话人' })));
@@ -12535,7 +14543,17 @@ var REL_KINDS = [
         b2.appendChild(el('div', 'mini', '（所有道具都已经在本店上架了。）'));
       }
       s2.appendChild(b2); w.appendChild(s2);
-      w.appendChild(this.bottomBar('shop', sh, sh.name));
+      /* 商城也可以在画布上放一张实体卡（作者 #106：「商城也要是实体卡」）。
+         道具**不**给这个按钮 —— 作者原话「道具不需要是实体卡」。 */
+      w.appendChild(this.bottomBar('shop', sh, sh.name, [
+        button(_T('在画布放一张实体卡'), () => {
+          MODEL.transact(_T('放置实体卡'), () => {
+            const n = MODEL.newNode('card', 80, 80);
+            n.title = sh.name; n.refKind = 'shop'; n.refId = sh.id; n.year = MODEL.data.timeline.current;
+            MODEL.select('node', n.id); VIEW.show('canvas');
+          });
+        }, 'sm wide'),
+      ]));
       return w;
     },
     /* 只读：谁持有这个道具（要改数量去对应角色 / 主角的「背包」） */
@@ -13436,7 +15454,7 @@ var REL_KINDS = [
 
   global.UI = UI;
   global.INSPECTOR = INSPECTOR;
-  global.INSP_HELPERS = { row, row2, textInput, numInput, area, select, check, button, exprInput, commit, yearInput };
+  global.INSP_HELPERS = { row, row2, textInput, numInput, area, select, check, button, exprInput, commit, yearInput, colorInput, normalizeHex };
 })(window);
 
 </script>
@@ -13865,9 +15883,11 @@ var REL_KINDS = [
     P('');
     P('### 8.1 节点总览');
     P('');
-    P(tbl(['ID', '类型', '标题', '年份', '地区', '说话人'], d.nodes.map(n => [
+    P(tbl(['ID', '类型', '标题', '年份', '截止年份', '地区', '说话人'], d.nodes.map(n => [
       `\`${n.id}\``, ({ scene: '场景', check: '检定', roll: '抽事件', effect: '结算', note: '便签', card: '实体卡' })[n.type] || n.type,
-      E(n.title), (n.year === '' || n.year == null) ? '—' : Y(n.year), n.regionId ? E(MODEL.regionName(n.regionId)) : '—', E(n.speaker) || '—',
+      E(n.title), (n.year === '' || n.year == null) ? '—' : Y(n.year),
+      (n.to === '' || n.to == null) ? '—' : Y(n.to),
+      n.regionId ? E(MODEL.regionName(n.regionId)) : '—', E(n.speaker) || '—',
     ])));
     P('');
     P('### 8.2 逐节点详情');
@@ -13879,6 +15899,9 @@ var REL_KINDS = [
       meta.push(`类型：${({ scene: '场景', check: '检定', roll: '抽事件', effect: '结算', ending: '结局', note: '便签', card: '实体卡' })[n.type]}`);
       if (n.type === 'ending' && n.endingId) meta.push(`结局编号：${E(n.endingId)}`);
       if (n.year !== '' && n.year != null) meta.push(`年份：${Y(n.year)}`);
+      /* 截止年份：这张卡跨到哪一年为止（"在沙漠里穿行了三年"就写在这里）。
+         没写就不导出来 —— 不能给个默认数字。 */
+      if (n.to !== '' && n.to != null) meta.push(`截止年份：${Y(n.to)}`);
       if (n.regionId) meta.push(`地点：${E(MODEL.regionName(n.regionId))}`);
       if (n.speaker) meta.push(`说话人：${E(n.speaker)}`);
       P('- ' + meta.join('　｜　'));
@@ -13971,6 +15994,29 @@ var REL_KINDS = [
       P('');
     }
 
+    /* 8.4 编集盒子：作者手动归类的分组（可嵌套）。
+       导出必须体现**成员 id** —— 否则下游（AI / 引擎）拿不到"这几段属于同一盒"这个信息。
+       树状缩进画出嵌套关系，和画布上的大虚线框一一对应。 */
+    if ((d.groups || []).length) {
+      P('### 8.4 编集盒子');
+      P('');
+      P('> 这是你在画布上手动归类的分组（可套娃：一个盒子可以装另一个盒子）。');
+      P('> 它不参与游戏逻辑，只是"这几段在我眼里是一组"的标记。');
+      P('');
+      const drawG = (parentId, depth) => {
+        (d.groups || []).filter(g => (g.parent || '') === (parentId || '')).forEach(g => {
+          const members = MODEL.groupMembers(g.id);
+          const ind = '　'.repeat(depth);
+          const ids = members.map(n => n.id).join('、') || '（无成员）';
+          P(`${ind}- **${E(g.name)}**（${g.id}）　成员 ${members.length} 个：${ids}`);
+          members.forEach(n => { P(`${ind}　　- ${n.id}　${nodeTitle(n.id)}`); });
+          drawG(g.id, depth + 1);
+        });
+      };
+      drawG('', 0);
+      P('');
+    }
+
     /* 9 引用索引 */
     P('## 9. 附录：引用索引');
     P('');
@@ -13986,6 +16032,33 @@ var REL_KINDS = [
     P('');
     P('---');
     P('');
+
+    /* 10 伏笔笔记（作者专用）
+       随工程导出一起带走 —— 作者做游戏（AI 协同 / Godot 读取）时不用再手动重录。
+       下游呈现层应按"作者专用"过滤，不展示给玩家。
+       每条伏笔 = 一组「埋设 / 提及 / 回收」关联，指向剧情节点（场景卡 / 结局卡 / 任何卡）。 */
+    const fss = d.foreshadows || [];
+    P('## 10. 伏笔笔记（作者专用 · 不展示给玩家）');
+    P('');
+    if (!fss.length) {
+      P('（暂无伏笔）\n');
+    } else {
+      fss.forEach(f => {
+        const counts = MODEL.foreshadowCounts(f);
+        P(`### ${E(f.title) || '（无标题）'} \`[${f.id}]\``);
+        P('');
+        if (f.note) P(`- 备注：${E(f.note)}`);
+        P(`- 计数：埋设 ${counts.plant} · 提及 ${counts.mention} · 回收 ${counts.payoff}`);
+        const byRole = { plant: [], mention: [], payoff: [] };
+        (f.links || []).forEach(l => { if (byRole[l.role]) byRole[l.role].push(l.node); });
+        const fmt = ids => ids.length ? ids.map(id => `${id} ${nodeTitle(id)}`).join('、') : '—';
+        P(`- 埋设：${fmt(byRole.plant)}`);
+        P(`- 提及：${fmt(byRole.mention)}`);
+        P(`- 回收：${fmt(byRole.payoff)}`);
+        P('');
+      });
+    }
+
     P(`_由 文游写作助手 导出 · 共 ${d.nodes.length} 个节点 / ${d.regions.length} 地区 / ${d.characters.length} 角色 / ${d.relations.length} 关系_`);
 
     return L.join('\n');
@@ -14097,7 +16170,10 @@ var REL_KINDS = [
       })),
       scenes: d.nodes.map(n => ({
         id: n.id, type: n.type, title: n.title, text: n.text, speaker: n.speaker,
-        year: n.year, region: n.regionId, tags: n.tags,
+        year: n.year,
+        /* 截止年份 = 这张卡跨到哪一年为止；没设就是 null（不编一个数字给它）。
+           endYear 与 year 同口径（当前最小单位下的整数刻度）。 */
+        endYear: (n.to === '' || n.to == null) ? null : n.to, region: n.regionId, tags: n.tags,
         choices: (n.choices || []).map(c => ({ text: c.text, condition: c.condition, hiddenIf: c.hiddenIf, effects: c.effects, next: c.next ? c.next.id : null })),
         checkId: n.checkId || null,
         tableId: n.tableId || null,
@@ -14115,14 +16191,34 @@ var REL_KINDS = [
         goodBad: n.goodBad || '',
         effects: n.effects || [],
         next: n.next ? n.next.id : null,
+        /* 所属编集盒子（分组）：没有就是 null。和下面顶层 groups 的成员清单是同一件事的双向视图。 */
+        group: n.group || null,
+        /* 祖先链（含自己，最内层 → 最外层）：n1 挂在 G1、而 G1⊂G2⊂G3 时 = ['G1','G2','G3']，
+           也就是"这个节点同时被这几层盒子包着"（图层组的传递包含）。
+           下游想知道它属于哪几层盒子，读这一条即可，不用自己爬 parent。 */
+        groupChain: MODEL.groupChain(n.group),
       })),
       /* 作者手写连线：不参与逻辑，但保留设计意图 */
       links: (d.links || []).map(l => ({ from: l.from, to: l.to, label: l.label || '' })),
+      /* 编集盒子：作者手动归类的分组（可嵌套，parent 指向父盒；顶层空串）。
+         members 是成员节点的 id 清单 —— 导出必须体现成员 id，
+         否则下游（AI / 引擎）拿不到"这几段属于同一盒"这个信息。 */
+      groups: (d.groups || []).map(g => ({
+        id: g.id, name: g.name, parent: g.parent || null,
+        members: MODEL.groupMembers(g.id).map(n => n.id),
+      })),
       /* 时间锚点：eras = 一段有名字的时期（如"夏"），marks = 一个值得记住的年份
          （如"商灭""主角出生"）。引擎侧可能用它们做触发，两件都要。
          以前只导出 eras，marks 整个漏了。 */
       eras: (d.timeline.eras || []).map(e => ({ year: e.year, label: e.label, note: e.note || '' })),
       marks: (d.timeline.marks || []).map(m => ({ year: m.year, label: m.label, note: m.note || '' })),
+      /* 伏笔笔记：作者专用，随导出一起带走。
+         下游呈现层按"authorOnly:true"过滤，不展示给玩家 —— 但 AI 协同 / Godot
+         读它做剧情逻辑时能用上，作者做游戏时不必把伏笔/回收再手动重录一遍。 */
+      foreshadows: (d.foreshadows || []).map(f => ({
+        id: f.id, title: f.title || '', note: f.note || '', authorOnly: true,
+        links: (f.links || []).map(l => ({ role: l.role, node: l.node })),
+      })),
     };
     return JSON.stringify(out, null, 2);
   }
@@ -14149,6 +16245,9 @@ var REL_KINDS = [
       regions: d.regions, characters: d.characters, relations: d.relations,
       items: d.items, currency: d.currency || '', shops: d.shops || [],
       flags: d.flags, vars: (d.vars && d.vars.list) || [], schema: d.schema, timeline: d.timeline,
+      /* 编集盒子：独立分组（可嵌套）。成员关系由每个节点的 group 字段指向盒子 id，
+         所以这里只要把盒子定义本身带上即可，不需要重复列成员。 */
+      groups: d.groups || [],
       /* 4.2：引擎侧必须知道刻度是按什么单位算的，否则"第 500"到底是
          500 年还是第 500 天就说不清了。一并给换算常量，
          让引擎想显示"3 年 2 个月"时不必自己猜 365/30。 */
@@ -14162,6 +16261,8 @@ var REL_KINDS = [
     }, null, 2);
     f['scenes.json'] = JSON.stringify({
       nodes: d.nodes, checks: d.checks, eventTables: d.eventTables, links: (d.links || []),
+      /* 伏笔笔记：作者专用，随导出带走（下游呈现层按 authorOnly 过滤，不展示给玩家）。 */
+      foreshadows: (d.foreshadows || []).map(f => ({ id: f.id, title: f.title || '', note: f.note || '', authorOnly: true, links: (f.links || []).map(l => ({ role: l.role, node: l.node })) })),
     }, null, 2);
     f['project.wyx'] = MODEL.serialize();
     return f;
@@ -15799,6 +17900,7 @@ var REL_KINDS = [
       document.getElementById('dirtyDot').classList.toggle('on', MODEL.dirty);
       this.syncTimebar();
       this.renderOutline();
+      this.renderForeshadows();
       const cnt = document.getElementById('statusRight');
       if (cnt) cnt.textContent = `${d.nodes.length} 节点 · ${d.regions.length} 地区 · ${d.characters.length} 角色 · ${d.factions.length} 势力 · ${d.relations.length} 关系 · ${d.checks.length} 检定 · ${d.eventTables.length} 表`;
     },
@@ -15981,6 +18083,25 @@ clampYear(ticks) {
         e.preventDefault();
         document.getElementById('btnClearFilter').click();
       });
+      /* ── 伏笔笔记 ── */
+      const fsHead = document.getElementById('fsHead');
+      if (fsHead) fsHead.onclick = e => {
+        /* 点「＋伏」按钮不触发折叠 */
+        if (e.target.closest('#btnAddForeshadow')) return;
+        this.fsCollapsed = !this.fsCollapsed;
+        document.getElementById('fsSection').classList.toggle('collapsed', this.fsCollapsed);
+      };
+      const addFs = document.getElementById('btnAddForeshadow');
+      if (addFs) addFs.onclick = e => {
+        e.stopPropagation();
+        const nm = prompt(_T('伏笔标题：'), _T('新伏笔'));
+        if (nm === null) return;
+        const f = MODEL.transact(_T('新建伏笔'), () => MODEL.addForeshadow(nm));
+        this.fsCollapsed = false;
+        this.fsOpen[f.id] = true;
+        this.renderForeshadows();
+        toast(_T('已新建伏笔「{a}」', { a: f.title }), 'ok');
+      };
     },
 
     /* 筛选命中计数：「显示 3 / 27 个节点」 */
@@ -16095,36 +18216,96 @@ clampYear(ticks) {
       });
     },
 
-    /* 批量设年份：作者在画布框选一堆节点后右键调它 */
+    /* 批量设**起始**年份：作者在画布框选一堆节点后右键调它。
+       作者 2026-10-24：「那就是批量设置起始年份的」—— 所以标题写明是起始，
+       免得跟新加的「批量设截止年份」摆在一起时分不清谁管哪个。
+       只写 n.year，一个字都不碰 n.to。 */
     batchYear(ids) {
       const list = (ids && ids.length ? ids : (MODEL.selNodes || [])).filter(id => !!MODEL.get('node', id));
       if (!list.length) { toast('先框选要改的节点', 'warn'); return; }
       const first = MODEL.get('node', list[0]);
       const w = el('div');
       w.appendChild(el('div', 'mini',
-        '把选中的 ' + list.length + ' 个节点都设成这一年。折叠着的连续剧情也算 —— 它们占着真实位置，框得到就选得到。'));
+        _T('把选中的 {n} 个节点的「起始年份」都设成这一年。只改起始年份，截止年份一点不动。'
+          + '折叠着的连续剧情也算 —— 它们占着真实位置，框得到就选得到。', { n: list.length })));
       const U = TIME.unitLabel(TIME.unitOf(MODEL.data.timeline));
       const inp = el('input', 'num year-inp');
       inp.type = 'text';
       inp.placeholder = '例如 3年2个月';
       const yv = (first.year == null || first.year === '') ? MODEL.data.timeline.current : first.year;
       inp.value = fmtYear(yv).replace(/^\D*(?=\d)/, '');
-      w.appendChild(el('div', 'mini', '时间（可写 ' + U + '，也能写 3年2个月）'));
+      w.appendChild(el('div', 'mini', _T('时间（可写 {u}，也能写 3年2个月）', { u: U })));
       w.appendChild(inp);
       UI.modal({
-        title: '批量设年份', width: '440px', body: w,
+        title: _T('批量设起始年份'), width: '440px', body: w,
         buttons: [
           { t: '取消' },
           {
             t: '确定', fn: () => {
               const y = parseYear(inp.value, MODEL.data.timeline);
               if (!isFinite(y)) { toast('年份看不懂', 'warn'); return false; }
-              MODEL.transact('批量设年份', () => {
+              MODEL.transact('批量设起始年份', () => {
                 list.forEach(id => { const n = MODEL.get('node', id); if (n) n.year = y; });
               });
               MODEL.selNodes = list.slice();
               VIEW.show('canvas'); CANVAS.render();
-              toast('已把 ' + list.length + ' 个节点设为 ' + fmtYear(y), 'ok');
+              toast(_T('已把 {n} 个节点的起始年份设为 {y}', { n: list.length, y: fmtYear(y) }), 'ok');
+              return true;
+            }
+          },
+        ],
+      });
+    },
+
+    /* 批量设「截止年份」（作者 2026-10-24）。
+       和「批量设年份」互不干涉 —— 那个改的是**起始**年份，这个只改**截止**年份，
+       两边各写各的字段。设了起始年份没设截止年份时，截止年份必须仍然是空的：
+       作者原话「不能我设置了起始年份没设置截止年份，截止年份就被默认成某个数字」。
+       输入框留空 = 清掉截止年份（这些卡回到"只占起始那一年"）。 */
+    batchEndYear(ids) {
+      const list = (ids && ids.length ? ids : (MODEL.selNodes || [])).filter(id => !!MODEL.get('node', id));
+      if (!list.length) { toast('先框选要改的节点', 'warn'); return; }
+      const first = MODEL.get('node', list[0]);
+      const w = el('div');
+      w.appendChild(el('div', 'mini',
+        _T('把选中的 {n} 个节点的「截止年份」一起设成这一年。只改截止年份，起始年份一点不动。'
+          + '留空 = 清掉截止年份，这些卡就回到「只占起始那一年」。', { n: list.length })));
+      const U = TIME.unitLabel(TIME.unitOf(MODEL.data.timeline));
+      const inp = el('input', 'num year-inp');
+      inp.type = 'text';
+      inp.placeholder = '例如 2025年';
+      inp.value = (first.to == null || first.to === '')
+        ? '' : fmtYear(first.to).replace(/^\D*(?=\d)/, '');
+      w.appendChild(el('div', 'mini', _T('截止年份（可写 {u}；留空 = 不设）', { u: U })));
+      w.appendChild(inp);
+      UI.modal({
+        title: '批量设截止年份', width: '440px', body: w,
+        buttons: [
+          { t: '取消' },
+          {
+            t: '确定', fn: () => {
+              const raw = String(inp.value == null ? '' : inp.value).trim();
+              let y = null;
+              if (raw) {
+                y = parseYear(raw, MODEL.data.timeline);
+                if (!isFinite(y)) { toast('年份看不懂', 'warn'); return false; }
+              }
+              let bad = 0;
+              MODEL.transact('批量设截止年份', () => {
+                list.forEach(id => {
+                  const n = MODEL.get('node', id);
+                  if (!n) return;
+                  n.to = y;
+                  if (y != null && Number(n.year) > y) bad++;
+                });
+              });
+              if (y != null) this.widenSpan(y, false);
+              MODEL.selNodes = list.slice();
+              VIEW.show('canvas'); CANVAS.render();
+              toast(y == null
+                ? _T('已清掉 {n} 个节点的截止年份', { n: list.length })
+                : _T('已把 {n} 个节点的截止年份设为 {y}', { n: list.length, y: fmtYear(y) })
+                  + (bad ? _T('（其中 {n} 个早于起始年份，时间轴上按只占一年画）', { n: bad }) : ''), 'ok');
               return true;
             }
           },
@@ -16364,6 +18545,267 @@ clampYear(ticks) {
       grp('剧情节点', nodes, 'node', o => ({ scene: '#3c6e4f', check: '#7a6420', roll: '#6b3f7a', effect: '#2f5d72', note: '#4a4a3a', card: '#3a3f4a' }[o.type] || '#3a3f4a'),
         o => (o.year === '' || o.year == null) ? '' : fmtYear(o.year),
         () => { MODEL.transact('新建场景', () => { const n = MODEL.newNode('scene', 80, 80); MODEL.select('node', n.id); }); VIEW.show('canvas'); });
+
+      /* 编集盒子：独立分组（图层组式可嵌套）。每个节点最多属于一个盒子；
+         盒子可套盒子。点击盒子名 → 选中它的全部成员；右键 → 重命名 / 把选中节点加进此盒 /
+         嵌套到另一盒 / 取消嵌套 / 删除并解组。 */
+      this.renderGroupsOutline(root, d);
+    },
+    /* ── 伏笔笔记（左侧可折叠段，卡片式排版）──────────────
+       每条伏笔 = 一张带金色左边线的圆角卡：折叠态显示「埋×/提×/收×」三计数
+       （收0 标淡红，是查漏的温顺提醒，不锁逻辑）；
+       展开态显示关联列表，每行 = 角色(埋/提/收) + 卡片标题，整行可点击定位到那张卡。
+       位置：大纲树下、快速筛选上，和右侧"属性"面板分开（用户原话：右边是属性、
+       和伏笔相关度低）。 */
+    renderForeshadows() {
+      const self = this;
+      const root = document.getElementById('foreshadowList');
+      const cntEl = document.getElementById('fsCount');
+      if (!root) return;
+      if (!this.fsOpen) this.fsOpen = {};
+      if (this.fsCollapsed === undefined) this.fsCollapsed = false;
+      const d = MODEL.data;
+      const fs = d.foreshadows || [];
+      document.getElementById('fsSection').classList.toggle('collapsed', this.fsCollapsed);
+      cntEl.textContent = fs.length ? ('· ' + fs.length) : '';
+      root.innerHTML = '';
+      if (!fs.length) {
+        root.appendChild(el('div', 'fs-empty',
+          '还没有伏笔。点右上「＋伏」新建一条，记下你想埋下、又怕忘了回收的线索。'));
+        return;
+      }
+      /* 选中态：编辑器里也用 sel.kind==='foreshadow' 表达（和右侧 inspector 联动）。 */
+      const selFs = MODEL.sel && MODEL.sel.kind === 'foreshadow' ? MODEL.sel.id : null;
+      fs.forEach(f => {
+        const counts = MODEL.foreshadowCounts(f);
+        const card = el('div', 'fs-card' + (selFs === f.id ? ' sel' : '') + (this.fsOpen[f.id] ? ' open' : ''));
+        /* 卡片头：标题 + 三计数（可点击切换展开） */
+        const top = el('div', 'fs-card-top');
+        const title = el('span', 'fs-card-title', f.title || _T('（无标题）'));
+        top.appendChild(title);
+        const cc = el('div', 'fs-card-counts');
+        const mk = (cls, label, n) => {
+          const c = el('span', 'fs-cc ' + cls + (n === 0 && cls === 'payoff' ? ' payoff-0' : ''));
+          c.innerHTML = label + ' <b>' + n + '</b>';
+          return c;
+        };
+        cc.appendChild(mk('plant', _T('埋'), counts.plant));
+        cc.appendChild(mk('mention', _T('提'), counts.mention));
+        cc.appendChild(mk('payoff', _T('收'), counts.payoff));
+        top.appendChild(cc);
+        top.onclick = () => { self.fsOpen[f.id] = !self.fsOpen[f.id]; card.classList.toggle('open', self.fsOpen[f.id]); };
+        card.appendChild(top);
+        /* 操作行：添加关联 / 重命名 / 删除 */
+        const acts = el('div', 'fs-card-actions');
+        const addBtn = el('span', 'fs-mini', _T('＋关联'));
+        addBtn.onclick = e => { e.stopPropagation(); self.openForeshadowLinkModal(f.id); };
+        const renBtn = el('span', 'fs-mini', _T('改名'));
+        renBtn.onclick = e => {
+          e.stopPropagation();
+          const nm = prompt(_T('伏笔标题：'), f.title || '');
+          if (nm === null) return;
+          MODEL.transact(_T('重命名伏笔'), () => { f.title = nm.trim() || _T('新伏笔'); });
+          self.renderForeshadows();
+        };
+        const delBtn = el('span', 'fs-mini', _T('删除'));
+        delBtn.onclick = e => {
+          e.stopPropagation();
+          if (!confirm(_T('删除伏笔「{a}」？关联也会一起清掉。', { a: f.title || '' }))) return;
+          MODEL.transact(_T('删除伏笔'), () => { MODEL.removeForeshadow(f.id); });
+          if (selFs === f.id) MODEL.select(null);
+          self.renderForeshadows();
+        };
+        acts.appendChild(addBtn); acts.appendChild(renBtn); acts.appendChild(delBtn);
+        card.appendChild(acts);
+        /* 关联列表（展开时显示） */
+        const links = el('div', 'fs-links');
+        (f.links || []).forEach(l => {
+          const row = el('div', 'fs-link');
+          const role = el('span', 'fs-link-role fs-role-' + l.role, ({ plant: _T('埋设'), mention: _T('提及'), payoff: _T('回收') })[l.role] || l.role);
+          const node = el('div', 'fs-link-node');
+          const nid = el('span', 'fs-nid', l.node);
+          node.appendChild(nid);
+          node.appendChild(document.createTextNode(MODEL.nodeTitle(l.node) || _T('（已删除的卡）')));
+          if (!MODEL.get('node', l.node)) { node.style.opacity = '.5'; node.title = _T('这张卡已不存在'); }
+          else node.title = _T('点击定位到这张卡');
+          node.onclick = e => {
+            e.stopPropagation();
+            if (!MODEL.get('node', l.node)) return;
+            VIEW.show('canvas'); setTimeout(() => CANVAS.focusNode(l.node), 60);
+          };
+          const del = el('span', 'fs-link-del', '✕');
+          del.title = _T('移除这条关联');
+          del.onclick = e => {
+            e.stopPropagation();
+            MODEL.transact(_T('移除关联'), () => MODEL.removeForeshadowLink(f.id, l.role, l.node));
+            self.renderForeshadows();
+          };
+          row.appendChild(role); row.appendChild(node); row.appendChild(del);
+          links.appendChild(row);
+        });
+        if (!(f.links || []).length) links.appendChild(el('div', 'fs-empty', _T('还没有关联。点「＋关联」把埋设/提及/回收的卡片挂上来。')));
+        card.appendChild(links);
+        root.appendChild(card);
+      });
+    },
+    /* 添加关联弹层：按标题搜索卡片（场景/结局/任何节点都能搜，结局也能是伏笔的埋设或回收）
+       也允许手填节点编号（心里有数时更快）。选好卡片 + 选角色（埋设/提及/回收）即可。 */
+    openForeshadowLinkModal(fid) {
+      const self = this;
+      const f = MODEL.getForeshadow(fid);
+      if (!f) return;
+      const w = el('div', 'fs-link-add');
+      w.appendChild(el('div', 'mini', _T('把某张卡挂成这条伏笔的「埋设 / 提及 / 回收」。可以按标题搜索，也可以直接填节点编号（如 n12）。')));
+      /* 角色选择 */
+      const roleRow = el('div', 'fs-row');
+      roleRow.appendChild(el('label', null, _T('角色')));
+      const roleSel = el('select');
+      [['plant', _T('埋设')], ['mention', _T('提及')], ['payoff', _T('回收')]].forEach(([v, t]) => {
+        const o = el('option'); o.value = v; o.textContent = t; roleSel.appendChild(o);
+      });
+      roleRow.appendChild(roleSel);
+      w.appendChild(roleRow);
+      /* 搜索框 */
+      const srRow = el('div', 'fs-row');
+      srRow.appendChild(el('label', null, _T('搜索')));
+      const search = el('input'); search.type = 'search'; search.placeholder = _T('输入卡片标题片段…');
+      srRow.appendChild(search);
+      w.appendChild(srRow);
+      /* 结果列表（实时过滤） */
+      const results = el('div', 'fs-search-results');
+      w.appendChild(results);
+      w.appendChild(el('div', 'fs-hint', _T('或手填编号：')));
+      /* 手填编号入口 */
+      const idRow = el('div', 'fs-row');
+      idRow.appendChild(el('label', null, _T('编号')));
+      const idInput = el('input'); idInput.placeholder = 'n12'; idInput.style.fontFamily = 'var(--mono)';
+      idRow.appendChild(idInput);
+      w.appendChild(idRow);
+      /* 渲染搜索结果 */
+      const renderResults = () => {
+        const q = (search.value || '').trim().toLowerCase();
+        results.innerHTML = '';
+        const nodes = (MODEL.data.nodes || []).filter(n => !q || (n.title || '').toLowerCase().indexOf(q) >= 0);
+        if (!nodes.length) { results.appendChild(el('div', 'fs-empty', _T('没有匹配的卡片'))); return; }
+        nodes.slice(0, 60).forEach(n => {
+          const opt = el('div', 'fs-opt' + (n.type === 'ending' ? ' ending' : ''));
+          opt.appendChild(document.createTextNode((n.title || n.id) + (n.type === 'ending' ? '' : '')));
+          const oid = el('span', 'fs-oid', n.id);
+          opt.appendChild(oid);
+          opt.onclick = () => { idInput.value = n.id; };
+          results.appendChild(opt);
+        });
+      };
+      search.addEventListener('input', renderResults);
+      renderResults();
+      UI.modal({
+        title: _T('为「{a}」添加关联', { a: f.title || '' }),
+        width: '460px',
+        body: w,
+        buttons: [
+          { t: _T('取消') },
+          {
+            t: _T('添加关联'), fn: () => {
+              const role = roleSel.value;
+              const nodeId = (idInput.value || '').trim();
+              if (!nodeId) { toast(_T('请先选一张卡或填编号'), 'warn'); return false; }
+              if (!MODEL.get('node', nodeId)) { toast(_T('编号「{a}」不是一张存在的卡', { a: nodeId }), 'warn'); return false; }
+              const added = MODEL.transact(_T('添加关联'), () => MODEL.addForeshadowLink(fid, role, nodeId));
+              self.fsOpen[fid] = true;
+              self.renderForeshadows();
+              if (!added) toast(_T('这张卡已经是这条伏笔的同一角色了'), 'warn');
+              return false; /* 不关弹层，方便连续挂多张 */
+            }
+          },
+        ],
+      });
+    },
+    /* 编集盒子的大纲条目：树状（可嵌套）。点击选中全部成员；右键更多。 */
+    renderGroupsOutline(root, d) {
+      const groups = d.groups || [];
+      const self = this;
+      const g = el('div', 'grp');
+      const h = el('div', 'grp-h');
+      h.appendChild(el('span', 'grp-t', _T('编集盒子')));
+      h.appendChild(el('span', 'grp-n', String(groups.length)));
+      const add = el('span', 'add-mini', '＋');
+      add.title = _T('新建盒子');
+      add.onclick = e => {
+        e.stopPropagation();
+        /* 新建盒子时给它一个画布上的位置（视口中间偏上）——
+           以前空盒子没有位置，画布上什么都画不出来，等于"建了等于没建"
+           （作者 #106：「新建后无法编辑任何事情」）。 */
+        MODEL.transact(_T('新建盒子'), () => { MODEL.newGroup(_T('新盒子'), '', CANVAS.emptyGroupPos()); });
+        self.renderOutline(); CANVAS.render();
+      };
+      h.appendChild(add);
+      g.appendChild(h);
+      const b = el('div', 'grp-b');
+      const draw = (parentId, depth) => {
+        groups.filter(x => (x.parent || '') === (parentId || '')).forEach(gr => {
+          const members = MODEL.groupMembers(gr.id);
+          const it = el('div', 'li group-li' + (gr.collapsed ? ' collapsed' : ''));
+          it.style.paddingLeft = (10 + depth * 16) + 'px';
+          /* 折叠箭头：▸收起 / ▾展开。空盒子也照常列出来（图层组可以是空的），
+             只是它没有成员可收，箭头点了也不改变什么。 */
+          const caret = el('span', 'grp-caret', gr.collapsed ? '▸' : '▾');
+          caret.title = gr.collapsed ? _T('展开') : _T('收起');
+          caret.onclick = e => {
+            e.stopPropagation();
+            MODEL.transact(gr.collapsed ? _T('展开盒子') : _T('收起盒子'), () => MODEL.setGroupCollapsed(gr.id, !gr.collapsed));
+            self.renderOutline(); CANVAS.render();
+          };
+          it.appendChild(caret);
+          it.appendChild(el('span', 'nm', gr.name));
+          it.appendChild(el('span', 'sub', members.length + _T(' 成员') + (gr.collapsed ? _T(' · 已收起') : '')));
+          it.title = _T('单击选中本盒（含子盒）全部成员 · 点箭头收起/展开 · 右键更多');
+          it.onclick = () => {
+            const ids = MODEL.groupMembers(gr.id).map(n => n.id);
+            MODEL.selNodes = ids; MODEL.select(null);
+            VIEW.show('canvas'); CANVAS.render();
+          };
+          it.oncontextmenu = e => { e.preventDefault(); e.stopPropagation(); self.groupMenu(gr, e); };
+          b.appendChild(it);
+          /* 收起的盒子不列子盒 —— 它们已经被收进去了（和画布上不再画子框一致） */
+          if (!gr.collapsed) draw(gr.id, depth + 1);
+        });
+      };
+      draw('', 0);
+      if (!groups.length) b.appendChild(el('div', 'tempty', _T('（空）')));
+      g.appendChild(b);
+      root.appendChild(g);
+    },
+    /* 编集盒子的右键菜单：重命名 / 加成员 / 嵌套 / 解组 / 删除。 */
+    groupMenu(gr, ev) {
+      const self = this;
+      const m = el('div', 'ctx-menu');
+      const mk = (txt, fn, danger) => { const b = el('div', 'ctx-item' + (danger ? ' danger' : ''), txt); b.onclick = () => { m.remove(); fn(); }; m.appendChild(b); };
+      mk(_T('重命名…'), () => { const nm = prompt(_T('新名称：'), gr.name); if (nm === null || !nm.trim()) return; MODEL.transact('重命名盒子', () => { gr.name = nm.trim(); }); self.renderOutline(); });
+      const picked = (MODEL.selNodes || []).filter(id => !!MODEL.get('node', id));
+      if (picked.length) {
+        mk(_T('把选中的 {n} 个节点加进此盒', { n: picked.length }), () => {
+          MODEL.transact('加入盒子', () => { picked.forEach(id => MODEL.setNodeGroup(id, gr.id)); });
+          self.renderOutline(); CANVAS.render();
+        });
+      }
+      /* 嵌套：把本盒设到其他盒之下（图层组式）。成环会被 setGroupParent 拒绝并红字提示。 */
+      (MODEL.data.groups || []).filter(x => x.id !== gr.id).forEach(x => {
+        mk(_T('套进「{n}」', { n: x.name }), () => {
+          try { MODEL.transact('嵌套盒子', () => MODEL.setGroupParent(gr.id, x.id)); }
+          catch (e) { toast(e.message, 'warn'); return; }
+          self.renderOutline(); CANVAS.render();
+        });
+      });
+      mk(gr.collapsed ? _T('展开（把收进去的显示出来）') : _T('收起（把成员收进盒子里）'), () => {
+        MODEL.transact(gr.collapsed ? _T('展开盒子') : _T('收起盒子'), () => MODEL.setGroupCollapsed(gr.id, !gr.collapsed));
+        self.renderOutline(); CANVAS.render();
+      });
+      mk(_T('取消嵌套（移为顶层）'), () => { MODEL.transact('取消嵌套', () => MODEL.setGroupParent(gr.id, '')); self.renderOutline(); CANVAS.render(); });
+      mk(_T('删除并解组'), () => { MODEL.transact('删除盒子', () => MODEL.removeGroup(gr.id)); self.renderOutline(); CANVAS.render(); }, true);
+      document.body.appendChild(m);
+      const r = document.getElementById('outline').getBoundingClientRect();
+      m.style.left = Math.min(ev.clientX, r.right - 10) + 'px';
+      m.style.top = Math.min(ev.clientY, window.innerHeight - m.offsetHeight - 10) + 'px';
     },
 
     /* ── 菜单 ── */
@@ -16721,6 +19163,10 @@ clampYear(ticks) {
     },
 
     async newProject(newWindow) {
+      /* 多开分支（newProject(true) → PY.call('new_instance') → 再启动一个进程）。
+         作者 2026-10-24：多开是正当需求（同时写两个剧本），所以保留；
+         被拦的只是"光启动程序却冒出第二个窗口"那种误触（app.py 单实例闸管这个）。
+         菜单项在「文件 ▸ 新开一个窗口（多开）」，快捷键默认没绑（防误触）。 */
       if (newWindow) {
         const r = await PY.call('new_instance');
         if (r) toast('已在新窗口打开（原窗口内容不受影响）', 'ok');
@@ -16731,7 +19177,7 @@ clampYear(ticks) {
       }
       // 同一窗口内新建：先把当前内容安全处理，绝不静默丢弃
       if (!await this.guardUnsaved('新建空白工程')) {
-        toast('已取消。可以用「文件 ▸ 新开一个窗口」保留当前内容', 'warn');
+        toast('已取消。当前工程保持原样', 'warn');
         return;
       }
       /* 新建之前必须清掉恢复文件：这份恢复文件属于"刚才那个工程"，
@@ -17444,8 +19890,15 @@ y &gt;= -1600 && f.见过王</pre>
       { id: 'save', group: '文件', label: '保存工程', def: 'Ctrl+S', allowInInput: true, run: () => APP.save(false) },
       { id: 'saveAs', group: '文件', label: '另存为…', def: 'Ctrl+Shift+S', run: () => APP.save(true) },
       { id: 'open', group: '文件', label: '打开工程…', def: 'Ctrl+O', run: () => APP.openProject() },
-      { id: 'new', group: '文件', label: '新建工程', def: 'Ctrl+N', run: () => APP.newProject(false) },
-      { id: 'newWindow', group: '文件', label: '新开一个窗口（多开）', def: 'Ctrl+Shift+N', run: () => APP.newProject(true) },
+      { id: 'new', group: '文件', label: '新建工程', def: 'Ctrl+N', run: () => APP.newProject() },
+      /* 「新开一个窗口（多开）」：多开是正当需求（作者要同时写两个剧本），
+         保留这个入口 —— 菜单里点一下是"明确的意图"，不会是误触。
+         ⚠️ 但**默认不绑快捷键**（def 为空）：上一轮报"点了那些之后会莫名多一个窗口"，
+         快捷键最容易误触（Ctrl+Shift+N）。想用的话在「帮助 ▸ 快捷键设置」里自己绑一个。 */
+      { id: 'newWindow', group: '文件', label: '新开一个窗口（多开）', def: '', run: () => APP.newProject(true) },
+      /* 「新开一个窗口（多开）」已撤下（2026-10-24，作者：「这个不要有」）。
+         多开是这个软件当初的一个设想，实际用起来只会让人分不清"哪个窗口是哪个工程"，
+         还会莫名其妙多出一个窗口。现在同一时间只允许一个窗口（app.py 单实例闸）。 */
       { id: 'quit', group: '文件', label: '关闭整个程序', def: 'Ctrl+W', allowInInput: true, run: () => APP.onWindowCloseRequest() },
       { id: 'snapshots', group: '文件', label: '查看 / 清理自动快照', def: '', run: () => APP.showSnapshots() },
       // ── 导出 ──
@@ -17463,7 +19916,7 @@ y &gt;= -1600 && f.见过王</pre>
       // ── 导入（4.1）──
       { id: 'importNovel', group: '导入', label: '导入小说正文为剧情节点…', def: '', run: () => APP.importNovel() },
       { id: 'importScript', group: '导入', label: '导入剧本（JSON）…', def: '', run: () => APP.importScript() },
-      { id: 'batchYear', group: '导入', label: '把选中的节点批量设年份…', def: '', run: () => APP.batchYear() },
+      { id: 'batchYear', group: '导入', label: '把选中的节点批量设起始年份…', def: '', run: () => APP.batchYear() },
       { id: 'batchYearSpread', group: '导入', label: '按顺序每年铺开年份…', def: '', run: () => APP.batchYearSpread() },
       // ── 画布节点 ──
       { id: 'copyNode', group: '画布节点', label: '复制选中的节点', def: 'Ctrl+C', allowInInput: false, run: () => CANVAS.copySelection() },
@@ -17618,14 +20071,14 @@ y &gt;= -1600 && f.见过王</pre>
     /* 同理，关系性质也是示例自己加的（出厂全局池为空）。
        一段关系 = 一个性质 + 一个数值。全局单一池，不分类别。 */
     p.schema.relNatures = [
-      { id: 't1', name: '性质一', color: '#e05555', def: 5 },
-      { id: 't2', name: '性质二', color: '#4fb96b', def: 4 },
-      { id: 't3', name: '性质三', color: '#4a9eff', def: 5 },
-      { id: 't4', name: '性质四', color: '#38b3a8', def: 3 },
-      { id: 't5', name: '性质五', color: '#c9a227', def: 5 },
-      { id: 't6', name: '性质六', color: '#4fb96b', def: 5 },
-      { id: 't7', name: '性质七', color: '#e05555', def: -5 },
-      { id: 't8', name: '性质八', color: '#38b3a8', def: 4 },
+      { id: 't1', name: '性质一', color: '#e05555', def: 0 },
+      { id: 't2', name: '性质二', color: '#4fb96b', def: 0 },
+      { id: 't3', name: '性质三', color: '#4a9eff', def: 0 },
+      { id: 't4', name: '性质四', color: '#38b3a8', def: 0 },
+      { id: 't5', name: '性质五', color: '#c9a227', def: 0 },
+      { id: 't6', name: '性质六', color: '#4fb96b', def: 0 },
+      { id: 't7', name: '性质七', color: '#e05555', def: 0 },
+      { id: 't8', name: '性质八', color: '#38b3a8', def: 0 },
     ];
 
     const r1 = { id: 'r1', name: 'A 地区', alias: '', color: '#c9a227', lon: 112.4, lat: 34.6, exist: [0, 100], params: { d1: 6, d2: 4 }, tags: ['核心'], note: '示例地区。' };
