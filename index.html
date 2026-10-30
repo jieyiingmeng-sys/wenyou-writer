@@ -16872,6 +16872,19 @@ var REL_KINDS = [
   };
 
   /* ── 文件层：File System Access API 优先，input/download 兜底 ── */
+  /* 保存框要显示的类型，按建议名自己的后缀来定 ——
+     保存工程是 .wyx，导出文本可能是 .md / .txt / .json，不能一刀切。
+     accept 里只放**一个**扩展名，浏览器才知道该补哪个后缀。 */
+  function saveTypes(name) {
+    const m = /(\.[A-Za-z0-9]+)$/.exec(String(name || ''));
+    const ext = (m ? m[1] : '.wyx').toLowerCase();
+    const desc = ext === '.wyx' ? '文游脚本 (*.wyx)'
+      : ext === '.md' ? 'Markdown (*.md)'
+        : ext === '.txt' ? '文本文件 (*.txt)'
+          : ext === '.json' ? 'JSON (*.json)'
+            : '文件 (*' + ext + ')';
+    return [{ description: desc, accept: { 'application/octet-stream': [ext] } }];
+  }
   const FS = {
     supported() {
       return typeof global.showSaveFilePicker === 'function'
@@ -16891,7 +16904,16 @@ var REL_KINDS = [
             const file = await handle.getFile();
             return { name: file.name, text: await file.text(), handle };
           })
-          .catch(e => { if (e && e.name === 'AbortError') return null; console.warn('open picker failed', e); return null; });
+          .catch(e => {
+            if (e && e.name === 'AbortError') return null;   // 用户自己取消，不打扰
+            /* 以前这里只 console.warn，界面上一句提示都没有 ——
+               用户点「打开」看到的是"什么都没发生"，根本不知道出了什么事。
+               现在把原因说出来，并给一条能立刻用的替代办法（拖进窗口）。 */
+            toastSafe('打不开文件选择框：' + ((e && e.message) || e)
+              + '　—— 也可以直接把 .wyx 文件拖进窗口打开', 'err');
+            console.warn('open picker failed', e);
+            return null;
+          });
       }
       return new Promise(resolve => {
         const inp = document.createElement('input');
@@ -16916,10 +16938,16 @@ var REL_KINDS = [
         inp.click();
       });
     },
-    /* 选一个位置来写。FSA 不可用时返回 null（调用方退化为下载）。 */
+    /* 选一个位置来写。FSA 不可用时返回 null（调用方退化为下载）。
+       必须带 types：桌面版 Edge / Chrome 会拿 accept 里唯一的扩展名，
+       给用户**手打**的文件名自动补后缀。以前只传 suggestedName ——
+       预填名确实带 .wyx，但用户在保存框里改成「随便命名一下」时
+       没有东西可补，存出来就是个没有后缀的文件；之后点「打开」，
+       筛选器只认 .wyx，这个文件又看不见了 ——
+       表现就是「保存的不是 wyx、打开还打不开」，其实是同一处根因。 */
     pickSave(suggestedName) {
       if (this.supported()) {
-        return global.showSaveFilePicker({ suggestedName })
+        return global.showSaveFilePicker({ suggestedName, types: saveTypes(suggestedName) })
           .then(handle => ({ name: handle.name, handle }))
           .catch(e => { if (e && e.name === 'AbortError') return null; console.warn('save picker failed', e); return null; });
       }
@@ -17187,6 +17215,12 @@ var REL_KINDS = [
     async open_file() {
       const picked = await FS.pickOpen('.wyx');
       if (!picked) return null;
+      /* 选到了文件却读不出内容（空文件 / 读取被拒）也要说一句 ——
+         界面上 `!r.content` 是直接静默 return 的，用户只会看到"点了没反应"。 */
+      if (!picked.text) {
+        toastSafe('这个文件读不出内容（是空的，或浏览器没有读它的权限）：' + picked.name, 'err');
+        return null;
+      }
       if (picked.handle) await Store.putQuiet('handles', picked.name, picked.handle);
       return { path: picked.name, content: picked.text };
     },
@@ -17260,6 +17294,15 @@ var REL_KINDS = [
         if (!picked) return null;
         if (!await FS.writeHandle(picked.handle, content)) return null;
         await Store.putQuiet('handles', picked.name, picked.handle);
+        if (!/\.wyx$/i.test(picked.name)) {
+          /* 浏览器没补上后缀（规范里补后缀只是"建议"行为，不一定做）。
+             内容其实已经写对了，但这个文件今后很难被找到 ——
+             「打开」的筛选器只认 .wyx，它不会出现在列表里。
+             与其等用户下次发现打不开，不如现在就说清楚。 */
+          toastSafe('已保存，但文件名没有 .wyx 后缀：「' + picked.name + '」。'
+            + '建议在资源管理器里改名为 ' + picked.name + '.wyx；'
+            + '否则下次用「打开」要在文件类型里切到「所有文件」才看得到它。', 'warn');
+        }
         return picked.name;
       }
       /* 无 FSA：下载一份，同时在本地缓存里记下内容，
