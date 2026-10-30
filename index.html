@@ -16932,42 +16932,84 @@ var REL_KINDS = [
             : '文件 (*' + ext + ')';
     return [{ description: desc, accept: { 'application/octet-stream': [ext] } }];
   }
+  /* 浏览器到底让不让弹文件框。
+     只查 `typeof showOpenFilePicker === 'function'` 是不够的 —— 函数确实在，
+     但文档是「沙箱文档」时一调用就抛 SecurityError（Sandboxed documents
+     aren't allowed to show a file picker），于是点「打开」只看到一句英文报错、
+     然后什么也没发生。所以分两步：开用前先做一次不弹框的沙箱探测；
+     真撞墙之后再记住结论，之后的打开/保存一律走 <input>/下载 兜底，
+     不再反复撞同一堵墙。 */
+  let fsaBlocked = false;
+  let fsaReason = '';
+  /* 第一次撞墙时返回 true（用来决定要不要提示一次）。 */
+  function markBlocked(reason) {
+    if (fsaBlocked) return false;
+    fsaBlocked = true;
+    fsaReason = String(reason || '');
+    return true;
+  }
+  /* 被嵌在别的应用的预览面板里时，浏览器通常给 iframe 加了 sandbox。
+     没有 allow-same-origin 的沙箱文档连 cookie 都读不到，据此判断。 */
+  function inSandboxedFrame() {
+    try {
+      if (window.top === window.self) return false;
+      void document.cookie;
+      return false;
+    } catch (e) { return true; }
+  }
+  function blockedHint() {
+    /* 报错原文是英文的一长串（Sandboxed documents aren't allowed…），
+       照搬出来没人看得懂，所以只说人话；英文原文留给 console。 */
+    if (inSandboxedFrame()) {
+      return '这个页面是被嵌在预览窗口里打开的，浏览器禁止这类页面弹文件框。'
+        + '请在浏览器里新开一个标签页打开它（或直接用线上地址），就能正常读写本地文件了。';
+    }
+    return '这个环境里浏览器不给出文件框（页面被限制了权限）。'
+      + '把页面放在正常网址下打开（https 的线上地址，或本地 http 服务）就正常了。';
+  }
   const FS = {
     supported() {
+      if (fsaBlocked) return false;
+      if (inSandboxedFrame()) { markBlocked('沙箱文档'); return false; }
       return typeof global.showSaveFilePicker === 'function'
         && typeof global.showOpenFilePicker === 'function';
     },
-    /* 选一个文件来读。FSA 不可用时用隐藏 <input type=file>。
-       cancel 事件 + window focus 兜底：用户关掉选择框必须让 Promise
-       resolve(null)，否则打开工程的流程会永远挂在那里。 */
-    pickOpen(acceptExt) {
+    /* 选一个文件来读。
+       优先 File System Access（拿到句柄，之后能直接写回原文件）；
+       浏览器不让弹框时退回隐藏 <input type=file>（读得到内容，但拿不到句柄，
+       之后的保存会走下载）。cancel 事件 + window focus 兜底：用户关掉选择框
+       必须让 Promise resolve(null)，否则打开工程的流程会永远挂在那里。 */
+    async pickOpen(acceptExt) {
       if (this.supported()) {
         const types = [{
           description: acceptExt === '.wyx' ? '文游脚本 (*.wyx)' : 'JSON (*.json)',
           accept: acceptExt === '.wyx' ? { 'application/octet-stream': ['.wyx'] } : { 'application/json': ['.json'] },
         }];
-        return global.showOpenFilePicker({ types, multiple: false })
-          .then(async handles => {
-            /* 标准里这个 API 返回的是**数组**（哪怕 multiple:false）。
-               以前直接拿返回值当单个句柄用，数组没有 getFile()，
-               于是每次点「打开」都在这一步抛错 —— 表现就是"点了没反应"，
-               而拖进窗口能打开（拖放走的是另一条读文件的路子）。 */
-            const handle = Array.isArray(handles) ? handles[0] : handles;
-            if (!handle) return null;
-            const file = await handle.getFile();
-            return { name: file.name, text: await file.text(), handle };
-          })
-          .catch(e => {
-            if (e && e.name === 'AbortError') return null;   // 用户自己取消，不打扰
-            /* 以前这里只 console.warn，界面上一句提示都没有 ——
-               用户点「打开」看到的是"什么都没发生"，根本不知道出了什么事。
-               现在把原因说出来，并给一条能立刻用的替代办法（拖进窗口）。 */
-            toastSafe('打不开文件选择框：' + ((e && e.message) || e)
-              + '　—— 也可以直接把 .wyx 文件拖进窗口打开', 'err');
-            console.warn('open picker failed', e);
-            return null;
-          });
+        try {
+          const handles = await global.showOpenFilePicker({ types, multiple: false });
+          /* 标准里这个 API 返回的是**数组**（哪怕 multiple:false）。
+             以前直接拿返回值当单个句柄用，数组没有 getFile()，
+             于是每次点「打开」都在这一步抛错 —— 表现就是"点了没反应"，
+             而拖进窗口能打开（拖放走的是另一条读文件的路子）。 */
+          const handle = Array.isArray(handles) ? handles[0] : handles;
+          if (!handle) return null;
+          const file = await handle.getFile();
+          return { name: file.name, text: await file.text(), handle };
+        } catch (e) {
+          if (e && e.name === 'AbortError') return null;   // 用户自己取消，不打扰
+          console.warn('open picker failed', e);
+          /* 撞墙了。以前这里只弹一句英文报错就结束，用户还是打不开文件。
+             现在改用普通文件框把这次打开做完，并说明为什么以后保存会走下载。 */
+          if (markBlocked((e && e.message) || e)) {
+            toastSafe(blockedHint() + '已改用普通文件框，这次照常能打开；'
+              + '但这种环境里拿不到文件本身，保存时会变成「下载一个新文件」，'
+              + '而不是改你原来那个。', 'warn');
+          }
+        }
       }
+      return this.pickOpenFallback(acceptExt);
+    },
+    pickOpenFallback(acceptExt) {
       return new Promise(resolve => {
         const inp = document.createElement('input');
         inp.type = 'file';
@@ -17005,14 +17047,30 @@ var REL_KINDS = [
         if (types) opt.types = types;
         return global.showSaveFilePicker(opt)
           .then(handle => ({ name: handle.name, handle }))
-          .catch(e => { if (e && e.name === 'AbortError') return null; console.warn('save picker failed', e); return null; });
+          .catch(e => {
+            if (e && e.name === 'AbortError') return null;
+            console.warn('save picker failed', e);
+            /* 弹不出保存框时返回 null，调用方会退化为下载 ——
+               内容一样能拿到，只是存成新文件而不是改原文件。
+               第一次撞墙时说清楚，免得用户以为是保存失败。 */
+            if (markBlocked((e && e.message) || e)) {
+              toastSafe(blockedHint() + '保存改成下载方式：文件会进你的下载目录，'
+                + '需要自己把它挪到想要的位置（或覆盖原来的那个）。', 'warn');
+            }
+            return null;
+          });
       }
       return Promise.resolve(null);
     },
     pickDir() {
       if (this.supported()) {
         return global.showDirectoryPicker()
-          .catch(e => { if (e && e.name === 'AbortError') return null; console.warn('dir picker failed', e); return null; });
+          .catch(e => {
+            if (e && e.name === 'AbortError') return null;
+            console.warn('dir picker failed', e);
+            markBlocked((e && e.message) || e);
+            return null;
+          });
       }
       return Promise.resolve(null);
     },
@@ -17227,6 +17285,15 @@ var REL_KINDS = [
       this.up = true;
       console.log('[web-api] 存储就绪：' + mode
         + (FS.supported() ? '，支持直接读写本地文件' : '，文件保存走下载（建议用 Edge / Chrome 获得完整体验）'));
+      /* 被嵌在预览面板里时，浏览器一律禁止弹文件框。
+         与其等用户点了「打开」才撞墙，不如一进来就说清楚怎么换地方打开。 */
+      if (inSandboxedFrame()) {
+        markBlocked('沙箱文档');
+        setTimeout(() => {
+          try { toastSafe(blockedHint() + '在预览窗口里「打开/保存」只能走普通文件框和下载，'
+            + '没法直接改你原来的文件。', 'warn'); } catch (e) { }
+        }, 1200);
+      }
     },
     methodNames() {
       return Object.keys(API).filter(k =>
