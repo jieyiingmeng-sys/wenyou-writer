@@ -16875,9 +16875,13 @@ var REL_KINDS = [
   /* 保存框要显示的类型，按建议名自己的后缀来定 ——
      保存工程是 .wyx，导出文本可能是 .md / .txt / .json，不能一刀切。
      accept 里只放**一个**扩展名，浏览器才知道该补哪个后缀。 */
-  function saveTypes(name) {
+  function saveTypes(name, fallback) {
     const m = /(\.[A-Za-z0-9]+)$/.exec(String(name || ''));
-    const ext = (m ? m[1] : '.wyx').toLowerCase();
+    /* 名字自己没带后缀时，用调用方指定的兜底后缀（保存工程是 .wyx）；
+       调用方没给就不传 types —— 否则导出一个叫「导出」的 md
+       会被硬补成 .wyx，那就补错了。 */
+    const ext = m ? m[1].toLowerCase() : (fallback || '');
+    if (!ext) return null;
     const desc = ext === '.wyx' ? '文游脚本 (*.wyx)'
       : ext === '.md' ? 'Markdown (*.md)'
         : ext === '.txt' ? '文本文件 (*.txt)'
@@ -16945,9 +16949,12 @@ var REL_KINDS = [
        没有东西可补，存出来就是个没有后缀的文件；之后点「打开」，
        筛选器只认 .wyx，这个文件又看不见了 ——
        表现就是「保存的不是 wyx、打开还打不开」，其实是同一处根因。 */
-    pickSave(suggestedName) {
+    pickSave(suggestedName, fallbackExt) {
       if (this.supported()) {
-        return global.showSaveFilePicker({ suggestedName, types: saveTypes(suggestedName) })
+        const opt = { suggestedName };
+        const types = saveTypes(suggestedName, fallbackExt);
+        if (types) opt.types = types;
+        return global.showSaveFilePicker(opt)
           .then(handle => ({ name: handle.name, handle }))
           .catch(e => { if (e && e.name === 'AbortError') return null; console.warn('save picker failed', e); return null; });
       }
@@ -17290,7 +17297,7 @@ var REL_KINDS = [
       const base = path || '未命名工程';
       const suggested = /\.wyx$/i.test(base) ? base : base + '.wyx';
       if (FS.supported()) {
-        const picked = await FS.pickSave(suggested);
+        const picked = await FS.pickSave(suggested, '.wyx');
         if (!picked) return null;
         if (!await FS.writeHandle(picked.handle, content)) return null;
         await Store.putQuiet('handles', picked.name, picked.handle);
@@ -19443,6 +19450,16 @@ clampYear(ticks) {
       if (MODEL.path && r.saved) {
         MODEL.dirty = false; this.onChange();
         if (!silent) this.savePing('已自动存盘 · 刚刚' + (r.snapshot ? '（另有快照）' : ''));
+        return;
+      }
+      /* 有工程路径、却没写回文件 —— 网页版最常见的一种：
+         重开浏览器后，上次那个文件的授权已经过期，而自动保存是定时器触发的、
+         没有用户点击，浏览器不给弹授权框，于是写不进去。
+         这种情况**绝不能沉默**：作者会以为一直在自动存盘，
+         其实内容只进了快照，等关掉浏览器再打开，文件还是几小时前的。 */
+      if (MODEL.path && !r.saved) {
+        if (!silent) this.savePing('没能自动写回文件 · 内容只存进了快照'
+          + (PY.web ? '（点一次「保存」重新选中文件就能续上）' : ''), 'warn');
         return;
       }
       /* 工程还没存过文件时，autosave 只写得了快照，写不了工程文件
