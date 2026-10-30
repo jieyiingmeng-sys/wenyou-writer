@@ -16871,6 +16871,49 @@ var REL_KINDS = [
     );
   };
 
+  /* ── 当前工程握着的那个文件 ──
+     Excalidraw、draw.io 都是这么做的：打开或保存之后，把文件句柄挂在
+     「当前打开的这个工程」上，之后写回就用它。它们从不按文件名去库里查
+     句柄 —— 文件名会重复（两个文件夹里都叫「工程.wyx」），句柄不会，
+     它指向的就是那一个文件。
+     我们以前是 handles[文件名] = 句柄，于是第二个同名文件会把第一个的
+     句柄顶掉：打开 B 读到 A 的内容，保存也可能写到另一个文件上。 */
+  const CUR = { id: '', name: '', handle: null };
+
+  function newFileId() {
+    return 'f' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+  function rememberCur(name, handle, id) {
+    if (!handle) return;
+    /* 给了 id 就用给的；没给但还是同一个文件就沿用；都不行则用
+       由文件名算出的稳定 id —— 这样同一条最近记录不会被反复
+       新建，列表里也不会冒出重复项。 */
+    CUR.id = id || (CUR.name === name ? CUR.id : '')
+      || ('p' + String(name || '').replace(/[^A-Za-z0-9]/g, '_'));
+    CUR.name = name || '';
+    CUR.handle = handle;
+  }
+  /* 句柄一律单独存，不和记录混在一起：
+     FileSystemFileHandle 是个带行为的活对象，塞进普通记录里一旦存不进去
+     （localStorage 降级时就会），会把整条存储降级链拖下水，连累所有数据。
+     存不进去顶多是下次点开要重新选一次文件，绝不该影响列表本身。
+     键用这条记录的 id（老数据用的是文件名），同名工程因此各占一格。 */
+  async function handleFor(path) {
+    /* 当前工程的句柄优先：id 对得上，或名字对得上。
+       保存当前工程时传的是文件名，所以名字必须认；
+       点最近列表里另一条时传的是那条自己的 id，名字对不上，就落到下面。 */
+    if (path && CUR.handle && (CUR.id === path || CUR.name === path)) {
+      return { handle: CUR.handle, id: CUR.id };
+    }
+    if (path) {
+      const h = await Store.get('handles', path);
+      /* 用文件名取到的（老数据）不给 id —— 让后面按文件名算一个稳定的，
+         免得同名时 id 也跟着含糊。 */
+      if (h) return { handle: h, id: /\.wyx$/i.test(path) ? '' : path };
+    }
+    return { handle: null, id: '' };
+  }
+
   /* ── 文件层：File System Access API 优先，input/download 兜底 ── */
   /* 保存框要显示的类型，按建议名自己的后缀来定 ——
      保存工程是 .wyx，导出文本可能是 .md / .txt / .json，不能一刀切。
@@ -16904,7 +16947,13 @@ var REL_KINDS = [
           accept: acceptExt === '.wyx' ? { 'application/octet-stream': ['.wyx'] } : { 'application/json': ['.json'] },
         }];
         return global.showOpenFilePicker({ types, multiple: false })
-          .then(async handle => {
+          .then(async handles => {
+            /* 标准里这个 API 返回的是**数组**（哪怕 multiple:false）。
+               以前直接拿返回值当单个句柄用，数组没有 getFile()，
+               于是每次点「打开」都在这一步抛错 —— 表现就是"点了没反应"，
+               而拖进窗口能打开（拖放走的是另一条读文件的路子）。 */
+            const handle = Array.isArray(handles) ? handles[0] : handles;
+            if (!handle) return null;
             const file = await handle.getFile();
             return { name: file.name, text: await file.text(), handle };
           })
@@ -17228,7 +17277,8 @@ var REL_KINDS = [
         toastSafe('这个文件读不出内容（是空的，或浏览器没有读它的权限）：' + picked.name, 'err');
         return null;
       }
-      if (picked.handle) await Store.putQuiet('handles', picked.name, picked.handle);
+      if (picked.handle) rememberCur(picked.name, picked.handle, newFileId());
+      else CUR.id = '';
       return { path: picked.name, content: picked.text };
     },
 
@@ -17283,11 +17333,13 @@ var REL_KINDS = [
        否则弹出保存框让用户选位置。FSA 不可用时退化为下载，
        并记住这次的文件名，让「最近」里能再次打开（从本地缓存读）。 */
     async save_file(content, path) {
-      if (path) {
-        const handle = await Store.get('handles', path);
-        if (handle && await FS.ensurePermission(handle, 'readwrite') && await FS.writeHandle(handle, content)) {
-          return path;
-        }
+      /* 先看当前工程自己握着的句柄；它为空（比如刷新之后）再看最近列表
+         里那条记录自己存的句柄（read_path 打开时会把它挂上来）。
+         两者都不是才弹框问位置。 */
+      const h = path ? await handleFor(path) : { handle: null, id: '' };
+      if (h.handle && await FS.ensurePermission(h.handle, 'readwrite') && await FS.writeHandle(h.handle, content)) {
+        rememberCur(path, h.handle, h.id);
+        return path;
       }
       /* 建议文件名：缺 .wyx 才补（和 PC 版 app.py 的
          「not path.endswith(FILE_EXT) 才追加」同一语义）。
@@ -17306,7 +17358,7 @@ var REL_KINDS = [
             + '换一个文件夹再试一次。', 'err');
           return null;
         }
-        await Store.putQuiet('handles', picked.name, picked.handle);
+        rememberCur(picked.name, picked.handle, newFileId());
         if (!/\.wyx$/i.test(picked.name)) {
           /* 浏览器没补上后缀（规范里补后缀只是"建议"行为，不一定做）。
              内容其实已经写对了，但这个文件今后很难被找到 ——
@@ -17377,8 +17429,9 @@ var REL_KINDS = [
         await this._trimSnapshots(30);
       } catch (e) { console.warn('snapshot failed', e); }
       if (path) {
-        const handle = await Store.get('handles', path);
-        if (handle && await FS.ensurePermission(handle, 'readwrite') && await FS.writeHandle(handle, content)) {
+        const h = await handleFor(path);
+        if (h.handle && await FS.ensurePermission(h.handle, 'readwrite') && await FS.writeHandle(h.handle, content)) {
+          rememberCur(path, h.handle, h.id);
           out.saved = true;
         } else {
           /* 没有文件句柄（下载模式保存的工程）：写本地缓存，
@@ -17456,13 +17509,23 @@ var REL_KINDS = [
       try {
         if (!String(path || '').toLowerCase().endsWith('.wyx')) return false;
         const list = await Store.all('recent');
-        const rest = list.filter(x => x.path !== path);
+        /* 有句柄时用句柄的 id 去重；没有句柄（下载模式保存的）才退回按
+           文件名去重 —— 那种情况下浏览器压根没告诉我们文件在哪。
+           不同文件夹里的同名文件因此各占一条，谁也不会顶掉谁。 */
+        const id = (CUR.id && CUR.name === path) ? CUR.id : '';
+        const rest = list.filter(x => !(id && x.id === id)
+          && !(!id && x.path === path && !x.id));
         rest.unshift({
+          id: id || ('p' + String(path).replace(/[^A-Za-z0-9]/g, '_')),
           path, name: title || String(path).split(/[\\/]/).pop(),
           time: fmtShort(new Date()),
         });
+        /* 列表顺序 = 最近用过的在前。句柄不进记录，单独安静地存一份。 */
         await Store.clear('recent');
-        for (const it of rest.slice(0, 20)) await Store.put('recent', it.path, it);
+        for (const it of rest.slice(0, 20)) await Store.put('recent', it.id || it.path, it);
+        if (CUR.handle && CUR.name === path) {
+          await Store.putQuiet('handles', id || ('p' + String(path).replace(/[^A-Za-z0-9]/g, '_')), CUR.handle);
+        }
         return true;
       } catch (e) { console.warn('touch_recent failed', e); return false; }
     },
@@ -17471,13 +17534,19 @@ var REL_KINDS = [
     async recent_projects() {
       try {
         const list = await Store.all('recent');
-        return list.map(x => ({ path: x.path, name: x.name, time: x.time }));
+        /* 把每条自己的 id 也带出去 —— 点开时靠它找回那条记录自己的句柄，
+           同名文件才不会被当成同一个。旧记录没有 id，界面会退回用 path。 */
+        return list.map(x => ({ id: x.id || '', path: x.path, name: x.name, time: x.time }));
       } catch (e) { return []; }
     },
-    async forget_recent(path, all_) {
+    async forget_recent(key, all_) {
       try {
         if (all_) { await Store.clear('recent'); return true; }
-        await Store.del('recent', path);
+        /* 列表记录的键是它自己的 id，不是文件名 —— 但外面也可能传来
+           文件名（旧数据 / 别处调用），所以两种都要认。 */
+        const list = await Store.all('recent');
+        const hit = list.find(x => x.id && x.id === key) || list.find(x => x.path === key);
+        await Store.del('recent', hit ? (hit.id || hit.path) : key);
         return true;
       } catch (e) { console.warn('forget_recent failed', e); return false; }
     },
@@ -17486,12 +17555,19 @@ var REL_KINDS = [
        优先从文件句柄读（能反映用户在外部对文件的修改）；
        没有句柄（下载模式保存的）退回本地缓存。 */
     async read_path(path) {
-      const handle = await Store.get('handles', path);
-      if (handle) {
-        if (await FS.ensurePermission(handle, 'read')) {
+      /* 顺序：当前工程握着的句柄 → 最近列表那条记录自己的句柄
+         → 老版本留下的 handles[文件名] → 下载模式的本地缓存。
+         前两步都不按文件名猜，所以同名文件不会互相顶。 */
+      const h = await handleFor(path);
+      if (h.handle) {
+        if (await FS.ensurePermission(h.handle, 'read')) {
           try {
-            const f = await handle.getFile();
-            return await f.text();
+            const f = await h.handle.getFile();
+            const text = await f.text();
+            /* 读成功了就把这个句柄认作「当前工程」的，
+               之后的保存直接写回它，不用再猜。 */
+            rememberCur(path, h.handle, h.id);
+            return text;
           } catch (e) { console.warn('read_path handle failed', e); }
         }
         return null;
@@ -19273,7 +19349,9 @@ clampYear(ticks) {
                变成未捕获的 Promise rejection —— 弹窗不关、界面零提示，
                用户只看到"点了没反应"。 */
             try {
-              const c = await PY.call('read_path', it.path);
+              /* 传这条记录的 id（不是文件名）：两个不同文件夹里的同名工程
+                 各有各的 id，靠 id 才能各自找回自己的文件，不串。 */
+              const c = await PY.call('read_path', it.id || it.path);
               if (!c) {
                 toast(PY.web
                   ? '打不开这个文件：' + it.path + '（可能被移动 / 删除，或浏览器尚未授权。可用「打开」重新选择它）'
@@ -19304,7 +19382,7 @@ clampYear(ticks) {
           rm.title = '只从「最近」列表移除，不会删磁盘上的文件';
           rm.onclick = async ev => {
             ev.stopPropagation();
-            await PY.call('forget_recent', it.path, false);
+            await PY.call('forget_recent', it.id || it.path, false);
             toast('已从最近列表移除：' + it.name, 'ok');
             reload();
           };
