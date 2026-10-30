@@ -17299,7 +17299,13 @@ var REL_KINDS = [
       if (FS.supported()) {
         const picked = await FS.pickSave(suggested, '.wyx');
         if (!picked) return null;
-        if (!await FS.writeHandle(picked.handle, content)) return null;
+        if (!await FS.writeHandle(picked.handle, content)) {
+          /* 写失败和"用户取消"是两回事，界面上不能都说成"可能取消了" ——
+             那是把浏览器的授权问题赖到用户头上。 */
+          toastSafe('没能写入「' + picked.name + '」：浏览器不给写这个位置。'
+            + '换一个文件夹再试一次。', 'err');
+          return null;
+        }
         await Store.putQuiet('handles', picked.name, picked.handle);
         if (!/\.wyx$/i.test(picked.name)) {
           /* 浏览器没补上后缀（规范里补后缀只是"建议"行为，不一定做）。
