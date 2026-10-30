@@ -16940,32 +16940,40 @@ var REL_KINDS = [
      真撞墙之后再记住结论，之后的打开/保存一律走 <input>/下载 兜底，
      不再反复撞同一堵墙。 */
   let fsaBlocked = false;
+  let fsaHinted = false;
   let fsaReason = '';
-  /* 第一次撞墙时返回 true（用来决定要不要提示一次）。 */
+  /* 已经撞过墙就不必再提示，但结论要留住。 */
   function markBlocked(reason) {
-    if (fsaBlocked) return false;
-    fsaBlocked = true;
-    fsaReason = String(reason || '');
-    return true;
+    if (!fsaBlocked) { fsaBlocked = true; fsaReason = String(reason || ''); }
   }
-  /* 被嵌在别的应用的预览面板里时，浏览器通常给 iframe 加了 sandbox。
-     没有 allow-same-origin 的沙箱文档连 cookie 都读不到，据此判断。 */
+  /* 本页面是不是被嵌在别人的页面里。取 top 可能被跨源策略挡，
+     挡住本身就说明不是顶层文档。 */
+  function inFrame() {
+    try { return window.top !== window.self; } catch (e) { return true; }
+  }
+  /* 预览面板那类宿主给 iframe 加的 sandbox 多半是
+     "allow-scripts allow-same-origin allow-forms" —— 同源是给了，
+     但文档仍然是沙箱文档，浏览器照样禁止弹文件框，
+     所以连 cookie 都读不到那种判断方式抓不到它。 */
   function inSandboxedFrame() {
-    try {
-      if (window.top === window.self) return false;
-      void document.cookie;
-      return false;
-    } catch (e) { return true; }
+    if (!inFrame()) return false;
+    try { void document.cookie; return false; } catch (e) { return true; }
   }
   function blockedHint() {
     /* 报错原文是英文的一长串（Sandboxed documents aren't allowed…），
        照搬出来没人看得懂，所以只说人话；英文原文留给 console。 */
-    if (inSandboxedFrame()) {
-      return '这个页面是被嵌在预览窗口里打开的，浏览器禁止这类页面弹文件框。'
+    if (inFrame()) {
+      return '这个页面是被嵌在预览窗口里打开的，浏览器通常禁止这类页面弹文件框。'
         + '请在浏览器里新开一个标签页打开它（或直接用线上地址），就能正常读写本地文件了。';
     }
     return '这个环境里浏览器不给出文件框（页面被限制了权限）。'
       + '把页面放在正常网址下打开（https 的线上地址，或本地 http 服务）就正常了。';
+  }
+  /* 同一句提醒只说一次：开页面时说过，之后真撞墙就不再啰嗦。 */
+  function hintOnce(extra) {
+    if (fsaHinted) return;
+    fsaHinted = true;
+    toastSafe(blockedHint() + (extra || ''), 'warn');
   }
   const FS = {
     supported() {
@@ -17000,11 +17008,10 @@ var REL_KINDS = [
           console.warn('open picker failed', e);
           /* 撞墙了。以前这里只弹一句英文报错就结束，用户还是打不开文件。
              现在改用普通文件框把这次打开做完，并说明为什么以后保存会走下载。 */
-          if (markBlocked((e && e.message) || e)) {
-            toastSafe(blockedHint() + '已改用普通文件框，这次照常能打开；'
-              + '但这种环境里拿不到文件本身，保存时会变成「下载一个新文件」，'
-              + '而不是改你原来那个。', 'warn');
-          }
+          markBlocked((e && e.message) || e);
+          hintOnce('已改用普通文件框，这次照常能打开；'
+            + '但这种环境里拿不到文件本身，保存时会变成「下载一个新文件」，'
+            + '而不是改你原来那个。');
         }
       }
       return this.pickOpenFallback(acceptExt);
@@ -17053,10 +17060,9 @@ var REL_KINDS = [
             /* 弹不出保存框时返回 null，调用方会退化为下载 ——
                内容一样能拿到，只是存成新文件而不是改原文件。
                第一次撞墙时说清楚，免得用户以为是保存失败。 */
-            if (markBlocked((e && e.message) || e)) {
-              toastSafe(blockedHint() + '保存改成下载方式：文件会进你的下载目录，'
-                + '需要自己把它挪到想要的位置（或覆盖原来的那个）。', 'warn');
-            }
+            markBlocked((e && e.message) || e);
+            hintOnce('保存改成下载方式：文件会进你的下载目录，'
+              + '需要自己把它挪到想要的位置（或覆盖原来的那个）。');
             return null;
           });
       }
@@ -17285,13 +17291,14 @@ var REL_KINDS = [
       this.up = true;
       console.log('[web-api] 存储就绪：' + mode
         + (FS.supported() ? '，支持直接读写本地文件' : '，文件保存走下载（建议用 Edge / Chrome 获得完整体验）'));
-      /* 被嵌在预览面板里时，浏览器一律禁止弹文件框。
-         与其等用户点了「打开」才撞墙，不如一进来就说清楚怎么换地方打开。 */
-      if (inSandboxedFrame()) {
-        markBlocked('沙箱文档');
+      /* 被嵌在预览面板里时多半会撞墙。与其等用户点了「打开」才发现，
+         不如一进来就把情况和换地方打开的办法说清楚（只说一次）。 */
+      if (inFrame()) {
         setTimeout(() => {
-          try { toastSafe(blockedHint() + '在预览窗口里「打开/保存」只能走普通文件框和下载，'
-            + '没法直接改你原来的文件。', 'warn'); } catch (e) { }
+          try {
+            hintOnce('在预览窗口里「打开」只能走普通文件框，「保存」会变成下载，'
+              + '没法直接改你原来那个文件。');
+          } catch (e) { }
         }, 1200);
       }
     },
